@@ -2,7 +2,10 @@ package com.project.mypokedex
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.data.PokemonInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,8 +17,10 @@ class PokedexViewModel: ViewModel() {
     val pokemonsList = mutableStateListOf<PokemonInfo>()
 
     init {
-        repeat(131) {
-            requestPokemon(it)
+        repeat(151) {
+            viewModelScope.launch(Dispatchers.IO) {
+                requestPokemon(it)
+            }
         }
     }
 
