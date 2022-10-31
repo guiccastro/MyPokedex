@@ -68,7 +68,7 @@ object PokemonRepository {
 
         if (id != null && name != null && types != null && image != null) {
             pokemonList.add(PokemonBaseInfo(id, name, types, image))
-            //pokemonList.sortBy { it.id }
+            pokemonList.sortBy { it.id }
         }
     }
 

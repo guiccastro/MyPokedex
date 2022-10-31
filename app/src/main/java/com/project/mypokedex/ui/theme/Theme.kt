@@ -7,13 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalView
 
 private val LightColorScheme = lightColorScheme(
-    background = Red,
-    surface = Red,
-    onPrimary = Red,
-    onSecondary = Red,
-    onTertiary = Red,
-    onBackground = Red,
-    onSurface = Red
+    background = MainRed,
+    surface = MainRed,
+    onPrimary = MainRed,
+    onSecondary = MainRed,
+    onTertiary = MainRed,
+    onBackground = MainRed,
+    onSurface = MainRed
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
