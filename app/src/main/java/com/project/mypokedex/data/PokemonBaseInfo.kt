@@ -4,7 +4,8 @@ class PokemonBaseInfo(
     val id: Int,
     val name: String,
     val types: List<PokemonType>,
-    val image: String
+    val image: String,
+    val gif: String
 ) {
     override fun toString(): String {
         return "$id|$name|$types|$image"

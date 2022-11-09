@@ -63,11 +63,16 @@ object PokemonRepository {
             }
         }
         val image = info["sprites"]?.jsonObject?.get("front_default")?.jsonPrimitive?.content
+        val gif = info["sprites"]?.jsonObject?.get("versions")?.jsonObject?.get("generation-v")?.jsonObject?.get("black-white")?.jsonObject?.get("animated")?.jsonObject?.get("front_default")?.jsonPrimitive?.content
 
         Log.println(Log.ASSERT, "Pokemon", "$id|$name|$types|$image")
 
-        if (id != null && name != null && types != null && image != null) {
-            pokemonList.add(PokemonBaseInfo(id, name, types, image))
+        if (id != null &&
+            name != null &&
+            types != null &&
+            image != null &&
+            gif != null) {
+            pokemonList.add(PokemonBaseInfo(id, name, types, image, gif))
             pokemonList.sortBy { it.id }
         }
     }

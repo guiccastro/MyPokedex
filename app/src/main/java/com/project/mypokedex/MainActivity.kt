@@ -63,6 +63,7 @@ import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.Yellow
 import com.project.mypokedex.ui.theme.cardShape
 import com.project.mypokedex.ui.theme.directionalButtonsShape
+import com.project.mypokedex.ui.theme.getImageLoader
 import com.project.mypokedex.ui.theme.idShape
 import com.project.mypokedex.ui.theme.pokedexScreenShape
 
@@ -78,7 +79,7 @@ class MainActivity : ComponentActivity() {
         }
 
         //viewModel.getPokemon(1)
-        repeat(200) {
+        repeat(20) {
             viewModel.getPokemon(it)
         }
     }
@@ -483,12 +484,13 @@ fun PokemonBaseCard(pokemon: PokemonBaseInfo, onClick: (PokemonBaseInfo) -> Unit
             }
 
             AsyncImage(
-                model = pokemon.image,
+                model = pokemon.gif,
                 contentDescription = null,
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .padding(8.dp)
-                    .size(60.dp)
+                    .size(60.dp),
+                imageLoader = getImageLoader()
             )
 
             Text(
