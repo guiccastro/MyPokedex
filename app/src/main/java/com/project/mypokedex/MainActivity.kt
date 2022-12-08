@@ -12,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -49,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.project.mypokedex.data.PokemonBaseInfo
+import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
@@ -78,9 +81,12 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        //viewModel.getPokemon(1)
-        repeat(20) {
-            viewModel.getPokemon(it)
+        observeRepository()
+    }
+
+    private fun observeRepository() {
+        PokemonRepository.pokemonList.observe(this) {
+            viewModel.onListUpdate(it)
         }
     }
 }
@@ -107,7 +113,7 @@ fun MainBackground(viewModel: PokedexViewModel) {
 
     PokedexTopDetails()
 
-    PokedexBottomDetails()
+    PokedexBottomDetails(viewModel)
 }
 
 @Composable
@@ -210,7 +216,8 @@ fun PokedexScreen(viewModel: PokedexViewModel) {
             shape = pokedexScreenShape,
             color = MainBlue
         ) {
-            PokemonBaseList(viewModel.pokemonsList, viewModel.onClickCard)
+            //viewModel.pokemonsList?.let { PokemonBaseList(it, viewModel.onClickCard) }
+            viewModel.currentPokemonInfo?.let { PokemonBaseCard(it) }
         }
 
         Surface(
@@ -288,7 +295,7 @@ fun PokedexTopDetails() {
 }
 
 @Composable
-fun PokedexBottomDetails() {
+fun PokedexBottomDetails(viewModel: PokedexViewModel) {
     Box(
         modifier = Modifier
             .wrapContentWidth()
@@ -361,7 +368,7 @@ fun PokedexBottomDetails() {
             }
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.onClickPrevious() },
                 modifier = Modifier
                     .size(50.dp)
                     .offset(0.dp, 40.dp),
@@ -373,7 +380,7 @@ fun PokedexBottomDetails() {
             }
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.onClickNext() },
                 modifier = Modifier
                     .size(50.dp)
                     .offset(80.dp, 40.dp),
@@ -429,13 +436,13 @@ fun PokemonBaseList(pokemons: List<PokemonBaseInfo>, onClick: (PokemonBaseInfo) 
             .padding(5.dp, 5.dp)
     ) {
         items(pokemons) { pokemon ->
-            PokemonBaseCard(pokemon, onClick)
+            PokemonBaseCardList(pokemon, onClick)
         }
     }
 }
 
 @Composable
-fun PokemonBaseCard(pokemon: PokemonBaseInfo, onClick: (PokemonBaseInfo) -> Unit) {
+fun PokemonBaseCardList(pokemon: PokemonBaseInfo, onClick: (PokemonBaseInfo) -> Unit) {
     Card(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 5.dp)
@@ -508,5 +515,95 @@ fun PokemonBaseCard(pokemon: PokemonBaseInfo, onClick: (PokemonBaseInfo) -> Unit
         }
     }
 }
+
+@Composable
+fun PokemonBaseCard(pokemon: PokemonBaseInfo) {
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .fillMaxSize()
+            .border(4.dp, Black, cardShape),
+        colors = CardDefaults.cardColors(containerColor = MainBlue),
+        shape = cardShape
+    ) {
+
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+            ) {
+                Text(
+                    text = pokemon.id.toString(),
+                    modifier = Modifier
+                        .background(Black, idShape)
+                        .padding(5.dp, 2.dp)
+                        .wrapContentWidth(),
+                    color = White,
+                    fontSize = 8.sp
+                )
+
+                AsyncImage(
+                    model = pokemon.gif,
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .padding(15.dp, 6.dp, 15.dp, 12.dp)
+                        .fillMaxHeight()
+                        .widthIn(0.dp, 120.dp),
+                    imageLoader = getImageLoader()
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(0.dp, 7.dp, 15.dp, 0.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 10.dp),
+                    text = pokemon.name.firstLetterUppercase(),
+                    style = typography.titleSmall,
+                    color = Black,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    text = pokemon.typesToString(),
+                    style = typography.bodyMedium,
+                    color = LightGray,
+                    fontSize = 15.sp,
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
+        }
+    }
+}
+
+/*
+@Preview
+@Composable
+fun PokemonCardPreview() {
+    val types = listOf(PokemonType("fire"), PokemonType("flying"))
+    val pokemon = PokemonBaseInfo(6, "charizard", types,
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/6.gif")
+
+    PokemonBaseCard(pokemon = pokemon)
+}
+*/
 
 

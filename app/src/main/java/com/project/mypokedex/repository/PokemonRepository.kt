@@ -1,12 +1,11 @@
 package com.project.mypokedex.repository
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.MutableLiveData
 import com.project.mypokedex.client.PokemonClient
 import com.project.mypokedex.data.PokemonBaseInfo
 import com.project.mypokedex.data.PokemonType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
@@ -20,38 +19,34 @@ object PokemonRepository {
 
     private val client = PokemonClient.getClient()
 
-    val pokemonList = mutableStateListOf<PokemonBaseInfo>()
+    val pokemonList = MutableLiveData<SnapshotStateList<PokemonBaseInfo>>(mutableStateListOf())
 
-    private suspend fun requestPokemon(id: Int) {
-        withContext(Dispatchers.IO) {
-            client.getPokemon(id).enqueue(object : Callback<String> {
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                }
+    private fun requestPokemon(id: Int) {
+        client.getPokemon(id).enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+            }
 
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    response.body()?.let { pokemon ->
-                        val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
-                        parseAndSave(jsonObj)
-                    }
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                response.body()?.let { pokemon ->
+                    val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
+                    parseAndSave(jsonObj)
                 }
-            })
-        }
+            }
+        })
     }
 
-    private suspend fun requestPokemon(name: String) {
-        withContext(Dispatchers.IO) {
-            client.getPokemon(name).enqueue(object : Callback<String> {
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                }
+    private fun requestPokemon(name: String) {
+        client.getPokemon(name).enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+            }
 
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    response.body()?.let { pokemon ->
-                        val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
-                        parseAndSave(jsonObj)
-                    }
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                response.body()?.let { pokemon ->
+                    val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
+                    parseAndSave(jsonObj)
                 }
-            })
-        }
+            }
+        })
     }
 
     private fun parseAndSave(info: JsonObject) {
@@ -65,20 +60,19 @@ object PokemonRepository {
         val image = info["sprites"]?.jsonObject?.get("front_default")?.jsonPrimitive?.content
         val gif = info["sprites"]?.jsonObject?.get("versions")?.jsonObject?.get("generation-v")?.jsonObject?.get("black-white")?.jsonObject?.get("animated")?.jsonObject?.get("front_default")?.jsonPrimitive?.content
 
-        Log.println(Log.ASSERT, "Pokemon", "$id|$name|$types|$image")
-
         if (id != null &&
             name != null &&
             types != null &&
             image != null &&
             gif != null) {
-            pokemonList.add(PokemonBaseInfo(id, name, types, image, gif))
-            pokemonList.sortBy { it.id }
+            pokemonList.value?.add(PokemonBaseInfo(id, name, types, image, gif))
+            pokemonList.value?.sortBy { it.id }
+            pokemonList.postValue(pokemonList.value)
         }
     }
 
-    suspend fun getPokemon(id: Int): PokemonBaseInfo? {
-        return pokemonList.find {
+    fun getPokemon(id: Int): PokemonBaseInfo? {
+        return pokemonList.value?.find {
             it.id == id
         } ?: run {
             requestPokemon(id)
@@ -86,8 +80,8 @@ object PokemonRepository {
         }
     }
 
-    suspend fun getPokemon(name: String): PokemonBaseInfo? {
-        return pokemonList.find {
+    fun getPokemon(name: String): PokemonBaseInfo? {
+        return pokemonList.value?.find {
             it.name == name
         } ?: run {
             requestPokemon(name)
