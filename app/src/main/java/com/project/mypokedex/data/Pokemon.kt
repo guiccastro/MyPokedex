@@ -1,6 +1,6 @@
 package com.project.mypokedex.data
 
-class PokemonBaseInfo(
+class Pokemon(
     val id: Int,
     val name: String,
     val types: List<PokemonType>,

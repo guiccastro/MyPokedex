@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.project.mypokedex.data.PokemonBaseInfo
+import com.project.mypokedex.data.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 
 class PokedexViewModel: ViewModel() {
@@ -18,10 +18,10 @@ class PokedexViewModel: ViewModel() {
             currentPokemonInfo = getPokemon(currentPokemonID)
         }
 
-    var currentPokemonInfo: PokemonBaseInfo? by mutableStateOf(null)
+    var currentPokemonInfo: Pokemon? by mutableStateOf(null)
         private set
 
-    val onClickCard: (PokemonBaseInfo) -> Unit = {
+    val onClickCard: (Pokemon) -> Unit = {
         getPokemon(it.id + 1)
     }
 
@@ -40,11 +40,11 @@ class PokedexViewModel: ViewModel() {
         currentPokemonID = 1
     }
 
-    fun getPokemon(id: Int): PokemonBaseInfo? {
+    fun getPokemon(id: Int): Pokemon? {
         return PokemonRepository.getPokemon(id)
     }
 
-    fun onListUpdate(list: SnapshotStateList<PokemonBaseInfo>) {
+    fun onListUpdate(list: SnapshotStateList<Pokemon>) {
         if (currentPokemonInfo == null) {
             list.find { it.id == currentPokemonID }?.let {
                 currentPokemonInfo = it

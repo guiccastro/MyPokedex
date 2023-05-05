@@ -50,7 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.project.mypokedex.data.PokemonBaseInfo
+import com.project.mypokedex.data.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.BorderBlack
@@ -429,7 +429,7 @@ fun PokedexBottomDetails(viewModel: PokedexViewModel) {
 }
 
 @Composable
-fun PokemonBaseList(pokemons: List<PokemonBaseInfo>, onClick: (PokemonBaseInfo) -> Unit) {
+fun PokemonBaseList(pokemons: List<Pokemon>, onClick: (Pokemon) -> Unit) {
     LazyVerticalGrid(
         columns = GridCells.Adaptive(90.dp),
         modifier = Modifier
@@ -442,7 +442,7 @@ fun PokemonBaseList(pokemons: List<PokemonBaseInfo>, onClick: (PokemonBaseInfo) 
 }
 
 @Composable
-fun PokemonBaseCardList(pokemon: PokemonBaseInfo, onClick: (PokemonBaseInfo) -> Unit) {
+fun PokemonBaseCardList(pokemon: Pokemon, onClick: (Pokemon) -> Unit) {
     Card(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 5.dp)
@@ -517,7 +517,7 @@ fun PokemonBaseCardList(pokemon: PokemonBaseInfo, onClick: (PokemonBaseInfo) -> 
 }
 
 @Composable
-fun PokemonBaseCard(pokemon: PokemonBaseInfo) {
+fun PokemonBaseCard(pokemon: Pokemon) {
     Card(
         modifier = Modifier
             .padding(horizontal = 10.dp, vertical = 10.dp)

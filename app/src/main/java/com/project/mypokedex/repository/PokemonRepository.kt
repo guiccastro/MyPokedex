@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import com.project.mypokedex.client.PokemonClient
-import com.project.mypokedex.data.PokemonBaseInfo
+import com.project.mypokedex.data.Pokemon
 import com.project.mypokedex.data.PokemonType
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -19,7 +19,7 @@ object PokemonRepository {
 
     private val client = PokemonClient.getClient()
 
-    val pokemonList = MutableLiveData<SnapshotStateList<PokemonBaseInfo>>(mutableStateListOf())
+    val pokemonList = MutableLiveData<SnapshotStateList<Pokemon>>(mutableStateListOf())
 
     private fun requestPokemon(id: Int) {
         client.getPokemon(id).enqueue(object : Callback<String> {
@@ -54,7 +54,7 @@ object PokemonRepository {
         val name = info["name"]?.jsonPrimitive?.content
         val types = info["types"]?.jsonArray?.mapNotNull {
             it.jsonObject["type"]?.jsonObject?.get("name")?.jsonPrimitive?.content?.let { typeName ->
-                PokemonType(typeName)
+                PokemonType.fromName(typeName)
             }
         }
         val image = info["sprites"]?.jsonObject?.get("front_default")?.jsonPrimitive?.content
@@ -65,13 +65,13 @@ object PokemonRepository {
             types != null &&
             image != null &&
             gif != null) {
-            pokemonList.value?.add(PokemonBaseInfo(id, name, types, image, gif))
+            pokemonList.value?.add(Pokemon(id, name, types, image, gif))
             pokemonList.value?.sortBy { it.id }
             pokemonList.postValue(pokemonList.value)
         }
     }
 
-    fun getPokemon(id: Int): PokemonBaseInfo? {
+    fun getPokemon(id: Int): Pokemon? {
         return pokemonList.value?.find {
             it.id == id
         } ?: run {
@@ -80,7 +80,7 @@ object PokemonRepository {
         }
     }
 
-    fun getPokemon(name: String): PokemonBaseInfo? {
+    fun getPokemon(name: String): Pokemon? {
         return pokemonList.value?.find {
             it.name == name
         } ?: run {
