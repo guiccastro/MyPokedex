@@ -3,6 +3,7 @@ package com.project.mypokedex.repository
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
+import com.project.mypokedex.CircuitBreakerConfiguration
 import com.project.mypokedex.client.PokemonClient
 import com.project.mypokedex.data.Pokemon
 import com.project.mypokedex.data.PokemonType
@@ -17,7 +18,7 @@ import retrofit2.Response
 
 object PokemonRepository {
 
-    private val client = PokemonClient.getClient()
+    private val client = PokemonClient(CircuitBreakerConfiguration()).getClient()
 
     val pokemonList = MutableLiveData<SnapshotStateList<Pokemon>>(mutableStateListOf())
 
