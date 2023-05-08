@@ -1,5 +1,6 @@
 package com.project.mypokedex.repository
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +24,7 @@ object PokemonRepository {
     val pokemonList = MutableLiveData<SnapshotStateList<Pokemon>>(mutableStateListOf())
 
     private fun requestPokemon(id: Int) {
+        Log.println(Log.ASSERT, "RequestPokemon", id.toString())
         client.getPokemon(id).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
             }
@@ -37,6 +39,7 @@ object PokemonRepository {
     }
 
     private fun requestPokemon(name: String) {
+        Log.println(Log.ASSERT, "RequestPokemon", name)
         client.getPokemon(name).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
             }
@@ -66,7 +69,9 @@ object PokemonRepository {
             types != null &&
             image != null &&
             gif != null) {
-            pokemonList.value?.add(Pokemon(id, name, types, image, gif))
+            val newPokemon = Pokemon(id, name, types, image, gif)
+            Log.println(Log.ASSERT, "NewPokemon", newPokemon.toString())
+            pokemonList.value?.add(newPokemon)
             pokemonList.value?.sortBy { it.id }
             pokemonList.postValue(pokemonList.value)
         }
