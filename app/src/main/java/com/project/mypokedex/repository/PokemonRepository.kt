@@ -62,13 +62,17 @@ object PokemonRepository {
             }
         }
         val image = info["sprites"]?.jsonObject?.get("front_default")?.jsonPrimitive?.content
-        val gif = info["sprites"]?.jsonObject?.get("versions")?.jsonObject?.get("generation-v")?.jsonObject?.get("black-white")?.jsonObject?.get("animated")?.jsonObject?.get("front_default")?.jsonPrimitive?.content
+        val gif =
+            info["sprites"]?.jsonObject?.get("versions")?.jsonObject?.get("generation-v")?.jsonObject?.get(
+                "black-white"
+            )?.jsonObject?.get("animated")?.jsonObject?.get("front_default")?.jsonPrimitive?.content
 
         if (id != null &&
             name != null &&
             types != null &&
             image != null &&
-            gif != null) {
+            gif != null
+        ) {
             val newPokemon = Pokemon(id, name, types, image, gif)
             Log.println(Log.ASSERT, "NewPokemon", newPokemon.toString())
             pokemonList.value?.add(newPokemon)
