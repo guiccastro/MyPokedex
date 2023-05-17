@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.project.mypokedex.data.Pokemon
+import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 import java.lang.Integer.max
 

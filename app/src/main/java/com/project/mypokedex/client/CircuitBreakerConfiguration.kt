@@ -1,4 +1,4 @@
-package com.project.mypokedex
+package com.project.mypokedex.client
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry

@@ -1,6 +1,5 @@
 package com.project.mypokedex.client
 
-import com.project.mypokedex.CircuitBreakerConfiguration
 import io.github.resilience4j.retrofit.CircuitBreakerCallAdapter
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory

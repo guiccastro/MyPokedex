@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
-import com.project.mypokedex.CircuitBreakerConfiguration
+import com.project.mypokedex.client.CircuitBreakerConfiguration
 import com.project.mypokedex.client.PokemonClient
-import com.project.mypokedex.data.Pokemon
-import com.project.mypokedex.data.PokemonType
+import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.PokemonType
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
