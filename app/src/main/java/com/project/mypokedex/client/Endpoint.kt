@@ -7,9 +7,9 @@ import retrofit2.http.Path
 interface Endpoint {
 
     @GET("/api/v2/pokemon/{id}")
-    fun getPokemon(@Path("id") id: Int) : Call<String>
+    fun getPokemon(@Path("id") id: Int): Call<String>
 
     @GET("/api/v2/pokemon/{id}")
-    fun getPokemon(@Path("id") name: String) : Call<String>
+    fun getPokemon(@Path("id") name: String): Call<String>
 
 }

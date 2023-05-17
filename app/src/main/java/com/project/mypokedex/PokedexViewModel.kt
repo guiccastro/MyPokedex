@@ -7,15 +7,20 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import com.project.mypokedex.data.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
+import java.lang.Integer.max
 
-class PokedexViewModel: ViewModel() {
+class PokedexViewModel : ViewModel() {
 
     var pokemonsList = PokemonRepository.pokemonList.value
 
     var currentPokemonID = 0
         set(value) {
-            field = value
+            field = max(1, value)
             currentPokemonInfo = getPokemon(currentPokemonID)
+            getPokemon(currentPokemonID + 1)
+            getPokemon(currentPokemonID - 1)
+            getPokemon(currentPokemonID + 10)
+            getPokemon(currentPokemonID - 10)
         }
 
     var currentPokemonInfo: Pokemon? by mutableStateOf(null)
@@ -33,6 +38,14 @@ class PokedexViewModel: ViewModel() {
 
     val onClickNext: () -> Unit = {
         currentPokemonID += 1
+    }
+
+    val onClickUp: () -> Unit = {
+        currentPokemonID += 10
+    }
+
+    val onClickDown: () -> Unit = {
+        currentPokemonID -= 10
     }
 
     init {

@@ -47,21 +47,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.project.mypokedex.data.Pokemon
+import com.project.mypokedex.data.PokemonType
+import com.project.mypokedex.extensions.firstLetterUppercase
 import com.project.mypokedex.repository.PokemonRepository
-import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.Green
 import com.project.mypokedex.ui.theme.HeavyRed
 import com.project.mypokedex.ui.theme.LightGray
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MainGray
-import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.MainRed
+import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.Yellow
 import com.project.mypokedex.ui.theme.cardShape
@@ -78,6 +81,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyPokedexTheme {
                 MainBackground(viewModel)
+                //Pokemon(6, "charizard", listOf(PokemonType.Fire, PokemonType.Flying), "", "").ToCard()
             }
         }
 
@@ -210,14 +214,11 @@ fun PokedexScreen(viewModel: PokedexViewModel) {
 
         Surface(
             modifier = Modifier
-                .matchParentSize()
-                .padding(30.dp, 30.dp, 30.dp, 80.dp)
-                .border(6.dp, BorderBlack, pokedexScreenShape),
-            shape = pokedexScreenShape,
-            color = MainBlue
+                .padding(start = 15.dp, top = 30.dp, end = 15.dp, bottom = 80.dp),
+            color = LightGray
         ) {
             //viewModel.pokemonsList?.let { PokemonBaseList(it, viewModel.onClickCard) }
-            viewModel.currentPokemonInfo?.let { PokemonBaseCard(it) }
+            viewModel.currentPokemonInfo?.let { it.ToCard() } //PokemonBaseCard(it) }
         }
 
         Surface(
@@ -356,7 +357,7 @@ fun PokedexBottomDetails(viewModel: PokedexViewModel) {
                 .offset(240.dp, 0.dp)
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.onClickUp() },
                 modifier = Modifier
                     .size(50.dp)
                     .offset(40.dp, 0.dp),
@@ -392,7 +393,7 @@ fun PokedexBottomDetails(viewModel: PokedexViewModel) {
             }
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.onClickDown() },
                 modifier = Modifier
                     .size(50.dp)
                     .offset(40.dp, 80.dp),
@@ -593,17 +594,17 @@ fun PokemonBaseCard(pokemon: Pokemon) {
     }
 }
 
-/*
 @Preview
 @Composable
 fun PokemonCardPreview() {
-    val types = listOf(PokemonType("fire"), PokemonType("flying"))
-    val pokemon = PokemonBaseInfo(6, "charizard", types,
+    val types = listOf(PokemonType.Fire, PokemonType.Flying)
+    val pokemon = Pokemon(
+        6, "charizard", types,
         "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
-        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/6.gif")
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/6.gif"
+    )
 
     PokemonBaseCard(pokemon = pokemon)
 }
-*/
 
 
