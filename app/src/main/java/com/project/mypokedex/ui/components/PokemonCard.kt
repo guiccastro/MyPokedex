@@ -37,6 +37,35 @@ import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.getImageLoader
 
 @Composable
+fun Pokemon.GetImage() {
+    val isPreview = LocalInspectionMode.current
+    if (isPreview) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_charizard),
+            contentDescription = "Pokemon Image",
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(4.dp)
+        )
+    } else {
+        AsyncImage(
+            model = gif,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(4.dp),
+            imageLoader = getImageLoader()
+        )
+    }
+
+
+
+
+}
+
+@Composable
 fun Pokemon.ToCard() {
     Surface(
         modifier = Modifier
@@ -56,27 +85,7 @@ fun Pokemon.ToCard() {
 
         Row(modifier = Modifier.padding(horizontal = 6.dp)) {
             Box(modifier = Modifier.size(150.dp)) {
-                val isPreview = LocalInspectionMode.current
-                if (isPreview) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_charizard),
-                        contentDescription = "Pokemon Image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(4.dp)
-                    )
-                } else {
-                    AsyncImage(
-                        model = gif,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(4.dp),
-                        imageLoader = getImageLoader()
-                    )
-                }
+                GetImage()
             }
 
             Column(
