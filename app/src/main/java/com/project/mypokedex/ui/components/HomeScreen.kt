@@ -238,7 +238,6 @@ fun DirectionalButtons(viewModel: PokedexViewModel) {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchPokemon(viewModel: PokedexViewModel) {
     var searchValue by remember { mutableStateOf("") }
@@ -281,7 +280,8 @@ fun SearchPokemon(viewModel: PokedexViewModel) {
             unfocusedTextColor = BorderBlack
         ),
         textStyle = PokemonGB.copy(fontSize = 12.sp),
-        singleLine = true
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
     )
 
 }
