@@ -57,6 +57,12 @@ class PokedexViewModel : ViewModel() {
         return PokemonRepository.getPokemon(id)
     }
 
+    fun searchPokemonById(id: Int?) {
+        id?.let {
+            currentPokemonID = it
+        }
+    }
+
     fun onListUpdate(list: SnapshotStateList<Pokemon>) {
         if (currentPokemonInfo == null) {
             list.find { it.id == currentPokemonID }?.let {

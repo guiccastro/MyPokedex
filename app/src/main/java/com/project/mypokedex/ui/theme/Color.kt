@@ -14,6 +14,10 @@ val Green = Color(0xFF48b699)
 val MainBlack = Color(0xFF494141)
 val MainGray = Color(0xFF565e5f)
 
+/** Home Screen **/
+val HomeScreenBackground = MainRed
+val HomeScreenCard = LightGray
+
 /** Pokemon Types **/
 val NormalColor = Color(0xFF949aa4)
 val FightingColor =  Color(0xFFdf4056)
