@@ -82,6 +82,7 @@ import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.Yellow
 import com.project.mypokedex.ui.theme.directionalButtonsShape
 import com.project.mypokedex.ui.theme.pokedexScreenShape
+import java.text.DecimalFormat
 
 @Composable
 fun NewHomeScreen(viewModel: PokedexViewModel) {
@@ -241,6 +242,7 @@ fun DirectionalButtons(viewModel: PokedexViewModel) {
 @Composable
 fun SearchPokemon(viewModel: PokedexViewModel) {
     var searchValue by remember { mutableStateOf("") }
+    val formatter = remember { DecimalFormat("#") }
 
     OutlinedTextField(
         modifier = Modifier
@@ -250,8 +252,14 @@ fun SearchPokemon(viewModel: PokedexViewModel) {
             .border(1.dp, BorderBlack, RoundedCornerShape(25)),
         value = searchValue,
         onValueChange = {
-            searchValue = it
-            viewModel.searchPokemonById(it.toIntOrNull())
+            try {
+                searchValue = formatter.format(it.toInt())
+            } catch (e: IllegalArgumentException) {
+                if (it.isEmpty()) {
+                    searchValue = it
+                }
+            }
+            viewModel.searchPokemonById(searchValue.toIntOrNull())
         },
         shape = RoundedCornerShape(25),
         leadingIcon = {
@@ -281,7 +289,7 @@ fun SearchPokemon(viewModel: PokedexViewModel) {
         ),
         textStyle = PokemonGB.copy(fontSize = 12.sp),
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
     )
 
 }

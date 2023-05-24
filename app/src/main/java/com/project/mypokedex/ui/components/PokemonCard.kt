@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
@@ -56,13 +57,10 @@ fun Pokemon.GetImage() {
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(4.dp),
-            imageLoader = getImageLoader()
+            imageLoader = getImageLoader(),
+            filterQuality = FilterQuality.High
         )
     }
-
-
-
-
 }
 
 @Composable
