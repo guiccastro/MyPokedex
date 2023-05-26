@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.project.mypokedex.repository.PokemonRepository
-import com.project.mypokedex.ui.components.HomeScreen
 import com.project.mypokedex.ui.components.NewHomeScreen
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
@@ -17,7 +16,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyPokedexTheme {
                 NewHomeScreen(viewModel)
-                //HomeScreen(viewModel)
             }
         }
 

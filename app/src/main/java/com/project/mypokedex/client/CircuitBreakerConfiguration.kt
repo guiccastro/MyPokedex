@@ -1,12 +1,13 @@
 package com.project.mypokedex.client
 
+import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import java.time.Duration
 
 class CircuitBreakerConfiguration {
 
-    fun getConfiguration() = CircuitBreakerConfig.custom()
+    private fun getConfiguration(): CircuitBreakerConfig = CircuitBreakerConfig.custom()
         .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)
         .slidingWindowSize(10)
         .slowCallRateThreshold(70.0f)
@@ -16,6 +17,6 @@ class CircuitBreakerConfiguration {
         .permittedNumberOfCallsInHalfOpenState(3)
         .build()
 
-    fun getCircuitBreaker() = CircuitBreakerRegistry.of(getConfiguration())
+    fun getCircuitBreaker(): CircuitBreaker = CircuitBreakerRegistry.of(getConfiguration())
         .circuitBreaker("circuit-breaker-pokemon")
 }
