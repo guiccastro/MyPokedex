@@ -9,12 +9,13 @@ import com.project.mypokedex.ui.components.SinglePokemonScreen
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: PokedexViewModel by viewModels()
+    //private val viewModel: PokedexViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyPokedexTheme {
+                val viewModel: SinglePokemonScreenViewModel by viewModels()
                 SinglePokemonScreen(viewModel)
             }
         }
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
 
     private fun observeRepository() {
         PokemonRepository.pokemonList.observe(this) {
-            viewModel.onListUpdate(it)
+            //viewModel.onListUpdate(it)
         }
     }
 }

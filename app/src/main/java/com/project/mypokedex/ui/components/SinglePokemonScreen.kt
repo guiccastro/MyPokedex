@@ -25,10 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -38,8 +35,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.PokedexViewModel
 import com.project.mypokedex.R
+import com.project.mypokedex.SinglePokemonScreenUIState
+import com.project.mypokedex.SinglePokemonScreenViewModel
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.Green
 import com.project.mypokedex.ui.theme.HomeScreenBackground
@@ -47,10 +45,15 @@ import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
-import java.text.DecimalFormat
 
 @Composable
-fun SinglePokemonScreen(viewModel: PokedexViewModel) {
+fun SinglePokemonScreen(viewModel: SinglePokemonScreenViewModel) {
+    val state = viewModel.uiState.collectAsState().value
+    SinglePokemonScreen(state = state)
+}
+
+@Composable
+fun SinglePokemonScreen(state: SinglePokemonScreenUIState = SinglePokemonScreenUIState()) {
     Background()
 
     Column(
@@ -58,7 +61,7 @@ fun SinglePokemonScreen(viewModel: PokedexViewModel) {
             .fillMaxHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        BackScreenCard(viewModel)
+        Screen(state)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -66,8 +69,8 @@ fun SinglePokemonScreen(viewModel: PokedexViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SearchPokemon(viewModel)
-            DirectionalButtons(viewModel)
+            SearchPokemon(state)
+            DirectionalButtons(state)
         }
     }
 
@@ -84,7 +87,7 @@ fun Background() {
 }
 
 @Composable
-fun BackScreenCard(viewModel: PokedexViewModel) {
+fun Screen(state: SinglePokemonScreenUIState) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -99,38 +102,32 @@ fun BackScreenCard(viewModel: PokedexViewModel) {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.Center
         ) {
-            Screen(viewModel)
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.dp, BorderBlack),
+                shadowElevation = 5.dp
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_screen_background),
+                    contentDescription = "Screen Background",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+
+                PokemonSingleCard(pokemon = state.currentPokemon)
+            }
         }
     }
+
 }
 
 @Composable
-fun Screen(viewModel: PokedexViewModel) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-            .padding(horizontal = 20.dp),
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, BorderBlack),
-        shadowElevation = 5.dp
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_screen_background),
-            contentDescription = "Screen Background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-
-        viewModel.currentPokemonInfo?.let {
-            PokemonSingleCard(pokemon = it)
-        }
-    }
-}
-
-@Composable
-fun DirectionalButtons(viewModel: PokedexViewModel) {
+fun DirectionalButtons(state: SinglePokemonScreenUIState) {
     val directionalsSize = 120.dp
     val buttonWidth = (directionalsSize.value / 3.44).dp
     val buttonHeight = (directionalsSize.value / 2.81).dp
@@ -145,7 +142,7 @@ fun DirectionalButtons(viewModel: PokedexViewModel) {
         ) {
             /** UP BUTTON **/
             Button(
-                onClick = { viewModel.onClickUp() },
+                onClick = { state.onClickUp() },
                 modifier = Modifier
                     .width(buttonWidth)
                     .height(buttonHeight),
@@ -168,7 +165,7 @@ fun DirectionalButtons(viewModel: PokedexViewModel) {
         ) {
             /** LEFT BUTTON **/
             Button(
-                onClick = { viewModel.onClickPrevious() },
+                onClick = { state.onClickLeft() },
                 modifier = Modifier
                     .width(buttonHeight)
                     .height(buttonWidth),
@@ -185,7 +182,7 @@ fun DirectionalButtons(viewModel: PokedexViewModel) {
 
             /** RIGHT BUTTON **/
             Button(
-                onClick = { viewModel.onClickNext() },
+                onClick = { state.onClickRight() },
                 modifier = Modifier
                     .width(buttonHeight)
                     .height(buttonWidth),
@@ -208,7 +205,7 @@ fun DirectionalButtons(viewModel: PokedexViewModel) {
         ) {
             /** DOWN BUTTON **/
             Button(
-                onClick = { viewModel.onClickDown() },
+                onClick = { state.onClickDown() },
                 modifier = Modifier
                     .width(buttonWidth)
                     .height(buttonHeight),
@@ -227,26 +224,16 @@ fun DirectionalButtons(viewModel: PokedexViewModel) {
 }
 
 @Composable
-fun SearchPokemon(viewModel: PokedexViewModel) {
-    var searchValue by remember { mutableStateOf("") }
-    val formatter = remember { DecimalFormat("#") }
-
+fun SearchPokemon(state: SinglePokemonScreenUIState) {
     OutlinedTextField(
         modifier = Modifier
             .width(220.dp)
             .height(46.dp)
             .background(Green, RoundedCornerShape(25))
             .border(1.dp, BorderBlack, RoundedCornerShape(25)),
-        value = searchValue,
+        value = state.searchText,
         onValueChange = {
-            try {
-                searchValue = formatter.format(it.toInt())
-            } catch (e: IllegalArgumentException) {
-                if (it.isEmpty()) {
-                    searchValue = it
-                }
-            }
-            viewModel.searchPokemonById(searchValue.toIntOrNull())
+            state.onSearchChange(it)
         },
         shape = RoundedCornerShape(25),
         leadingIcon = {
@@ -284,10 +271,9 @@ fun SearchPokemon(viewModel: PokedexViewModel) {
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    val viewModel = PokedexViewModel()
     MyPokedexTheme {
         Surface {
-            SinglePokemonScreen(viewModel)
+            SinglePokemonScreen()
         }
     }
 }
