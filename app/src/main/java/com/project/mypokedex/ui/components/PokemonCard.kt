@@ -22,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,33 +37,7 @@ import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.getImageLoader
 
 @Composable
-fun Pokemon.GetImage() {
-    val isPreview = LocalInspectionMode.current
-    if (isPreview) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_charizard),
-            contentDescription = "Pokemon Image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(4.dp)
-        )
-    } else {
-        AsyncImage(
-            model = gif,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(4.dp),
-            imageLoader = getImageLoader(),
-            filterQuality = FilterQuality.High
-        )
-    }
-}
-
-@Composable
-fun Pokemon.ToCard() {
+fun PokemonSingleCard(pokemon: Pokemon) {
     Surface(
         modifier = Modifier
             .height(150.dp)
@@ -83,7 +56,16 @@ fun Pokemon.ToCard() {
 
         Row(modifier = Modifier.padding(horizontal = 6.dp)) {
             Box(modifier = Modifier.size(150.dp)) {
-                GetImage()
+                AsyncImage(
+                    model = pokemon.gif,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .padding(4.dp),
+                    imageLoader = getImageLoader(),
+                    filterQuality = FilterQuality.High
+                )
             }
 
             Column(
@@ -96,7 +78,7 @@ fun Pokemon.ToCard() {
 
                 Column {
                     Text(
-                        text = formattedID(),
+                        text = pokemon.formattedID(),
                         fontSize = 16.sp,
                         fontWeight = FontWeight(500),
                         color = Color.DarkGray,
@@ -106,7 +88,7 @@ fun Pokemon.ToCard() {
                         style = PokemonGB
                     )
                     Text(
-                        text = formattedName(),
+                        text = pokemon.formattedName(),
                         fontSize = 14.sp,
                         fontWeight = FontWeight(400),
                         color = Color.DarkGray,
@@ -123,8 +105,8 @@ fun Pokemon.ToCard() {
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    items(types) {
-                        it.ToUI(fontSize = 12.sp)
+                    items(pokemon.types) {
+                        PokemonTypeToUI(pokemonType = it, fontSize = 12.sp)
                     }
                 }
             }
@@ -136,5 +118,5 @@ fun Pokemon.ToCard() {
 @Preview
 @Composable
 fun PokemonCardPreview() {
-    charizard.ToCard()
+    PokemonSingleCard(charizard)
 }

@@ -50,7 +50,7 @@ import com.project.mypokedex.ui.theme.PokemonGB
 import java.text.DecimalFormat
 
 @Composable
-fun NewHomeScreen(viewModel: PokedexViewModel) {
+fun SinglePokemonScreen(viewModel: PokedexViewModel) {
     Background()
 
     Column(
@@ -58,7 +58,7 @@ fun NewHomeScreen(viewModel: PokedexViewModel) {
             .fillMaxHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        ScreenCard(viewModel)
+        BackScreenCard(viewModel)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -84,7 +84,7 @@ fun Background() {
 }
 
 @Composable
-fun ScreenCard(viewModel: PokedexViewModel) {
+fun BackScreenCard(viewModel: PokedexViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +123,9 @@ fun Screen(viewModel: PokedexViewModel) {
                 .fillMaxSize()
         )
 
-        viewModel.currentPokemonInfo?.ToCard()
+        viewModel.currentPokemonInfo?.let {
+            PokemonSingleCard(pokemon = it)
+        }
     }
 }
 
@@ -285,7 +287,7 @@ fun HomeScreenPreview() {
     val viewModel = PokedexViewModel()
     MyPokedexTheme {
         Surface {
-            NewHomeScreen(viewModel)
+            SinglePokemonScreen(viewModel)
         }
     }
 }

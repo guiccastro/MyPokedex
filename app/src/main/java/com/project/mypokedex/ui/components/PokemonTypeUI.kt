@@ -16,20 +16,20 @@ import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.PokemonType
 
 @Composable
-fun PokemonType.ToUI(modifier: Modifier = Modifier, fontSize: TextUnit = 8.sp) {
+fun PokemonTypeToUI(pokemonType: PokemonType, modifier: Modifier = Modifier, fontSize: TextUnit = 8.sp) {
     val cornerRoundWeight = 3 / 2
     val cornerShape = RoundedCornerShape((fontSize.value * cornerRoundWeight).dp)
     Text(
         modifier = modifier
             .border(width = (fontSize.value / 35).dp, Color.Black, cornerShape)
-            .border(width = (fontSize.value / 7).dp, color = getColor(), cornerShape)
+            .border(width = (fontSize.value / 7).dp, color = pokemonType.getColor(), cornerShape)
             .background(Color.Black.copy(alpha = 0.5f), cornerShape)
             .padding(
                 horizontal = (fontSize.value * 2 / 3).dp,
                 vertical = (fontSize.value / 17).dp
             ),
-        text = toString().uppercase(),
-        color = getColor(),
+        text = pokemonType.toString().uppercase(),
+        color = pokemonType.getColor(),
         fontSize = fontSize,
         fontWeight = FontWeight(500),
         letterSpacing = (0.2).sp
@@ -39,5 +39,5 @@ fun PokemonType.ToUI(modifier: Modifier = Modifier, fontSize: TextUnit = 8.sp) {
 @Preview
 @Composable
 fun TypePreview() {
-    PokemonType.Fire.ToUI()
+    PokemonTypeToUI(PokemonType.Fire)
 }
