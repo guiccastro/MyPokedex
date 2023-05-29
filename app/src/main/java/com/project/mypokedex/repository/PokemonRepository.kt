@@ -1,13 +1,11 @@
 package com.project.mypokedex.repository
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.MutableLiveData
 import com.project.mypokedex.client.CircuitBreakerConfiguration
 import com.project.mypokedex.client.PokemonClient
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonArray
@@ -21,7 +19,7 @@ object PokemonRepository {
 
     private val client = PokemonClient(CircuitBreakerConfiguration()).getClient()
 
-    val pokemonList = MutableLiveData<SnapshotStateList<Pokemon>>(mutableStateListOf())
+    val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
 
     private fun requestPokemon(id: Int) {
         Log.println(Log.ASSERT, "RequestPokemon", id.toString())
@@ -75,14 +73,12 @@ object PokemonRepository {
         ) {
             val newPokemon = Pokemon(id, name, types, image, gif)
             Log.println(Log.ASSERT, "NewPokemon", newPokemon.toString())
-            pokemonList.value?.add(newPokemon)
-            pokemonList.value?.sortBy { it.id }
-            pokemonList.postValue(pokemonList.value)
+            pokemonList.value = (pokemonList.value + newPokemon).sortedBy { it.id }
         }
     }
 
     fun getPokemon(id: Int): Pokemon? {
-        return pokemonList.value?.find {
+        return pokemonList.value.find {
             it.id == id
         } ?: run {
             requestPokemon(id)
@@ -91,7 +87,7 @@ object PokemonRepository {
     }
 
     fun getPokemon(name: String): Pokemon? {
-        return pokemonList.value?.find {
+        return pokemonList.value.find {
             it.name == name
         } ?: run {
             requestPokemon(name)

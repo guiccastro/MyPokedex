@@ -1,6 +1,7 @@
 package com.project.mypokedex.ui.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -86,6 +88,7 @@ fun Background() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Screen(state: SinglePokemonScreenUIState) {
     Surface(
@@ -119,7 +122,13 @@ fun Screen(state: SinglePokemonScreenUIState) {
                         .fillMaxSize()
                 )
 
-                PokemonSingleCard(pokemon = state.currentPokemon)
+
+                HorizontalPager(
+                    pageCount = state.pokemonList.size,
+                    pageSpacing = 10.dp
+                ) {
+                    PokemonSingleCard(pokemon = state.pokemonList[it])
+                }
             }
         }
     }
