@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.components.PokemonGridCard
 import com.project.mypokedex.ui.stateholders.GridPokemonScreenStateHolder
@@ -45,7 +46,7 @@ fun GridPokemonScreen(state: GridPokemonScreenStateHolder = GridPokemonScreenSta
 fun GridPokemonScreenPreview() {
     MyPokedexTheme {
         Surface {
-            GridPokemonScreen()
+            GridPokemonScreen(GridPokemonScreenStateHolder(pokemonList = listPokemons))
         }
     }
 }

@@ -8,6 +8,7 @@ import com.project.mypokedex.model.PokemonType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -24,7 +25,7 @@ object PokemonRepository {
     private val requestedByIDs: HashMap<Int, Boolean> = HashMap()
     private val requestedByNames: HashMap<String, Boolean> = HashMap()
 
-    private val TAG = PokemonRepository::javaClass.name
+    private val TAG = PokemonRepository::class.java.simpleName
 
     private fun isAlreadyRequested(id: Int): Boolean {
         requestedByIDs[id]?.let {
@@ -88,24 +89,23 @@ object PokemonRepository {
         val id = info["id"]?.jsonPrimitive?.content?.toInt()
         val name = info["name"]?.jsonPrimitive?.content
         val types = info["types"]?.jsonArray?.mapNotNull {
-            it.jsonObject["type"]?.jsonObject?.get("name")?.jsonPrimitive?.content?.let { typeName ->
+            it.jsonObject["type"]?.jsonObject?.get("name")?.jsonPrimitive?.contentOrNull?.let { typeName ->
                 PokemonType.fromName(typeName)
             }
-        }
-        val image = info["sprites"]?.jsonObject?.get("front_default")?.jsonPrimitive?.content
+        } ?: emptyList()
+        val image =
+            info["sprites"]?.jsonObject?.get("front_default")?.jsonPrimitive?.contentOrNull ?: ""
         val gif =
             info["sprites"]?.jsonObject?.get("versions")?.jsonObject?.get("generation-v")?.jsonObject?.get(
                 "black-white"
-            )?.jsonObject?.get("animated")?.jsonObject?.get("front_default")?.jsonPrimitive?.content
+            )?.jsonObject?.get("animated")?.jsonObject?.get("front_default")?.jsonPrimitive?.contentOrNull
+                ?: ""
 
         if (id != null &&
-            name != null &&
-            types != null &&
-            image != null &&
-            gif != null
+            name != null
         ) {
             val newPokemon = Pokemon(id, name, types, image, gif)
-            Log.println(Log.ASSERT, "NewPokemon", newPokemon.toString())
+            Log.i(TAG, "parseAndSave: $newPokemon")
             pokemonList.value = (pokemonList.value + newPokemon).sortedBy { it.id }
         }
     }
