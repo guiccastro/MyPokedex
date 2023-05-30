@@ -1,25 +1,14 @@
-package com.project.mypokedex
+package com.project.mypokedex.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
+import com.project.mypokedex.ui.stateholders.SinglePokemonScreenUIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
-
-data class SinglePokemonScreenUIState(
-    val currentPokemonId: Int = 1,
-    val pokemonList: List<Pokemon> = emptyList(),
-    val searchText: String = "",
-    val onSearchChange: (String) -> Unit = {},
-    val onClickUp: () -> Unit = {},
-    val onClickDown: () -> Unit = {},
-    val onClickLeft: () -> Unit = {},
-    val onClickRight: () -> Unit = {}
-)
 
 class SinglePokemonScreenViewModel : ViewModel() {
 
@@ -30,6 +19,7 @@ class SinglePokemonScreenViewModel : ViewModel() {
     private val formatter = DecimalFormat("#")
 
     init {
+        PokemonRepository.getPokemon(1)
         _uiState.update { currentState ->
             currentState.copy(
                 onSearchChange = {

@@ -1,4 +1,4 @@
-package com.project.mypokedex.ui.components
+package com.project.mypokedex.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -38,15 +38,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
-import com.project.mypokedex.SinglePokemonScreenUIState
-import com.project.mypokedex.SinglePokemonScreenViewModel
+import com.project.mypokedex.ui.components.Background
+import com.project.mypokedex.ui.components.PokemonSingleCard
+import com.project.mypokedex.ui.stateholders.SinglePokemonScreenUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.Green
-import com.project.mypokedex.ui.theme.HomeScreenBackground
 import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
+import com.project.mypokedex.ui.viewmodels.SinglePokemonScreenViewModel
 
 @Composable
 fun SinglePokemonScreen(viewModel: SinglePokemonScreenViewModel) {
@@ -76,16 +77,6 @@ fun SinglePokemonScreen(state: SinglePokemonScreenUIState = SinglePokemonScreenU
         }
     }
 
-}
-
-@Composable
-fun Background() {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize(),
-        color = HomeScreenBackground
-    ) {
-    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)

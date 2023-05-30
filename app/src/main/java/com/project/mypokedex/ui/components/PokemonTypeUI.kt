@@ -16,7 +16,11 @@ import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.PokemonType
 
 @Composable
-fun PokemonTypeToUI(pokemonType: PokemonType, modifier: Modifier = Modifier, fontSize: TextUnit = 8.sp) {
+fun PokemonTypeToUI(
+    pokemonType: PokemonType,
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = 8.sp
+) {
     val cornerRoundWeight = 3 / 2
     val cornerShape = RoundedCornerShape((fontSize.value * cornerRoundWeight).dp)
     Text(

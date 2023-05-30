@@ -21,31 +21,64 @@ object PokemonRepository {
 
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
 
+    private val requestedByIDs: HashMap<Int, Boolean> = HashMap()
+    private val requestedByNames: HashMap<String, Boolean> = HashMap()
+
+    private val TAG = PokemonRepository::javaClass.name
+
+    private fun isAlreadyRequested(id: Int): Boolean {
+        requestedByIDs[id]?.let {
+            return true
+        }
+        return false
+    }
+
+    private fun isAlreadyRequested(name: String): Boolean {
+        requestedByNames[name]?.let {
+            return true
+        }
+        return false
+    }
+
     private fun requestPokemon(id: Int) {
-        Log.println(Log.ASSERT, "RequestPokemon", id.toString())
+        if (isAlreadyRequested(id)) return
+        requestedByIDs[id] = true
+
+        Log.i(TAG, "requestPokemon: $id")
         client.getPokemon(id).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
+                requestedByIDs.remove(id)
+                Log.i(TAG, "onFailure: $id")
             }
 
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 response.body()?.let { pokemon ->
                     val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
                     parseAndSave(jsonObj)
+                    requestedByIDs.remove(id)
+                    Log.i(TAG, "onResponse: $id")
                 }
             }
         })
     }
 
     private fun requestPokemon(name: String) {
-        Log.println(Log.ASSERT, "RequestPokemon", name)
+        if (isAlreadyRequested(name)) return
+        requestedByNames[name] = true
+
+        Log.i(TAG, "requestPokemon: $name")
         client.getPokemon(name).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
+                requestedByNames.remove(name)
+                Log.i(TAG, "onFailure: $name")
             }
 
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 response.body()?.let { pokemon ->
                     val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
                     parseAndSave(jsonObj)
+                    requestedByNames.remove(name)
+                    Log.i(TAG, "onResponse: $name")
                 }
             }
         })
