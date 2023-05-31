@@ -29,4 +29,10 @@ class Pokemon(
     fun formattedName(): String {
         return name.uppercase()
     }
+
+    fun getGifOrImage(): String {
+        return gif.ifBlank {
+            image
+        }
+    }
 }

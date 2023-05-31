@@ -154,44 +154,34 @@ fun PokemonGridCard(pokemon: Pokemon) {
                     overflow = TextOverflow.Ellipsis
                 )
                 SubcomposeAsyncImage(
-                    model = pokemon.gif,
+                    model = pokemon.getGifOrImage(),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize(),
                     imageLoader = getImageLoader(),
                     filterQuality = FilterQuality.High
                 ) {
-                    if (pokemon.gif.isEmpty()) {
-                        Image(
-                            modifier = Modifier
-                                .padding(20.dp),
-                            painter = painterResource(id = R.drawable.ic_close),
-                            contentDescription = "Error",
-                            colorFilter = ColorFilter.tint(BorderBlack)
-                        )
-                    } else {
-                        when (painter.state) {
-                            is AsyncImagePainter.State.Loading -> {
-                                CircularProgressIndicator(
-                                    modifier = Modifier
-                                        .padding(40.dp),
-                                    color = BorderBlack
-                                )
-                            }
+                    when (painter.state) {
+                        is AsyncImagePainter.State.Loading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .padding(40.dp),
+                                color = BorderBlack
+                            )
+                        }
 
-                            is AsyncImagePainter.State.Error -> {
-                                Image(
-                                    modifier = Modifier
-                                        .padding(40.dp),
-                                    painter = painterResource(id = R.drawable.ic_error),
-                                    contentDescription = "Error",
-                                    colorFilter = ColorFilter.tint(BorderBlack)
-                                )
-                            }
+                        is AsyncImagePainter.State.Error -> {
+                            Image(
+                                modifier = Modifier
+                                    .padding(40.dp),
+                                painter = painterResource(id = R.drawable.ic_error),
+                                contentDescription = "Error",
+                                colorFilter = ColorFilter.tint(BorderBlack)
+                            )
+                        }
 
-                            else -> {
-                                SubcomposeAsyncImageContent()
-                            }
+                        else -> {
+                            SubcomposeAsyncImageContent()
                         }
                     }
                 }
