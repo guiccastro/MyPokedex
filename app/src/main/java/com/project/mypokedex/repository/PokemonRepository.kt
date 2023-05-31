@@ -49,7 +49,7 @@ object PokemonRepository {
         client.getPokemon(id).enqueue(object : Callback<String> {
             override fun onFailure(call: Call<String>, t: Throwable) {
                 requestedByIDs.remove(id)
-                Log.i(TAG, "onFailure: $id")
+                Log.i(TAG, "onFailure: $id - $t")
             }
 
             override fun onResponse(call: Call<String>, response: Response<String>) {

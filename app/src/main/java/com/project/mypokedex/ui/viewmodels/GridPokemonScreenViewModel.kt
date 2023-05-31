@@ -15,10 +15,12 @@ class GridPokemonScreenViewModel : ViewModel() {
         MutableStateFlow(GridPokemonScreenStateHolder())
     val uiState get() = _uiState.asStateFlow()
 
+    private val requestNumber = 20
+
     init {
-        PokemonRepository.getPokemon(1)
-        PokemonRepository.getPokemon(2)
-        PokemonRepository.getPokemon(3)
+        repeat(requestNumber + 1) {
+            PokemonRepository.getPokemon(it)
+        }
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -36,9 +38,11 @@ class GridPokemonScreenViewModel : ViewModel() {
     }
 
     private fun onScroll(id: Int) {
-        PokemonRepository.getPokemon(id + 3)
-        PokemonRepository.getPokemon(id + 6)
-        PokemonRepository.getPokemon(id + 9)
+        if (id % requestNumber == 0) {
+            repeat(requestNumber + 1) {
+                PokemonRepository.getPokemon(it + id)
+            }
+        }
     }
 
 }
