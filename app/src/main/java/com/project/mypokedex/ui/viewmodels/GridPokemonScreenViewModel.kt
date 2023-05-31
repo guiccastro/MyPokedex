@@ -37,7 +37,7 @@ class GridPokemonScreenViewModel : ViewModel() {
         viewModelScope.launch {
             PokemonRepository.pokemonList.collect {
                 _uiState.value = _uiState.value.copy(
-                    pokemonList = it
+                    pokemonList = filterList(_uiState.value.searchText)
                 )
             }
         }
@@ -75,6 +75,7 @@ class GridPokemonScreenViewModel : ViewModel() {
 
     private fun filterList(text: String): List<Pokemon> {
         val id = text.toIntOrNull() ?: ""
+        PokemonRepository.getPokemon(text.toIntOrNull() ?: 0)
         return PokemonRepository.pokemonList.value.filter {
             it.id == id ||
                     it.name.contains(text) ||
