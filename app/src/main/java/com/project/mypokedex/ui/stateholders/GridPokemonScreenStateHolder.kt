@@ -4,6 +4,7 @@ import com.project.mypokedex.model.Pokemon
 
 data class GridPokemonScreenStateHolder(
     val pokemonList: List<Pokemon> = emptyList(),
+    val showList: Boolean = true,
     val onScroll: (Int) -> Unit = {},
     val onSearchClick: () -> Unit = {},
     val isSearching: Boolean = true,

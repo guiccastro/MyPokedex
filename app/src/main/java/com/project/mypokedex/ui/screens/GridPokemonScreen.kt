@@ -10,15 +10,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -136,8 +135,8 @@ fun GridPokemonScreen(state: GridPokemonScreenStateHolder = GridPokemonScreenSta
 
             Surface(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp, top = 10.dp)
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp)
                     .border((0.3).dp, BorderBlackShadow, RoundedCornerShape(16.dp)),
                 shadowElevation = 10.dp,
                 color = HomeScreenCard,
@@ -145,7 +144,7 @@ fun GridPokemonScreen(state: GridPokemonScreenStateHolder = GridPokemonScreenSta
             ) {
                 Surface(
                     modifier = Modifier
-                        .padding(vertical = 10.dp, horizontal = 5.dp)
+                        .padding(vertical = 10.dp, horizontal = 10.dp)
                         .innerShadow(
                             color = Color.Black,
                             cornersRadius = 14.dp,
@@ -154,17 +153,24 @@ fun GridPokemonScreen(state: GridPokemonScreenStateHolder = GridPokemonScreenSta
                     color = MainBlue,
                     shape = RoundedCornerShape(14.dp)
                 ) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
-                        contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
+                    AnimatedVisibility(
+                        visible = state.showList,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
                     ) {
-                        items(state.pokemonList) { pokemon ->
-                            state.onScroll(pokemon.id)
-                            PokemonGridCard(pokemon = pokemon)
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(3),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalArrangement = Arrangement.spacedBy(20.dp),
+                            contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
+                        ) {
+                            items(state.pokemonList) { pokemon ->
+                                state.onScroll(pokemon.id)
+                                PokemonGridCard(pokemon = pokemon)
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -177,7 +183,6 @@ fun SearchPokemon(state: GridPokemonScreenStateHolder) {
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp, top = 10.dp)
             .fillMaxWidth()
-            .height(46.dp)
             .background(Green, RoundedCornerShape(25))
             .border(1.dp, BorderBlack, RoundedCornerShape(25)),
         value = state.searchText,
@@ -194,7 +199,7 @@ fun SearchPokemon(state: GridPokemonScreenStateHolder) {
         },
         placeholder = {
             Text(
-                text = "Search by ID",
+                text = "Search",
                 style = PokemonGB,
                 fontSize = 12.sp,
                 maxLines = 1
@@ -208,11 +213,18 @@ fun SearchPokemon(state: GridPokemonScreenStateHolder) {
             focusedTextColor = BorderBlack,
             disabledTextColor = BorderBlack,
             errorTextColor = BorderBlack,
-            unfocusedTextColor = BorderBlack
+            unfocusedTextColor = BorderBlack,
+            focusedIndicatorColor = BorderBlack,
+            focusedLeadingIconColor = BorderBlack,
+            cursorColor = BorderBlack,
+            selectionColors = TextSelectionColors(BorderBlack, BorderBlackShadow)
         ),
         textStyle = PokemonGB.copy(fontSize = 12.sp),
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+        keyboardOptions = KeyboardOptions(
+            autoCorrect = false,
+            keyboardType = KeyboardType.Password
+        )
     )
 
 }
