@@ -2,6 +2,7 @@ package com.project.mypokedex.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GridPokemonScreenStateHolder
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,10 @@ class GridPokemonScreenViewModel : ViewModel() {
 
         _uiState.update { currentState ->
             currentState.copy(
-                onScroll = { onScroll(it) }
+                onScroll = { onScroll(it) },
+                onSearchClick = { onSearchClick() },
+                isSearching = false,
+                onSearchChange = { onSearchChange(it) }
             )
         }
 
@@ -42,6 +46,30 @@ class GridPokemonScreenViewModel : ViewModel() {
             repeat(requestNumber + 1) {
                 PokemonRepository.getPokemon(it + id)
             }
+        }
+    }
+
+    private fun onSearchClick() {
+        _uiState.value = _uiState.value.copy(
+            isSearching = !_uiState.value.isSearching,
+            searchText = "",
+            pokemonList = PokemonRepository.pokemonList.value
+        )
+    }
+
+    private fun onSearchChange(newText: String) {
+        _uiState.value = _uiState.value.copy(
+            searchText = newText,
+            pokemonList = filterList(newText)
+        )
+    }
+
+    private fun filterList(text: String): List<Pokemon> {
+        val id = text.toIntOrNull() ?: ""
+        return PokemonRepository.pokemonList.value.filter {
+            it.id == id ||
+                    it.name.contains(text) ||
+                    it.types.toString().contains(text)
         }
     }
 
