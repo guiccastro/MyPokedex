@@ -43,7 +43,7 @@ class GridPokemonScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            delay(500)
+            delay(1000)
             _uiState.value = _uiState.value.copy(
                 showList = true,
             )
@@ -67,20 +67,28 @@ class GridPokemonScreenViewModel : ViewModel() {
     }
 
     private fun onSearchChange(newText: String) {
+        search(newText)
         _uiState.value = _uiState.value.copy(
             searchText = newText,
             pokemonList = filterList(newText)
         )
     }
 
+    private fun search(text: String) {
+        val id = text.toIntOrNull() ?: 0
+        PokemonRepository.getPokemon(id)
+        PokemonRepository.searchBasicKey(text)
+    }
+
     private fun filterList(text: String): List<Pokemon> {
-        val id = text.toIntOrNull() ?: ""
-        PokemonRepository.getPokemon(text.toIntOrNull() ?: 0)
+        val id = text.toIntOrNull() ?: 0
         return PokemonRepository.pokemonList.value.filter {
             it.id == id ||
                     it.name.contains(text) ||
                     it.types.toString().lowercase().contains(text)
         }
+
+
     }
 
 }

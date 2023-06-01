@@ -22,10 +22,58 @@ object PokemonRepository {
 
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
 
+    private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
+    private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
+
     private val requestedByIDs: HashMap<Int, Boolean> = HashMap()
     private val requestedByNames: HashMap<String, Boolean> = HashMap()
 
     private val TAG = PokemonRepository::class.java.simpleName
+
+    init {
+        getBasicKeys()
+    }
+
+    private fun getBasicKeys() {
+        client.getBasicKeys().enqueue(
+            object : Callback<String> {
+                override fun onResponse(call: Call<String>, response: Response<String>) {
+                    response.body()?.let {
+                        val jsonObj = Json.parseToJsonElement(it).jsonObject
+                        parseBasicKeys(jsonObj)
+                    }
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+    }
+
+    private fun parseBasicKeys(info: JsonObject) {
+        val keyList = ArrayList<Pair<String, Int>>()
+        info["results"]?.jsonArray?.forEach {
+            val name = it.jsonObject["name"]?.jsonPrimitive?.content ?: return
+            val url = it.jsonObject["url"]?.jsonPrimitive?.content ?: return
+            val id = url.split("/").dropLast(1).last().toInt()
+
+            keyList.add(Pair(name, id))
+        }
+        pokemonBasicKeyID = keyList.associate { it.second to it.first }
+        pokemonBasicKeyName = keyList.associate { it.first to it.second }
+    }
+
+    fun searchBasicKey(name: String) {
+        pokemonBasicKeyName.keys.forEach { nameKey ->
+            if (nameKey.contains(name)) {
+                pokemonBasicKeyName[nameKey]?.let { id ->
+                    getPokemon(id)
+                }
+            }
+        }
+    }
 
     private fun isAlreadyRequested(id: Int): Boolean {
         requestedByIDs[id]?.let {
@@ -47,11 +95,6 @@ object PokemonRepository {
 
         Log.i(TAG, "requestPokemon: $id")
         client.getPokemon(id).enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                requestedByIDs.remove(id)
-                Log.i(TAG, "onFailure: $id - $t")
-            }
-
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 response.body()?.let { pokemon ->
                     val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
@@ -59,6 +102,11 @@ object PokemonRepository {
                     requestedByIDs.remove(id)
                     Log.i(TAG, "onResponse: $id")
                 }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                requestedByIDs.remove(id)
+                Log.i(TAG, "onFailure: $id - $t")
             }
         })
     }
@@ -69,11 +117,6 @@ object PokemonRepository {
 
         Log.i(TAG, "requestPokemon: $name")
         client.getPokemon(name).enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                requestedByNames.remove(name)
-                Log.i(TAG, "onFailure: $name")
-            }
-
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 response.body()?.let { pokemon ->
                     val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
@@ -81,6 +124,11 @@ object PokemonRepository {
                     requestedByNames.remove(name)
                     Log.i(TAG, "onResponse: $name")
                 }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                requestedByNames.remove(name)
+                Log.i(TAG, "onFailure: $name")
             }
         })
     }
