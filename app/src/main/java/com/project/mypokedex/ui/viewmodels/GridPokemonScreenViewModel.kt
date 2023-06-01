@@ -43,6 +43,14 @@ class GridPokemonScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
+            PokemonRepository.isRequesting.collect {
+                _uiState.value = _uiState.value.copy(
+                    isRequesting = it
+                )
+            }
+        }
+
+        viewModelScope.launch {
             delay(1000)
             _uiState.value = _uiState.value.copy(
                 showList = true,
@@ -87,8 +95,6 @@ class GridPokemonScreenViewModel : ViewModel() {
                     it.name.contains(text) ||
                     it.types.toString().lowercase().contains(text)
         }
-
-
     }
 
 }

@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -168,6 +169,16 @@ fun GridPokemonScreen(state: GridPokemonScreenStateHolder = GridPokemonScreenSta
                                 state.onScroll(pokemon.id)
                                 PokemonGridCard(pokemon = pokemon)
                             }
+
+                            if (state.isRequesting) {
+                                item {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier
+                                            .padding(40.dp),
+                                        color = BorderBlack
+                                    )
+                                }
+                            }
                         }
                     }
 
@@ -234,7 +245,7 @@ fun SearchPokemon(state: GridPokemonScreenStateHolder) {
 fun GridPokemonScreenPreview() {
     MyPokedexTheme {
         Surface {
-            GridPokemonScreen(GridPokemonScreenStateHolder(pokemonList = listPokemons))
+            GridPokemonScreen(GridPokemonScreenStateHolder(pokemonList = listPokemons, isRequesting = true))
         }
     }
 }

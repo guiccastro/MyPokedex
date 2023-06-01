@@ -21,6 +21,7 @@ object PokemonRepository {
     private val client = PokemonClient(CircuitBreakerConfiguration()).getClient()
 
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
+    val isRequesting: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
     private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
@@ -94,18 +95,21 @@ object PokemonRepository {
         requestedByIDs[id] = true
 
         Log.i(TAG, "requestPokemon: $id")
+        isRequesting.value = true
         client.getPokemon(id).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 response.body()?.let { pokemon ->
                     val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
                     parseAndSave(jsonObj)
                     requestedByIDs.remove(id)
+                    isRequesting.value = false
                     Log.i(TAG, "onResponse: $id")
                 }
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
                 requestedByIDs.remove(id)
+                isRequesting.value = false
                 Log.i(TAG, "onFailure: $id - $t")
             }
         })
@@ -116,18 +120,21 @@ object PokemonRepository {
         requestedByNames[name] = true
 
         Log.i(TAG, "requestPokemon: $name")
+        isRequesting.value = true
         client.getPokemon(name).enqueue(object : Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 response.body()?.let { pokemon ->
                     val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
                     parseAndSave(jsonObj)
                     requestedByNames.remove(name)
+                    isRequesting.value = false
                     Log.i(TAG, "onResponse: $name")
                 }
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
                 requestedByNames.remove(name)
+                isRequesting.value = false
                 Log.i(TAG, "onFailure: $name")
             }
         })
