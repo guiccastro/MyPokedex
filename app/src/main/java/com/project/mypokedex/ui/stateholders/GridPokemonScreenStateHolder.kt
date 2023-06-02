@@ -9,6 +9,5 @@ data class GridPokemonScreenStateHolder(
     val onSearchClick: () -> Unit = {},
     val isSearching: Boolean = true,
     val searchText: String = "",
-    val onSearchChange: (String) -> Unit = {},
-    val isRequesting: Boolean = false
+    val onSearchChange: (String) -> Unit = {}
 )

@@ -20,10 +20,6 @@ class GridPokemonScreenViewModel : ViewModel() {
     private val requestNumber = 20
 
     init {
-        repeat(requestNumber + 1) {
-            PokemonRepository.getPokemon(it)
-        }
-
         _uiState.update { currentState ->
             currentState.copy(
                 showList = false,
@@ -38,14 +34,6 @@ class GridPokemonScreenViewModel : ViewModel() {
             PokemonRepository.pokemonList.collect {
                 _uiState.value = _uiState.value.copy(
                     pokemonList = filterList(_uiState.value.searchText)
-                )
-            }
-        }
-
-        viewModelScope.launch {
-            PokemonRepository.isRequesting.collect {
-                _uiState.value = _uiState.value.copy(
-                    isRequesting = it
                 )
             }
         }

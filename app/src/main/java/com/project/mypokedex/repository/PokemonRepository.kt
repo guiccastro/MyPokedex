@@ -18,35 +18,48 @@ import retrofit2.Response
 
 object PokemonRepository {
 
-    private val client = PokemonClient(CircuitBreakerConfiguration()).getClient()
-
-    val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
-    val isRequesting: MutableStateFlow<Boolean> = MutableStateFlow(false)
-
-    private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
-    private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
-
-    private val requestedByIDs: HashMap<Int, Boolean> = HashMap()
-    private val requestedByNames: HashMap<String, Boolean> = HashMap()
+    private const val REQUESTS_AT_A_TIME = 20
+    private const val MAX_BASIC_KEY_RETRY = 5
 
     private val TAG = PokemonRepository::class.java.simpleName
+
+    private val client = PokemonClient(CircuitBreakerConfiguration()).getClient()
+
+    private var basicKeyOnFailure = 0
+    private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
+    private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
+    private var totalPokemons = 0
+
+    private val requestPokemons = ArrayList<Int>()
+
+    val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
+
+    var progressRequest = 0
+
 
     init {
         getBasicKeys()
     }
 
     private fun getBasicKeys() {
+        Log.i(TAG, "getBasicKeys: Requesting Basic Keys")
         client.getBasicKeys().enqueue(
             object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     response.body()?.let {
                         val jsonObj = Json.parseToJsonElement(it).jsonObject
                         parseBasicKeys(jsonObj)
+                        request()
+                        Log.i(TAG, "onResponse: Basic Keys")
                     }
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    basicKeyOnFailure++
+                    Log.i(TAG, "onFailure: Basic Keys - Failures: $basicKeyOnFailure")
+                    if (basicKeyOnFailure == MAX_BASIC_KEY_RETRY) {
+                        getBasicKeys()
+                    }
                 }
 
             }
@@ -54,6 +67,8 @@ object PokemonRepository {
     }
 
     private fun parseBasicKeys(info: JsonObject) {
+        totalPokemons = info["count"]?.jsonPrimitive?.content?.toIntOrNull() ?: 0
+
         val keyList = ArrayList<Pair<String, Int>>()
         info["results"]?.jsonArray?.forEach {
             val name = it.jsonObject["name"]?.jsonPrimitive?.content ?: return
@@ -64,80 +79,51 @@ object PokemonRepository {
         }
         pokemonBasicKeyID = keyList.associate { it.second to it.first }
         pokemonBasicKeyName = keyList.associate { it.first to it.second }
+
+        requestPokemons.addAll(pokemonBasicKeyID.keys)
     }
 
-    fun searchBasicKey(name: String) {
-        pokemonBasicKeyName.keys.forEach { nameKey ->
-            if (nameKey.contains(name)) {
-                pokemonBasicKeyName[nameKey]?.let { id ->
-                    getPokemon(id)
-                }
-            }
+    private fun request() {
+        var responseCount = 0
+        val toIndex = if (requestPokemons.size >= REQUESTS_AT_A_TIME) {
+            REQUESTS_AT_A_TIME
+        } else {
+            requestPokemons.size
         }
-    }
+        requestPokemons.subList(0, toIndex).forEach { id ->
+            Log.i(TAG, "requestPokemon: $id")
+            client.getPokemon(id).enqueue(
+                object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        response.body()?.let {
+                            val jsonObj = Json.parseToJsonElement(it).jsonObject
+                            parseAndSave(jsonObj)
+                            calculateProgressRequest()
+                            requestPokemons.remove(id)
+                            responseCount++
+                            if (responseCount == toIndex) {
+                                request()
+                            }
+                            Log.i(TAG, "onResponse: Pokemon - $id")
 
-    private fun isAlreadyRequested(id: Int): Boolean {
-        requestedByIDs[id]?.let {
-            return true
-        }
-        return false
-    }
+                            if (requestPokemons.isEmpty()) {
+                                pokemonList.value =
+                                    pokemonList.value.sortedBy { pokemon -> pokemon.id }
+                                Log.i(TAG, "onResponse: All Pokemons requested correctly!")
+                            }
+                        }
+                    }
 
-    private fun isAlreadyRequested(name: String): Boolean {
-        requestedByNames[name]?.let {
-            return true
-        }
-        return false
-    }
-
-    private fun requestPokemon(id: Int) {
-        if (isAlreadyRequested(id)) return
-        requestedByIDs[id] = true
-
-        Log.i(TAG, "requestPokemon: $id")
-        isRequesting.value = true
-        client.getPokemon(id).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                response.body()?.let { pokemon ->
-                    val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
-                    parseAndSave(jsonObj)
-                    requestedByIDs.remove(id)
-                    isRequesting.value = false
-                    Log.i(TAG, "onResponse: $id")
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Log.i(TAG, "onFailure: Pokemon - $id - $t")
+                        responseCount++
+                        if (responseCount == toIndex) {
+                            request()
+                        }
+                    }
                 }
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                requestedByIDs.remove(id)
-                isRequesting.value = false
-                Log.i(TAG, "onFailure: $id - $t")
-            }
-        })
-    }
-
-    private fun requestPokemon(name: String) {
-        if (isAlreadyRequested(name)) return
-        requestedByNames[name] = true
-
-        Log.i(TAG, "requestPokemon: $name")
-        isRequesting.value = true
-        client.getPokemon(name).enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                response.body()?.let { pokemon ->
-                    val jsonObj = Json.parseToJsonElement(pokemon).jsonObject
-                    parseAndSave(jsonObj)
-                    requestedByNames.remove(name)
-                    isRequesting.value = false
-                    Log.i(TAG, "onResponse: $name")
-                }
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                requestedByNames.remove(name)
-                isRequesting.value = false
-                Log.i(TAG, "onFailure: $name")
-            }
-        })
+            )
+        }
     }
 
     private fun parseAndSave(info: JsonObject) {
@@ -161,25 +147,34 @@ object PokemonRepository {
         ) {
             val newPokemon = Pokemon(id, name, types, image, gif)
             Log.i(TAG, "parseAndSave: $newPokemon")
-            pokemonList.value = (pokemonList.value + newPokemon).sortedBy { it.id }
+            pokemonList.value = (pokemonList.value + newPokemon)
+        }
+    }
+
+    private fun calculateProgressRequest() {
+        progressRequest = (pokemonList.value.size * 100) / totalPokemons
+        Log.i(TAG, "ProgressRequest: $progressRequest%")
+    }
+
+    fun searchBasicKey(name: String) {
+        pokemonBasicKeyName.keys.forEach { nameKey ->
+            if (nameKey.contains(name)) {
+                pokemonBasicKeyName[nameKey]?.let { id ->
+                    getPokemon(id)
+                }
+            }
         }
     }
 
     fun getPokemon(id: Int): Pokemon? {
         return pokemonList.value.find {
             it.id == id
-        } ?: run {
-            requestPokemon(id)
-            null
         }
     }
 
     fun getPokemon(name: String): Pokemon? {
         return pokemonList.value.find {
             it.name == name
-        } ?: run {
-            requestPokemon(name)
-            null
         }
     }
 }
