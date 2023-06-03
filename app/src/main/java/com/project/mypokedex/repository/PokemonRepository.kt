@@ -18,12 +18,12 @@ import retrofit2.Response
 
 object PokemonRepository {
 
-    private const val REQUESTS_AT_A_TIME = 20
+    private const val REQUESTS_AT_A_TIME = 100
     private const val MAX_BASIC_KEY_RETRY = 5
 
     private val TAG = PokemonRepository::class.java.simpleName
 
-    private val client = PokemonClient(CircuitBreakerConfiguration()).getClient()
+    private val client get() = PokemonClient(CircuitBreakerConfiguration()).getClient()
 
     private var basicKeyOnFailure = 0
     private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
