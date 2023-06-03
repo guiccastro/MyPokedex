@@ -34,7 +34,7 @@ object PokemonRepository {
 
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
 
-    var progressRequest = 0
+    var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
 
 
     init {
@@ -152,7 +152,7 @@ object PokemonRepository {
     }
 
     private fun calculateProgressRequest() {
-        progressRequest = (pokemonList.value.size * 100) / totalPokemons
+        progressRequest.value = pokemonList.value.size.toFloat() / totalPokemons.toFloat()
         Log.i(TAG, "ProgressRequest: $progressRequest%")
     }
 

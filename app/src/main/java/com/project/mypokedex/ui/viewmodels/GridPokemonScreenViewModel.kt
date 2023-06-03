@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 class GridPokemonScreenViewModel : ViewModel() {
 
@@ -17,13 +18,12 @@ class GridPokemonScreenViewModel : ViewModel() {
         MutableStateFlow(GridPokemonScreenStateHolder())
     val uiState get() = _uiState.asStateFlow()
 
-    private val requestNumber = 20
+    private val downloadProgressFormatter = DecimalFormat("#.##")
 
     init {
         _uiState.update { currentState ->
             currentState.copy(
                 showList = false,
-                onScroll = { onScroll(it) },
                 onSearchClick = { onSearchClick() },
                 isSearching = false,
                 onSearchChange = { onSearchChange(it) }
@@ -39,18 +39,20 @@ class GridPokemonScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
+            PokemonRepository.progressRequest.collect {
+                _uiState.value = _uiState.value.copy(
+                    downloadProgress = it,
+                    formattedDownloadProgress = "${downloadProgressFormatter.format(it * 100)}%",
+                    isDownloading = it < 1F
+                )
+            }
+        }
+
+        viewModelScope.launch {
             delay(1000)
             _uiState.value = _uiState.value.copy(
                 showList = true,
             )
-        }
-    }
-
-    private fun onScroll(id: Int) {
-        if (id % requestNumber == 0) {
-            repeat(requestNumber + 1) {
-                PokemonRepository.getPokemon(it + id)
-            }
         }
     }
 
@@ -63,17 +65,10 @@ class GridPokemonScreenViewModel : ViewModel() {
     }
 
     private fun onSearchChange(newText: String) {
-        search(newText)
         _uiState.value = _uiState.value.copy(
             searchText = newText,
             pokemonList = filterList(newText)
         )
-    }
-
-    private fun search(text: String) {
-        val id = text.toIntOrNull() ?: 0
-        PokemonRepository.getPokemon(id)
-        PokemonRepository.searchBasicKey(text)
     }
 
     private fun filterList(text: String): List<Pokemon> {
