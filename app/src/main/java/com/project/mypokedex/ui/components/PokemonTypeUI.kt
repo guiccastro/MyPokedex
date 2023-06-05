@@ -14,14 +14,15 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.PokemonType
+import com.project.mypokedex.ui.theme.PokemonGB
 
 @Composable
 fun PokemonTypeToUI(
     pokemonType: PokemonType,
     modifier: Modifier = Modifier,
-    fontSize: TextUnit = 8.sp
+    fontSize: TextUnit = 6.sp
 ) {
-    val cornerRoundWeight = 3 / 2
+    val cornerRoundWeight = 3 / 4
     val cornerShape = RoundedCornerShape((fontSize.value * cornerRoundWeight).dp)
     Text(
         modifier = modifier
@@ -30,13 +31,13 @@ fun PokemonTypeToUI(
             .background(Color.Black.copy(alpha = 0.5f), cornerShape)
             .padding(
                 horizontal = (fontSize.value * 2 / 3).dp,
-                vertical = (fontSize.value / 17).dp
+                vertical = (fontSize.value / 2).dp
             ),
         text = pokemonType.toString().uppercase(),
         color = pokemonType.getColor(),
         fontSize = fontSize,
-        fontWeight = FontWeight(500),
-        letterSpacing = (0.2).sp
+        fontWeight = FontWeight(1000),
+        style = PokemonGB
     )
 }
 

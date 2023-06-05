@@ -152,6 +152,16 @@ fun PokemonGridCard(pokemon: Pokemon) {
                     textStyle = PokemonGB,
                     maxLines = 1
                 )
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    items(pokemon.types) {
+                        PokemonTypeToUI(pokemonType = it)
+                    }
+                }
+
                 SubcomposeAsyncImage(
                     model = pokemon.getGifOrImage(),
                     contentDescription = null,
