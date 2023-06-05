@@ -141,17 +141,16 @@ fun PokemonGridCard(pokemon: Pokemon) {
                     textAlign = TextAlign.Center,
                     style = PokemonGB
                 )
-                Text(
+                ResponsiveText(
                     text = pokemon.formattedName(),
-                    fontSize = 10.sp,
+                    targetTextSizeHeight = 10.sp,
                     fontWeight = FontWeight(400),
                     color = Color.DarkGray,
                     modifier = Modifier
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    style = PokemonGB,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    textStyle = PokemonGB,
+                    maxLines = 1
                 )
                 SubcomposeAsyncImage(
                     model = pokemon.getGifOrImage(),

@@ -386,7 +386,8 @@ fun GridPokemonScreenPreview() {
                 GridPokemonScreenStateHolder(
                     pokemonList = listPokemons,
                     downloadProgress = 1F,
-                    formattedDownloadProgress = "100.00%"
+                    formattedDownloadProgress = "100.00%",
+                    isDownloading = false
                 )
             )
         }
