@@ -1,7 +1,11 @@
 package com.project.mypokedex.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
 class Pokemon(
-    val id: Int,
+    @PrimaryKey val id: Int,
     val name: String,
     val types: List<PokemonType>,
     val image: String,

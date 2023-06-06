@@ -80,4 +80,8 @@ dependencies {
     // Resilience4j-Retrofit: https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-retrofit
     implementation 'io.github.resilience4j:resilience4j-retrofit:1.7.1'
 
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
 }
