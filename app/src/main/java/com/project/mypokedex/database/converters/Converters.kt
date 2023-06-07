@@ -7,7 +7,7 @@ class Converters {
 
     @TypeConverter
     fun pokemonTypeToInt(types: List<PokemonType>): String {
-        return types.joinToString("|")
+        return types.map { it.id }.joinToString("|")
     }
 
     @TypeConverter

@@ -6,7 +6,10 @@ import com.project.mypokedex.client.PokemonClient
 import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.contentOrNull
@@ -21,11 +24,11 @@ import javax.inject.Inject
 class PokemonRepository @Inject constructor(
     private val pokemonDao: PokemonDao
 ) {
-
-    private val REQUESTS_AT_A_TIME = 100
-    private val MAX_BASIC_KEY_RETRY = 5
-
-    private val TAG = PokemonRepository::class.java.simpleName
+    companion object {
+        private const val REQUESTS_AT_A_TIME = 100
+        private const val MAX_BASIC_KEY_RETRY = 5
+        private const val TAG = "PokemonRepository"
+    }
 
     private val client get() = PokemonClient(CircuitBreakerConfiguration()).getClient()
 
@@ -40,9 +43,16 @@ class PokemonRepository @Inject constructor(
 
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
 
-
     init {
-        getBasicKeys()
+        CoroutineScope(IO).launch {
+            val pokemonListDao = pokemonDao.getAll()
+            if (pokemonListDao.isEmpty()) {
+                getBasicKeys()
+            } else {
+                pokemonList.value = pokemonListDao.sortedBy { it.id }
+                progressRequest.value = 1F
+            }
+        }
     }
 
     private fun getBasicKeys() {
@@ -152,6 +162,10 @@ class PokemonRepository @Inject constructor(
             val newPokemon = Pokemon(id, name, types, image, gif)
             Log.i(TAG, "parseAndSave: $newPokemon")
             pokemonList.value = (pokemonList.value + newPokemon)
+
+            CoroutineScope(IO).launch {
+                pokemonDao.insert(newPokemon)
+            }
         }
     }
 
