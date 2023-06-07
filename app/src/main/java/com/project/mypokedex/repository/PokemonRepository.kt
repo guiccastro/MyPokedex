@@ -3,6 +3,7 @@ package com.project.mypokedex.repository
 import android.util.Log
 import com.project.mypokedex.client.CircuitBreakerConfiguration
 import com.project.mypokedex.client.PokemonClient
+import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,11 +16,14 @@ import kotlinx.serialization.json.jsonPrimitive
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-object PokemonRepository {
+class PokemonRepository @Inject constructor(
+    private val pokemonDao: PokemonDao
+) {
 
-    private const val REQUESTS_AT_A_TIME = 100
-    private const val MAX_BASIC_KEY_RETRY = 5
+    private val REQUESTS_AT_A_TIME = 100
+    private val MAX_BASIC_KEY_RETRY = 5
 
     private val TAG = PokemonRepository::class.java.simpleName
 

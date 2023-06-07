@@ -4,13 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.SinglePokemonScreenUIState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class SinglePokemonScreenViewModel : ViewModel() {
+@HiltViewModel
+class SinglePokemonScreenViewModel @Inject constructor(
+    private val repository: PokemonRepository
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<SinglePokemonScreenUIState> =
         MutableStateFlow(SinglePokemonScreenUIState())
@@ -19,7 +24,7 @@ class SinglePokemonScreenViewModel : ViewModel() {
     private val formatter = DecimalFormat("#")
 
     init {
-        PokemonRepository.getPokemon(1)
+        repository.getPokemon(1)
         _uiState.update { currentState ->
             currentState.copy(
                 onSearchChange = {
@@ -29,7 +34,7 @@ class SinglePokemonScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            PokemonRepository.pokemonList.collect {
+            repository.pokemonList.collect {
                 _uiState.value = _uiState.value.copy(
                     pokemonList = it
                 )
@@ -59,7 +64,7 @@ class SinglePokemonScreenViewModel : ViewModel() {
 
     private fun searchPokemonById(id: Int?) {
         id?.let {
-            PokemonRepository.getPokemon(id)
+            repository.getPokemon(id)
         }
     }
 }

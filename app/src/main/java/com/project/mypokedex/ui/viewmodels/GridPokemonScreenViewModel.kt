@@ -5,14 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GridPokemonScreenStateHolder
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class GridPokemonScreenViewModel : ViewModel() {
+@HiltViewModel
+class GridPokemonScreenViewModel @Inject constructor(
+    private val repository: PokemonRepository
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<GridPokemonScreenStateHolder> =
         MutableStateFlow(GridPokemonScreenStateHolder())
@@ -31,7 +36,7 @@ class GridPokemonScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            PokemonRepository.pokemonList.collect {
+            repository.pokemonList.collect {
                 _uiState.value = _uiState.value.copy(
                     pokemonList = filterList(_uiState.value.searchText)
                 )
@@ -39,7 +44,7 @@ class GridPokemonScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            PokemonRepository.progressRequest.collect {
+            repository.progressRequest.collect {
                 _uiState.value = _uiState.value.copy(
                     downloadProgress = it,
                     formattedDownloadProgress = "${downloadProgressFormatter.format(it * 100)}%",
@@ -60,7 +65,7 @@ class GridPokemonScreenViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(
             isSearching = !_uiState.value.isSearching,
             searchText = "",
-            pokemonList = PokemonRepository.pokemonList.value
+            pokemonList = repository.pokemonList.value
         )
     }
 
@@ -73,7 +78,7 @@ class GridPokemonScreenViewModel : ViewModel() {
 
     private fun filterList(text: String): List<Pokemon> {
         val id = text.toIntOrNull() ?: 0
-        return PokemonRepository.pokemonList.value.filter {
+        return repository.pokemonList.value.filter {
             it.id == id ||
                     it.name.contains(text) ||
                     it.types.toString().lowercase().contains(text)
