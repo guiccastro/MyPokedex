@@ -4,8 +4,9 @@ import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import java.time.Duration
+import javax.inject.Inject
 
-class CircuitBreakerConfiguration {
+class CircuitBreakerConfiguration @Inject constructor(){
 
     private fun getConfiguration(): CircuitBreakerConfig = CircuitBreakerConfig.custom()
         .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)

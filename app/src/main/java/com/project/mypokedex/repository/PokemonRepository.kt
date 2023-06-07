@@ -1,13 +1,13 @@
 package com.project.mypokedex.repository
 
 import android.util.Log
-import com.project.mypokedex.client.CircuitBreakerConfiguration
 import com.project.mypokedex.client.PokemonClient
 import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -22,15 +22,14 @@ import retrofit2.Response
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
-    private val pokemonDao: PokemonDao
+    private val pokemonDao: PokemonDao,
+    private val client: PokemonClient
 ) {
     companion object {
         private const val REQUESTS_AT_A_TIME = 100
         private const val MAX_BASIC_KEY_RETRY = 5
         private const val TAG = "PokemonRepository"
     }
-
-    private val client get() = PokemonClient(CircuitBreakerConfiguration()).getClient()
 
     private var basicKeyOnFailure = 0
     private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
@@ -46,11 +45,13 @@ class PokemonRepository @Inject constructor(
     init {
         CoroutineScope(IO).launch {
             val pokemonListDao = pokemonDao.getAll()
-            if (pokemonListDao.isEmpty()) {
-                getBasicKeys()
-            } else {
-                pokemonList.value = pokemonListDao.sortedBy { it.id }
-                progressRequest.value = 1F
+            CoroutineScope(Main).launch {
+                if (pokemonListDao.isEmpty()) {
+                    getBasicKeys()
+                } else {
+                    pokemonList.value = pokemonListDao.sortedBy { it.id }
+                    progressRequest.value = 1F
+                }
             }
         }
     }

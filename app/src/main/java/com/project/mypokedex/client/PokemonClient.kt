@@ -1,26 +1,18 @@
 package com.project.mypokedex.client
 
-import io.github.resilience4j.retrofit.CircuitBreakerCallAdapter
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
 
-class PokemonClient(
-    private val circuitBreakerConfiguration: CircuitBreakerConfiguration
-) {
-    companion object {
-        private const val MAIN_URL = "https://pokeapi.co"
-    }
+interface PokemonClient {
 
-    private fun getRetrofitInstance(): Retrofit {
-        return Retrofit.Builder()
-            .addCallAdapterFactory(CircuitBreakerCallAdapter.of(circuitBreakerConfiguration.getCircuitBreaker()))
-            .baseUrl(MAIN_URL)
-            //.addConverterFactory(GsonConverterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-    }
+    @GET("/api/v2/pokemon/{id}")
+    fun getPokemon(@Path("id") id: Int): Call<String>
 
-    fun getClient(): Endpoint {
-        return getRetrofitInstance().create(Endpoint::class.java)
-    }
+    @GET("/api/v2/pokemon/{id}")
+    fun getPokemon(@Path("id") name: String): Call<String>
+
+    @GET("/api/v2/pokemon?limit=100000&offset=0")
+    fun getBasicKeys(): Call<String>
+
 }
