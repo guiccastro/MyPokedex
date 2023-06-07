@@ -245,7 +245,7 @@ fun AnimatedEnter(state: GridPokemonScreenStateHolder) {
 fun TopBar(state: GridPokemonScreenStateHolder) {
     TopAppBar(
         modifier = Modifier
-            .bottomBorder((0.3).dp, BorderBlack)
+            .bottomBorder(1.dp, BorderBlack)
             .shadow(10.dp),
         title = {
             Text(
@@ -283,25 +283,29 @@ fun Screen(state: GridPokemonScreenStateHolder) {
             )
         }
 
+        val externalCorner = 8.dp
+        val internalCorner = 6.dp
+        val externalShape = RoundedCornerShape(externalCorner)
+        val internalShape = RoundedCornerShape(internalCorner)
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp)
-                .border((0.3).dp, BorderBlackShadow, RoundedCornerShape(16.dp)),
+                .border((0.3).dp, BorderBlackShadow, externalShape),
             shadowElevation = 10.dp,
             color = HomeScreenCard,
-            shape = RoundedCornerShape(16.dp)
+            shape = externalShape
         ) {
             Surface(
                 modifier = Modifier
-                    .padding(vertical = 10.dp, horizontal = 10.dp)
+                    .padding(all = 10.dp)
                     .innerShadow(
                         color = Color.Black,
-                        cornersRadius = 14.dp,
+                        cornersRadius = internalCorner,
                         blur = 5.dp
                     ),
                 color = MainBlue,
-                shape = RoundedCornerShape(14.dp)
+                shape = internalShape
             ) {
                 AnimatedVisibility(
                     visible = state.showList,
@@ -327,17 +331,18 @@ fun Screen(state: GridPokemonScreenStateHolder) {
 
 @Composable
 fun SearchPokemon(state: GridPokemonScreenStateHolder) {
+    val shape = RoundedCornerShape(4.dp)
     OutlinedTextField(
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp, top = 10.dp)
             .fillMaxWidth()
-            .background(Green, RoundedCornerShape(25))
-            .border(1.dp, BorderBlack, RoundedCornerShape(25)),
+            .background(Green, shape)
+            .border(1.dp, BorderBlack, shape),
         value = state.searchText,
         onValueChange = {
             state.onSearchChange(it)
         },
-        shape = RoundedCornerShape(25),
+        shape = shape,
         leadingIcon = {
             Image(
                 imageVector = Icons.Default.Search,
