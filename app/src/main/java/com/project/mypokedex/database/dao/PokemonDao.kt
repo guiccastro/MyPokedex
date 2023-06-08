@@ -19,7 +19,7 @@ interface PokemonDao {
     @Query("DELETE FROM Pokemon WHERE id = :id")
     fun delete(id: Int)
 
-    @Query("SELECT * FROM Pokemon")
+    @Query("SELECT * FROM Pokemon ORDER BY id")
     fun getAll(): List<Pokemon>
 
 }

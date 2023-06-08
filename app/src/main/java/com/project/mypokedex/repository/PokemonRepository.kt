@@ -7,7 +7,6 @@ import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -44,15 +43,13 @@ class PokemonRepository @Inject constructor(
 
     init {
         CoroutineScope(IO).launch {
-            val pokemonListDao = pokemonDao.getAll()
-            CoroutineScope(Main).launch {
-                if (pokemonListDao.isEmpty()) {
-                    getBasicKeys()
-                } else {
-                    pokemonList.value = pokemonListDao.sortedBy { it.id }
-                    progressRequest.value = 1F
-                }
-            }
+            pokemonList.value = pokemonDao.getAll()
+        }
+
+        if (pokemonList.value.isEmpty()) {
+            getBasicKeys()
+        } else {
+            progressRequest.value = 1F
         }
     }
 
