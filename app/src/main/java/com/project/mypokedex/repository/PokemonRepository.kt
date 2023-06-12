@@ -1,7 +1,9 @@
 package com.project.mypokedex.repository
 
 import android.util.Log
+import com.project.mypokedex.client.BasicKeysResponse
 import com.project.mypokedex.client.PokemonClient
+import com.project.mypokedex.client.PokemonResponse
 import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
@@ -9,19 +11,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
-    private val pokemonDao: PokemonDao,
+    private val dao: PokemonDao,
     private val client: PokemonClient
 ) {
     companion object {
@@ -30,7 +23,6 @@ class PokemonRepository @Inject constructor(
         private const val TAG = "PokemonRepository"
     }
 
-    private var basicKeyOnFailure = 0
     private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
     private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
     private var totalPokemons = 0
@@ -43,127 +35,105 @@ class PokemonRepository @Inject constructor(
 
     init {
         CoroutineScope(IO).launch {
-            pokemonList.value = pokemonDao.getAll()
-        }
+            pokemonList.value = dao.getAll()
 
-        if (pokemonList.value.isEmpty()) {
-            getBasicKeys()
-        } else {
-            progressRequest.value = 1F
-        }
-    }
-
-    private fun getBasicKeys() {
-        Log.i(TAG, "getBasicKeys: Requesting Basic Keys")
-        client.getBasicKeys().enqueue(
-            object : Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    response.body()?.let {
-                        val jsonObj = Json.parseToJsonElement(it).jsonObject
-                        parseBasicKeys(jsonObj)
-                        request()
-                        Log.i(TAG, "onResponse: Basic Keys")
-                    }
-                }
-
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    basicKeyOnFailure++
-                    Log.i(TAG, "onFailure: Basic Keys - Failures: $basicKeyOnFailure")
-                    if (basicKeyOnFailure == MAX_BASIC_KEY_RETRY) {
-                        getBasicKeys()
-                    }
-                }
-
+            if (pokemonList.value.isEmpty()) {
+                getBasicKeys()
+            } else {
+                progressRequest.value = 1F
             }
-        )
+        }
     }
 
-    private fun parseBasicKeys(info: JsonObject) {
-        totalPokemons = info["count"]?.jsonPrimitive?.content?.toIntOrNull() ?: 0
+    private suspend fun getBasicKeys() {
+        var onFailureCount = 0
+
+        try {
+            Log.i(TAG, "getBasicKeys: Requesting Basic Keys")
+            val basicKeys = client.getBasicKeys()
+            Log.i(TAG, "onResponse: Basic Keys")
+
+            parseBasicKeys(basicKeys)
+            requestAllPokemons()
+        } catch (e: Exception) {
+            onFailureCount++
+            Log.i(TAG, "onFailure: Basic Keys - Failures: $onFailureCount - $e")
+            if (onFailureCount < MAX_BASIC_KEY_RETRY) {
+                getBasicKeys()
+            }
+        }
+    }
+
+    private fun parseBasicKeys(basicKeys: BasicKeysResponse) {
+        totalPokemons = basicKeys.count
 
         val keyList = ArrayList<Pair<String, Int>>()
-        info["results"]?.jsonArray?.forEach {
-            val name = it.jsonObject["name"]?.jsonPrimitive?.content ?: return
-            val url = it.jsonObject["url"]?.jsonPrimitive?.content ?: return
-            val id = url.split("/").dropLast(1).last().toInt()
-
+        basicKeys.results.forEach { keyResponse ->
+            val name = keyResponse.name
+            val id = keyResponse.url.split("/").dropLast(1).last().toInt()
             keyList.add(Pair(name, id))
         }
+
         pokemonBasicKeyID = keyList.associate { it.second to it.first }
         pokemonBasicKeyName = keyList.associate { it.first to it.second }
 
         requestPokemons.addAll(pokemonBasicKeyID.keys)
     }
 
-    private fun request() {
+    private suspend fun requestAllPokemons() {
         var responseCount = 0
         val toIndex = if (requestPokemons.size >= REQUESTS_AT_A_TIME) {
             REQUESTS_AT_A_TIME
         } else {
             requestPokemons.size
         }
+
         requestPokemons.subList(0, toIndex).forEach { id ->
-            Log.i(TAG, "requestPokemon: $id")
-            client.getPokemon(id).enqueue(
-                object : Callback<String> {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        response.body()?.let {
-                            val jsonObj = Json.parseToJsonElement(it).jsonObject
-                            parseAndSave(jsonObj)
-                            calculateProgressRequest()
-                            requestPokemons.remove(id)
-                            responseCount++
-                            if (responseCount == toIndex) {
-                                request()
-                            }
-                            Log.i(TAG, "onResponse: Pokemon - $id")
-
-                            if (requestPokemons.isEmpty()) {
-                                pokemonList.value =
-                                    pokemonList.value.sortedBy { pokemon -> pokemon.id }
-                                Log.i(TAG, "onResponse: All Pokemons requested correctly!")
-                            }
-                        }
+            CoroutineScope(IO).launch {
+                try {
+                    Log.i(TAG, "requestPokemon: $id")
+                    val pokemon = client.getPokemon(id)
+                    parseAndSavePokemon(pokemon)
+                    calculateProgressRequest()
+                    requestPokemons.remove(id)
+                    responseCount++
+                    if (responseCount == toIndex) {
+                        requestAllPokemons()
                     }
+                    Log.i(TAG, "onResponse: Pokemon - $id")
 
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.i(TAG, "onFailure: Pokemon - $id - $t")
-                        responseCount++
-                        if (responseCount == toIndex) {
-                            request()
-                        }
+                    if (requestPokemons.isEmpty()) {
+                        pokemonList.value = pokemonList.value.sortedBy { it.id }
+                        Log.i(TAG, "onResponse: All Pokemons requested correctly!")
+                    }
+                } catch (e: Exception) {
+                    Log.i(TAG, "onFailure: Pokemon - $id - $e")
+                    responseCount++
+                    if (responseCount == toIndex) {
+                        requestAllPokemons()
                     }
                 }
-            )
+            }
         }
     }
 
-    private fun parseAndSave(info: JsonObject) {
-        val id = info["id"]?.jsonPrimitive?.content?.toInt()
-        val name = info["name"]?.jsonPrimitive?.content
-        val types = info["types"]?.jsonArray?.mapNotNull {
-            it.jsonObject["type"]?.jsonObject?.get("name")?.jsonPrimitive?.contentOrNull?.let { typeName ->
-                PokemonType.fromName(typeName)
-            }
-        } ?: emptyList()
-        val image =
-            info["sprites"]?.jsonObject?.get("front_default")?.jsonPrimitive?.contentOrNull ?: ""
-        val gif =
-            info["sprites"]?.jsonObject?.get("versions")?.jsonObject?.get("generation-v")?.jsonObject?.get(
-                "black-white"
-            )?.jsonObject?.get("animated")?.jsonObject?.get("front_default")?.jsonPrimitive?.contentOrNull
-                ?: ""
+    private fun parseAndSavePokemon(info: PokemonResponse) {
+        val id = info.id
+        val name = info.name
+        val types = info.types.mapNotNull {
+            PokemonType.fromId(
+                it.type.url.split("/").dropLast(1).last().toInt()
+            )
+        }
+        val image = info.sprites.frontDefault ?: ""
+        val gif = info.sprites.versions?.generationV?.blackWhite?.animated?.frontDefault ?: ""
 
-        if (id != null &&
-            name != null
-        ) {
-            val newPokemon = Pokemon(id, name, types, image, gif)
-            Log.i(TAG, "parseAndSave: $newPokemon")
-            pokemonList.value = (pokemonList.value + newPokemon)
+        val newPokemon = Pokemon(id, name, types, image, gif)
+        Log.i(TAG, "parseAndSave: $newPokemon")
+        pokemonList.value = (pokemonList.value + newPokemon)
 
-            CoroutineScope(IO).launch {
-                pokemonDao.insert(newPokemon)
-            }
+        CoroutineScope(IO).launch {
+            dao.insert(newPokemon)
         }
     }
 

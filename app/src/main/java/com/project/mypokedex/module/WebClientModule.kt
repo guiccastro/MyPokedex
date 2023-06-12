@@ -7,12 +7,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class WebClientModule {
 
     @Provides
+    @Singleton
     fun providePokemonClient(circuitBreakerConfiguration: CircuitBreakerConfiguration): PokemonClient {
         return PokemonWebClientInitializer(circuitBreakerConfiguration).getClient()
     }
