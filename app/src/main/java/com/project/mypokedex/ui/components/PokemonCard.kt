@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,13 +38,13 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
+import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
-import com.project.mypokedex.ui.theme.getImageLoader
 
 @Composable
 fun PokemonSingleCard(pokemon: Pokemon) {
@@ -56,7 +57,7 @@ fun PokemonSingleCard(pokemon: Pokemon) {
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .padding(4.dp),
-                imageLoader = getImageLoader(),
+                imageLoader = LocalContext.current.imageLoader,
                 filterQuality = FilterQuality.High
             )
         }
@@ -167,7 +168,7 @@ fun PokemonGridCard(pokemon: Pokemon) {
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize(),
-                    imageLoader = getImageLoader(),
+                    imageLoader = LocalContext.current.imageLoader,
                     filterQuality = FilterQuality.High
                 ) {
                     when (painter.state) {
