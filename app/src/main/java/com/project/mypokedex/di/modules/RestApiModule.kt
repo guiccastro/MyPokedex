@@ -1,4 +1,4 @@
-package com.project.mypokedex.di.module
+package com.project.mypokedex.di.modules
 
 import com.project.mypokedex.network.services.PokemonService
 import dagger.Module

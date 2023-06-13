@@ -3,7 +3,7 @@ package com.project.mypokedex.database.converters
 import androidx.room.TypeConverter
 import com.project.mypokedex.model.PokemonType
 
-class Converters {
+class DatabaseConverters {
 
     @TypeConverter
     fun pokemonTypeToInt(types: List<PokemonType>): String {
