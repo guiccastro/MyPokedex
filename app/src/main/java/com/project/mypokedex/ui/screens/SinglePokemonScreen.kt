@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -113,9 +114,8 @@ fun Screen(state: SinglePokemonScreenUIState) {
                         .fillMaxSize()
                 )
 
-
                 HorizontalPager(
-                    pageCount = state.pokemonList.size,
+                    state = rememberPagerState { state.pokemonList.size },
                     pageSpacing = 10.dp
                 ) {
                     PokemonSingleCard(pokemon = state.pokemonList[it])
