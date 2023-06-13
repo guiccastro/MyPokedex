@@ -1,4 +1,4 @@
-package com.project.mypokedex.module
+package com.project.mypokedex.di.module
 
 import android.content.Context
 import com.project.mypokedex.database.dao.PokemonDao

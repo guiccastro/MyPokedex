@@ -1,12 +1,12 @@
 package com.project.mypokedex.repository
 
 import android.util.Log
-import com.project.mypokedex.client.BasicKeysResponse
-import com.project.mypokedex.client.PokemonClient
-import com.project.mypokedex.client.PokemonResponse
 import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
+import com.project.mypokedex.network.responses.BasicKeysResponse
+import com.project.mypokedex.network.responses.PokemonResponse
+import com.project.mypokedex.network.services.PokemonService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
     private val dao: PokemonDao,
-    private val client: PokemonClient
+    private val client: PokemonService
 ) {
     companion object {
         private const val REQUESTS_AT_A_TIME = 100
