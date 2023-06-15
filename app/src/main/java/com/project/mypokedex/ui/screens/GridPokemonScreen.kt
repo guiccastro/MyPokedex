@@ -9,7 +9,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,33 +30,26 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.project.mypokedex.R
 import com.project.mypokedex.sampledata.listPokemons
-import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.components.PokemonGridCard
-import com.project.mypokedex.ui.components.bottomBorder
+import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.GridPokemonScreenStateHolder
 import com.project.mypokedex.ui.theme.BorderBlack
@@ -80,20 +72,7 @@ fun GridPokemonScreen(viewModel: GridPokemonScreenViewModel) {
 
 @Composable
 fun GridPokemonScreen(state: GridPokemonScreenStateHolder = GridPokemonScreenStateHolder()) {
-    Background()
-
-    Scaffold(
-        topBar = { TopBar(state = state) }
-    ) { paddingValues ->
-        Surface(
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            Screen(state = state)
-        }
-    }
-
-    AnimatedEnter(state = state)
+    Screen(state = state)
 }
 
 @Composable
@@ -240,36 +219,6 @@ fun AnimatedEnter(state: GridPokemonScreenStateHolder) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(state: GridPokemonScreenStateHolder) {
-    TopAppBar(
-        modifier = Modifier
-            .bottomBorder(1.dp, BorderBlack)
-            .shadow(10.dp),
-        title = {
-            Text(
-                text = "MyPokedex",
-                style = PokemonGB,
-                color = BorderBlack,
-                fontSize = 14.sp
-            )
-        },
-        actions = {
-            Image(
-                painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(BorderBlack),
-                modifier = Modifier
-                    .padding(end = 10.dp)
-                    .clickable(
-                        onClick = state.onSearchClick
-                    )
-            )
-        }
-    )
-}
-
 @Composable
 fun Screen(state: GridPokemonScreenStateHolder) {
     Column {
@@ -291,8 +240,12 @@ fun Screen(state: GridPokemonScreenStateHolder) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp)
-                .border((0.3).dp, BorderBlackShadow, externalShape),
-            shadowElevation = 10.dp,
+                .border((0.3).dp, BorderBlackShadow, externalShape)
+                .customShadow(
+                    color = Color.Black.copy(alpha = 0.7f),
+                    blurRadius = 5.dp,
+                    borderRadius = externalCorner
+                ),
             color = HomeScreenCard,
             shape = externalShape
         ) {

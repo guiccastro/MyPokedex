@@ -3,8 +3,15 @@ package com.project.mypokedex.ui.components
 import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -15,19 +22,22 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.HomeScreenBackground
+import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun Background() {
-    Surface(
+    Box(
         modifier = Modifier
-            .fillMaxSize(),
-        color = HomeScreenBackground
-    ) {
-    }
+            .fillMaxSize()
+            .background(HomeScreenBackground)
+    )
 }
 
 fun Modifier.innerShadow(
@@ -98,6 +108,44 @@ fun Modifier.innerShadow(
     }
 }
 
+fun Modifier.customShadow(
+    color: Color = Color.Black,
+    borderRadius: Dp = 0.dp,
+    blurRadius: Dp = 0.dp,
+    spread: Dp = 0f.dp,
+    widthOffset: Dp = 0.dp,
+    heightOffset: Dp = 0.dp,
+    offsetY: Dp = 0.dp,
+    offsetX: Dp = 0.dp,
+) = this.drawBehind {
+    this.drawIntoCanvas {
+        size.height
+        val paint = Paint()
+        val frameworkPaint = paint.asFrameworkPaint()
+        val spreadPixel = spread.toPx()
+        val leftPixel = (0f - spreadPixel) + offsetX.toPx() - widthOffset.toPx()
+        val topPixel = (0f - spreadPixel) + offsetY.toPx() - heightOffset.toPx()
+        val rightPixel = (this.size.width + spreadPixel) + widthOffset.toPx()
+        val bottomPixel = (this.size.height + spreadPixel) + heightOffset.toPx()
+
+        if (blurRadius != 0.dp) {
+            frameworkPaint.maskFilter =
+                (BlurMaskFilter(blurRadius.toPx(), BlurMaskFilter.Blur.NORMAL))
+        }
+
+        frameworkPaint.color = color.toArgb()
+        it.drawRoundRect(
+            left = leftPixel,
+            top = topPixel,
+            right = rightPixel,
+            bottom = bottomPixel,
+            radiusX = borderRadius.toPx(),
+            radiusY = borderRadius.toPx(),
+            paint
+        )
+    }
+}
+
 
 fun Modifier.bottomBorder(strokeWidth: Dp, color: Color) = composed(
     factory = {
@@ -108,6 +156,26 @@ fun Modifier.bottomBorder(strokeWidth: Dp, color: Color) = composed(
             drawContent()
             val width = size.width
             val height = size.height - strokeWidthPx / 2
+
+            drawLine(
+                color = color,
+                start = Offset(x = 0f, y = height),
+                end = Offset(x = width, y = height),
+                strokeWidth = strokeWidthPx
+            )
+        }
+    }
+)
+
+fun Modifier.topBorder(strokeWidth: Dp, color: Color) = composed(
+    factory = {
+        val density = LocalDensity.current
+        val strokeWidthPx = density.run { strokeWidth.toPx() }
+
+        Modifier.drawWithContent {
+            drawContent()
+            val width = size.width
+            val height = strokeWidthPx / 2
 
             drawLine(
                 color = color,
