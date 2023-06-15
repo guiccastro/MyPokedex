@@ -9,7 +9,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.project.mypokedex.navigation.NavigationRoute
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.screens.AnimatedEnter
-import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenStateHolder
+import com.project.mypokedex.ui.stateholders.AnimatedEnterStateHolder
+import com.project.mypokedex.ui.stateholders.gridscreen.TopBarGridScreenStateHolder
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 private val bottomAppBarItems = listOf(
@@ -19,14 +20,15 @@ private val bottomAppBarItems = listOf(
 
 @Composable
 fun MyPokedexApp(
-    state: GridScreenStateHolder = GridScreenStateHolder(),
+    animatedEnterState: AnimatedEnterStateHolder = AnimatedEnterStateHolder(),
+    topBarState: TopBarGridScreenStateHolder = TopBarGridScreenStateHolder(),
     onNavigateBottomBar: (NavigationRoute) -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Background()
 
     Scaffold(
-        topBar = { TopBar(state = state) },
+        topBar = { TopBar(state = topBarState) },
         bottomBar = { BottomBar(bottomAppBarItems, onNavigateBottomBar) }
     ) { paddingValues ->
         Surface(
@@ -37,7 +39,7 @@ fun MyPokedexApp(
         }
     }
 
-    AnimatedEnter(state = state)
+    AnimatedEnter(state = animatedEnterState)
 }
 
 @Preview
@@ -45,7 +47,7 @@ fun MyPokedexApp(
 fun MyPokedexAppPreview() {
     MyPokedexTheme {
         Surface {
-            MyPokedexApp(GridScreenStateHolder(isDownloading = false)) {
+            MyPokedexApp(AnimatedEnterStateHolder(isDownloading = false)) {
 
             }
         }

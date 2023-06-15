@@ -13,6 +13,7 @@ import com.project.mypokedex.ui.components.basic.MyPokedexApp
 import com.project.mypokedex.ui.screens.GridPokemonScreen
 import com.project.mypokedex.ui.screens.SinglePokemonScreen
 import com.project.mypokedex.ui.theme.MyPokedexTheme
+import com.project.mypokedex.ui.viewmodels.AnimatedEnterViewModel
 import com.project.mypokedex.ui.viewmodels.GridPokemonScreenViewModel
 import com.project.mypokedex.ui.viewmodels.SinglePokemonScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,11 +25,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyPokedexTheme {
+                val animatedEnterViewModel: AnimatedEnterViewModel by viewModels()
                 val singleScreenViewModel: SinglePokemonScreenViewModel by viewModels()
                 val gridScreenViewModel: GridPokemonScreenViewModel by viewModels()
                 val navController = rememberNavController()
                 MyPokedexApp(
-                    state = gridScreenViewModel.uiState.collectAsState().value,
+                    animatedEnterState = animatedEnterViewModel.animatedEnterStateHolder.collectAsState().value,
+                    topBarState = gridScreenViewModel.topBarState.collectAsState().value,
                     onNavigateBottomBar = { navigationRoute ->
                         navController.navigate(navigationRoute.route) {
                             launchSingleTop = true

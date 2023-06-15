@@ -139,7 +139,7 @@ class PokemonRepository @Inject constructor(
 
     private fun calculateProgressRequest() {
         progressRequest.value = pokemonList.value.size.toFloat() / totalPokemons.toFloat()
-        Log.i(TAG, "ProgressRequest: $progressRequest%")
+        Log.i(TAG, "ProgressRequest: ${progressRequest.value}%")
     }
 
     fun searchBasicKey(name: String) {

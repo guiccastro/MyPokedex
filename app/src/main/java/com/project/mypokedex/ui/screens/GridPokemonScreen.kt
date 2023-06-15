@@ -51,7 +51,8 @@ import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.PokemonGridCard
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
-import com.project.mypokedex.ui.stateholders.GridPokemonScreenStateHolder
+import com.project.mypokedex.ui.stateholders.AnimatedEnterStateHolder
+import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenStateHolder
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.Green
@@ -71,12 +72,12 @@ fun GridPokemonScreen(viewModel: GridPokemonScreenViewModel) {
 }
 
 @Composable
-fun GridPokemonScreen(state: GridPokemonScreenStateHolder = GridPokemonScreenStateHolder()) {
+fun GridPokemonScreen(state: GridScreenStateHolder = GridScreenStateHolder()) {
     Screen(state = state)
 }
 
 @Composable
-fun AnimatedEnter(state: GridPokemonScreenStateHolder) {
+fun AnimatedEnter(state: AnimatedEnterStateHolder) {
     val animVisibleState = remember { MutableTransitionState(state.isDownloading) }.apply {
         targetState = state.isDownloading
     }
@@ -220,7 +221,7 @@ fun AnimatedEnter(state: GridPokemonScreenStateHolder) {
 }
 
 @Composable
-fun Screen(state: GridPokemonScreenStateHolder) {
+fun Screen(state: GridScreenStateHolder) {
     Column {
         AnimatedVisibility(
             visible = state.isSearching,
@@ -283,7 +284,7 @@ fun Screen(state: GridPokemonScreenStateHolder) {
 }
 
 @Composable
-fun SearchPokemon(state: GridPokemonScreenStateHolder) {
+fun SearchPokemon(state: GridScreenStateHolder) {
     val shape = RoundedCornerShape(4.dp)
     OutlinedTextField(
         modifier = Modifier
@@ -341,11 +342,8 @@ fun GridPokemonScreenPreview() {
     MyPokedexTheme {
         Surface {
             GridPokemonScreen(
-                GridPokemonScreenStateHolder(
-                    pokemonList = listPokemons,
-                    downloadProgress = 1F,
-                    formattedDownloadProgress = "100.00%",
-                    isDownloading = false
+                GridScreenStateHolder(
+                    pokemonList = listPokemons
                 )
             )
         }
