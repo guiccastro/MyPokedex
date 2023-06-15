@@ -13,16 +13,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.R
+import com.project.mypokedex.TopAppBarStateHolder
 import com.project.mypokedex.ui.components.bottomBorder
 import com.project.mypokedex.ui.components.customShadow
-import com.project.mypokedex.ui.stateholders.gridscreen.TopBarGridScreenStateHolder
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(state: TopBarGridScreenStateHolder) {
+fun TopBar(state: TopAppBarStateHolder) {
     TopAppBar(
         modifier = Modifier
             .bottomBorder(1.dp, BorderBlack)
@@ -40,16 +39,18 @@ fun TopBar(state: TopBarGridScreenStateHolder) {
             )
         },
         actions = {
-            Image(
-                painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(BorderBlack),
-                modifier = Modifier
-                    .padding(end = 10.dp)
-                    .clickable(
-                        onClick = state.onSearchClick
-                    )
-            )
+            state.itemsList.forEach { item ->
+                Image(
+                    painter = painterResource(id = item.icon),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(item.iconColor),
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .clickable(
+                            onClick = item.onClickEvent
+                        )
+                )
+            }
         }
     )
 }

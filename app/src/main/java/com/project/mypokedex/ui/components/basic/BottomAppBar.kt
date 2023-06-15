@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.navigation.NavigationRoute
+import com.project.mypokedex.navigation.AppDestination
 import com.project.mypokedex.sampledata.bottomAppItemsSample
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
@@ -37,22 +37,22 @@ import com.project.mypokedex.ui.theme.MyPokedexTheme
 sealed class BottomAppBarItem(
     val label: String,
     val icon: ImageVector,
-    val route: NavigationRoute
+    val route: AppDestination
 ) {
     object GridScreen :
-        BottomAppBarItem(label = "Grid", icon = Icons.Default.List, NavigationRoute.GridScreen)
+        BottomAppBarItem(label = "Grid", icon = Icons.Default.List, AppDestination.GridScreen)
 
     object SimpleScreen : BottomAppBarItem(
         label = "Simple",
         icon = Icons.Default.AccountBox,
-        NavigationRoute.SimpleScreen
+        AppDestination.SimpleScreen
     )
 }
 
 @Composable
 fun BottomBar(
     bottomList: List<BottomAppBarItem> = emptyList(),
-    onNavigateBottomBar: (NavigationRoute) -> Unit = {}
+    onNavigateBottomBar: (AppDestination) -> Unit = {}
 ) {
     BottomAppBar(
         modifier = Modifier
@@ -78,7 +78,7 @@ fun BottomBar(
 @Composable
 fun BottomAppBarItem(
     item: BottomAppBarItem,
-    onNavigateBottomBar: (NavigationRoute) -> Unit = {}
+    onNavigateBottomBar: (AppDestination) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
