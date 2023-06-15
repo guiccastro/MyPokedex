@@ -1,6 +1,7 @@
 package com.project.mypokedex.ui.components.basic
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,22 +27,33 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.mypokedex.navigation.NavigationRoute
 import com.project.mypokedex.sampledata.bottomAppItemsSample
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
-enum class BottomAppBarItem(
+sealed class BottomAppBarItem(
     val label: String,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val route: NavigationRoute
 ) {
-    GridScreen(label = "Grid", icon = Icons.Default.List),
-    SimpleScreen(label = "Simple", icon = Icons.Default.AccountBox);
+    object GridScreen :
+        BottomAppBarItem(label = "Grid", icon = Icons.Default.List, NavigationRoute.GridScreen)
+
+    object SimpleScreen : BottomAppBarItem(
+        label = "Simple",
+        icon = Icons.Default.AccountBox,
+        NavigationRoute.SimpleScreen
+    )
 }
 
 @Composable
-fun BottomBar(bottomList: List<BottomAppBarItem> = emptyList()) {
+fun BottomBar(
+    bottomList: List<BottomAppBarItem> = emptyList(),
+    onNavigateBottomBar: (NavigationRoute) -> Unit = {}
+) {
     BottomAppBar(
         modifier = Modifier
             .topBorder(1.dp, BorderBlack)
@@ -57,18 +69,24 @@ fun BottomBar(bottomList: List<BottomAppBarItem> = emptyList()) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             bottomList.forEach {
-                BottomAppBarItem(it)
+                BottomAppBarItem(it, onNavigateBottomBar)
             }
         }
     }
 }
 
 @Composable
-fun BottomAppBarItem(item: BottomAppBarItem) {
+fun BottomAppBarItem(
+    item: BottomAppBarItem,
+    onNavigateBottomBar: (NavigationRoute) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .widthIn(min = 20.dp, max = 120.dp)
-            .padding(vertical = 4.dp, horizontal = 8.dp),
+            .padding(vertical = 4.dp, horizontal = 8.dp)
+            .clickable {
+                onNavigateBottomBar(item.route)
+            },
         verticalArrangement = Arrangement.Center
     ) {
         Row(
@@ -78,7 +96,7 @@ fun BottomAppBarItem(item: BottomAppBarItem) {
         ) {
             Image(
                 imageVector = item.icon,
-                contentDescription = item.name,
+                contentDescription = item.label,
                 modifier = Modifier
                     .size(40.dp),
                 colorFilter = ColorFilter.tint(Color.Black)

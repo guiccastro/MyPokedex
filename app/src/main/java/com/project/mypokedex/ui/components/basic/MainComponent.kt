@@ -6,22 +6,28 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.project.mypokedex.sampledata.bottomAppItemsSample
+import com.project.mypokedex.navigation.NavigationRoute
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.screens.AnimatedEnter
-import com.project.mypokedex.ui.stateholders.GridPokemonScreenStateHolder
+import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenStateHolder
 import com.project.mypokedex.ui.theme.MyPokedexTheme
+
+private val bottomAppBarItems = listOf(
+    BottomAppBarItem.GridScreen,
+    BottomAppBarItem.SimpleScreen,
+)
 
 @Composable
 fun MyPokedexApp(
-    state: GridPokemonScreenStateHolder = GridPokemonScreenStateHolder(isDownloading = false),
+    state: GridScreenStateHolder = GridScreenStateHolder(),
+    onNavigateBottomBar: (NavigationRoute) -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Background()
 
     Scaffold(
         topBar = { TopBar(state = state) },
-        bottomBar = { BottomBar(bottomAppItemsSample) }
+        bottomBar = { BottomBar(bottomAppBarItems, onNavigateBottomBar) }
     ) { paddingValues ->
         Surface(
             modifier = Modifier
@@ -39,7 +45,7 @@ fun MyPokedexApp(
 fun MyPokedexAppPreview() {
     MyPokedexTheme {
         Surface {
-            MyPokedexApp {
+            MyPokedexApp(GridScreenStateHolder(isDownloading = false)) {
 
             }
         }
