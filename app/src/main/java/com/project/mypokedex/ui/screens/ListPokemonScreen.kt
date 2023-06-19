@@ -41,23 +41,23 @@ import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.components.PokemonSingleCard
-import com.project.mypokedex.ui.stateholders.SinglePokemonScreenUIState
+import com.project.mypokedex.ui.stateholders.ListPokemonScreenUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.Green
 import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
-import com.project.mypokedex.ui.viewmodels.SinglePokemonScreenViewModel
+import com.project.mypokedex.ui.viewmodels.ListPokemonScreenViewModel
 
 @Composable
-fun SinglePokemonScreen(viewModel: SinglePokemonScreenViewModel) {
+fun ListPokemonScreen(viewModel: ListPokemonScreenViewModel) {
     val state = viewModel.uiState.collectAsState().value
-    SinglePokemonScreen(state = state)
+    ListPokemonScreen(state = state)
 }
 
 @Composable
-fun SinglePokemonScreen(state: SinglePokemonScreenUIState = SinglePokemonScreenUIState()) {
+fun ListPokemonScreen(state: ListPokemonScreenUIState = ListPokemonScreenUIState()) {
     Background()
 
     Column(
@@ -82,7 +82,7 @@ fun SinglePokemonScreen(state: SinglePokemonScreenUIState = SinglePokemonScreenU
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Screen(state: SinglePokemonScreenUIState) {
+fun Screen(state: ListPokemonScreenUIState) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,7 +127,7 @@ fun Screen(state: SinglePokemonScreenUIState) {
 }
 
 @Composable
-fun DirectionalButtons(state: SinglePokemonScreenUIState) {
+fun DirectionalButtons(state: ListPokemonScreenUIState) {
     val directionalsSize = 120.dp
     val buttonWidth = (directionalsSize.value / 3.44).dp
     val buttonHeight = (directionalsSize.value / 2.81).dp
@@ -224,7 +224,7 @@ fun DirectionalButtons(state: SinglePokemonScreenUIState) {
 }
 
 @Composable
-fun SearchPokemon(state: SinglePokemonScreenUIState) {
+fun SearchPokemon(state: ListPokemonScreenUIState) {
     OutlinedTextField(
         modifier = Modifier
             .width(220.dp)
@@ -273,7 +273,7 @@ fun SearchPokemon(state: SinglePokemonScreenUIState) {
 fun HomeScreenPreview() {
     MyPokedexTheme {
         Surface {
-            SinglePokemonScreen()
+            ListPokemonScreen()
         }
     }
 }

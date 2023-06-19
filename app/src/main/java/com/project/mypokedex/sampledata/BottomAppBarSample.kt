@@ -1,6 +1,6 @@
 package com.project.mypokedex.sampledata
 
-import com.project.mypokedex.ui.components.basic.BottomAppBarItem
+import com.project.mypokedex.BottomAppBarItem
 
 
-val bottomAppItemsSample = listOf(BottomAppBarItem.GridScreen, BottomAppBarItem.SimpleScreen)
+val bottomAppItemsSample = listOf(BottomAppBarItem.GridScreen, BottomAppBarItem.ListScreen)

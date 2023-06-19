@@ -12,9 +12,9 @@ fun MyPokedexNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = AppDestination.GridScreen.route
+        startDestination = homeGraphRoute
     ) {
-        gridScreen(onNewRoute)
-        simpleScreen(onNewRoute)
+        homeGraph(onNewRoute = onNewRoute)
+        // detailedScreen()
     }
 }

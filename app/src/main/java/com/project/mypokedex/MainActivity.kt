@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
 import com.project.mypokedex.navigation.MyPokedexNavHost
+import com.project.mypokedex.navigation.navigateSingleTopWithPopUpTo
 import com.project.mypokedex.ui.components.basic.MyPokedexApp
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.viewmodels.AnimatedEnterViewModel
@@ -29,11 +30,8 @@ class MainActivity : ComponentActivity() {
                 MyPokedexApp(
                     animatedEnterState = animatedEnterViewModel.animatedEnterStateHolder.collectAsState().value,
                     topAppBarState = topAppBarState,
-                    onNavigateBottomBar = { navigationRoute ->
-                        navController.navigate(navigationRoute.route) {
-                            launchSingleTop = true
-                            popUpTo(navigationRoute.route)
-                        }
+                    onNavigateBottomBar = { bottomAppBarItem ->
+                        navController.navigateSingleTopWithPopUpTo(bottomAppBarItem)
                     }
                 ) {
                     MyPokedexNavHost(

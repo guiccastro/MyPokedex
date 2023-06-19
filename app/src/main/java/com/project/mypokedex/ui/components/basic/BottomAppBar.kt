@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -20,39 +17,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.navigation.AppDestination
+import com.project.mypokedex.BottomAppBarItem
 import com.project.mypokedex.sampledata.bottomAppItemsSample
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
-sealed class BottomAppBarItem(
-    val label: String,
-    val icon: ImageVector,
-    val route: AppDestination
-) {
-    object GridScreen :
-        BottomAppBarItem(label = "Grid", icon = Icons.Default.List, AppDestination.GridScreen)
-
-    object SimpleScreen : BottomAppBarItem(
-        label = "Simple",
-        icon = Icons.Default.AccountBox,
-        AppDestination.SimpleScreen
-    )
-}
-
 @Composable
 fun BottomBar(
     bottomList: List<BottomAppBarItem> = emptyList(),
-    onNavigateBottomBar: (AppDestination) -> Unit = {}
+    onNavigateBottomBar: (BottomAppBarItem) -> Unit = {}
 ) {
     BottomAppBar(
         modifier = Modifier
@@ -78,14 +59,14 @@ fun BottomBar(
 @Composable
 fun BottomAppBarItem(
     item: BottomAppBarItem,
-    onNavigateBottomBar: (AppDestination) -> Unit = {}
+    onNavigateBottomBar: (BottomAppBarItem) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
             .widthIn(min = 20.dp, max = 120.dp)
             .padding(vertical = 4.dp, horizontal = 8.dp)
             .clickable {
-                onNavigateBottomBar(item.route)
+                onNavigateBottomBar(item)
             },
         verticalArrangement = Arrangement.Center
     ) {
