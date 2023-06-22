@@ -1,4 +1,4 @@
-package com.project.mypokedex
+package com.project.mypokedex.model
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color

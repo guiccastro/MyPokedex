@@ -3,8 +3,8 @@ package com.project.mypokedex.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.R
-import com.project.mypokedex.TopAppBarItem
-import com.project.mypokedex.TopAppBarStateHolder
+import com.project.mypokedex.model.TopAppBarItem
+import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenStateHolder

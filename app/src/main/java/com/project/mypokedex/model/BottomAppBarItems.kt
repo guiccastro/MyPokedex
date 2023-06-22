@@ -1,4 +1,4 @@
-package com.project.mypokedex
+package com.project.mypokedex.model
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox

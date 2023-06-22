@@ -1,4 +1,4 @@
-package com.project.mypokedex.navigation
+package com.project.mypokedex.navigation.destinations
 
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.project.mypokedex.TopAppBarStateHolder
+import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.screens.GridPokemonScreen
 import com.project.mypokedex.ui.viewmodels.GridPokemonScreenViewModel
 
@@ -20,6 +20,6 @@ fun NavGraphBuilder.gridScreen(onNewRoute: (TopAppBarStateHolder) -> Unit = {}) 
     }
 }
 
-fun NavController.navigateToGrid(navOptions: NavOptions? = null) {
+fun NavController.navigateToGridScreen(navOptions: NavOptions? = null) {
     navigate(gridRoute, navOptions)
 }

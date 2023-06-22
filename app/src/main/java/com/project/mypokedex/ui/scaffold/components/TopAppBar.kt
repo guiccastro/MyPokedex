@@ -1,4 +1,4 @@
-package com.project.mypokedex.ui.components.basic
+package com.project.mypokedex.ui.scaffold.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.TopAppBarStateHolder
+import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.components.bottomBorder
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.theme.BorderBlack

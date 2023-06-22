@@ -1,4 +1,4 @@
-package com.project.mypokedex.ui.components.basic
+package com.project.mypokedex.ui.scaffold.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,7 +23,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.BottomAppBarItem
+import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.sampledata.bottomAppItemsSample
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder

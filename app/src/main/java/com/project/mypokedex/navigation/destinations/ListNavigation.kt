@@ -1,11 +1,11 @@
-package com.project.mypokedex.navigation
+package com.project.mypokedex.navigation.destinations
 
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.project.mypokedex.TopAppBarStateHolder
+import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.screens.ListPokemonScreen
 import com.project.mypokedex.ui.viewmodels.ListPokemonScreenViewModel
 
@@ -19,6 +19,6 @@ fun NavGraphBuilder.listScreen(onNewRoute: (TopAppBarStateHolder) -> Unit = {}) 
     }
 }
 
-fun NavController.navigateToList(navOptions: NavOptions? = null) {
+fun NavController.navigateToListScreen(navOptions: NavOptions? = null) {
     navigate(listRoute, navOptions)
 }

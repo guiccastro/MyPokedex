@@ -1,11 +1,11 @@
-package com.project.mypokedex.navigation
+package com.project.mypokedex.navigation.destinations
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
 import androidx.navigation.navOptions
-import com.project.mypokedex.BottomAppBarItem
-import com.project.mypokedex.TopAppBarStateHolder
+import com.project.mypokedex.model.BottomAppBarItem
+import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 
 internal const val homeGraphRoute = "home"
 
@@ -27,12 +27,12 @@ fun NavController.navigateSingleTopWithPopUpTo(bottomAppBarItem: BottomAppBarIte
     val (route, navigate) = when (bottomAppBarItem) {
         BottomAppBarItem.GridScreen -> Pair(
             gridRoute,
-            ::navigateToGrid
+            ::navigateToGridScreen
         )
 
         BottomAppBarItem.ListScreen -> Pair(
             listRoute,
-            ::navigateToList
+            ::navigateToListScreen
         )
     }
 
