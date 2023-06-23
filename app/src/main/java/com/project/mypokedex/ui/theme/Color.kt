@@ -1,6 +1,7 @@
 package com.project.mypokedex.ui.theme
 
 import androidx.compose.ui.graphics.Color
+import com.project.mypokedex.model.BottomAppBarItem
 
 val MainRed = Color(0xFFf14948)
 val HeavyRed = Color(0xFFdd3524)
@@ -17,6 +18,9 @@ val MainGray = Color(0xFF565e5f)
 /** Home Screen **/
 val HomeScreenBackground = MainRed
 val HomeScreenCard = LightGray
+
+/** Bottom App Bar **/
+val BottomAppBarSelectedItem = Color(0xFFC93D3C)
 
 /** Pokemon Types **/
 val NormalColor = Color(0xFF949aa4)

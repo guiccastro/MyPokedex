@@ -7,27 +7,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.project.mypokedex.model.BottomAppBarItem
-import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
-import com.project.mypokedex.model.bottomAppBarItems
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.scaffold.components.BottomBar
 import com.project.mypokedex.ui.scaffold.components.TopBar
 import com.project.mypokedex.ui.screens.AnimatedEnter
 import com.project.mypokedex.ui.stateholders.AnimatedEnterStateHolder
+import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun MainScaffold(
     animatedEnterState: AnimatedEnterStateHolder = AnimatedEnterStateHolder(),
     topAppBarState: TopAppBarStateHolder = TopAppBarStateHolder(),
-    onNavigateBottomBar: (BottomAppBarItem) -> Unit = {},
+    bottomAppBarSelectedItem: BottomAppBarItem? = null,
+    bottomAppBarItems: List<BottomAppBarItem> = emptyList(),
+    onClickBottomAppBarItem: (BottomAppBarItem) -> Unit = {},
     content: @Composable () -> Unit
 ) {
     Background()
 
     Scaffold(
         topBar = { TopBar(state = topAppBarState) },
-        bottomBar = { BottomBar(bottomAppBarItems, onNavigateBottomBar) }
+        bottomBar = {
+            BottomBar(
+                selectedItem = bottomAppBarSelectedItem,
+                items = bottomAppBarItems,
+                onClickItem = onClickBottomAppBarItem
+            )
+        }
     ) { paddingValues ->
         Surface(
             modifier = Modifier

@@ -1,15 +1,10 @@
 package com.project.mypokedex.ui.scaffold.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,20 +17,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.sampledata.bottomAppItemsSample
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
 import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.BottomAppBarSelectedItem
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun BottomBar(
-    bottomList: List<BottomAppBarItem> = emptyList(),
-    onNavigateBottomBar: (BottomAppBarItem) -> Unit = {}
+    selectedItem: BottomAppBarItem? = null,
+    items: List<BottomAppBarItem> = emptyList(),
+    onClickItem: (BottomAppBarItem) -> Unit = {}
 ) {
-    BottomAppBar(
+    NavigationBar(
         modifier = Modifier
             .topBorder(1.dp, BorderBlack)
             .customShadow(
@@ -44,59 +40,32 @@ fun BottomBar(
                 widthOffset = 10.dp
             )
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            bottomList.forEach {
-                BottomAppBarItem(it, onNavigateBottomBar)
-            }
-        }
-    }
-}
-
-@Composable
-fun BottomAppBarItem(
-    item: BottomAppBarItem,
-    onNavigateBottomBar: (BottomAppBarItem) -> Unit = {}
-) {
-    Column(
-        modifier = Modifier
-            .widthIn(min = 20.dp, max = 120.dp)
-            .padding(vertical = 4.dp, horizontal = 8.dp)
-            .clickable {
-                onNavigateBottomBar(item)
-            },
-        verticalArrangement = Arrangement.Center
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Image(
-                imageVector = item.icon,
-                contentDescription = item.label,
-                modifier = Modifier
-                    .size(40.dp),
-                colorFilter = ColorFilter.tint(Color.Black)
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = item.label,
-                fontWeight = FontWeight(500),
-                fontSize = 16.sp,
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+        items.forEach { item ->
+            NavigationBarItem(
+                selected = selectedItem == item,
+                onClick = {
+                    onClickItem(item)
+                },
+                icon = {
+                    Image(
+                        imageVector = item.icon,
+                        contentDescription = item.label,
+                        colorFilter = ColorFilter.tint(Color.Black)
+                    )
+                },
+                label = {
+                    Text(
+                        text = item.label,
+                        fontWeight = FontWeight(500),
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = BottomAppBarSelectedItem
+                )
             )
         }
     }
@@ -109,23 +78,13 @@ fun BottomAppBarPreview() {
         Surface {
             Scaffold(
                 bottomBar = {
-                    BottomBar(bottomAppItemsSample)
+                    BottomBar(items = bottomAppItemsSample)
                 }
             ) {
                 Surface(modifier = Modifier.padding(it)) {
 
                 }
             }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun BottomAppBarItemPreview() {
-    MyPokedexTheme {
-        Surface {
-            BottomAppBarItem(BottomAppBarItem.GridScreen)
         }
     }
 }
