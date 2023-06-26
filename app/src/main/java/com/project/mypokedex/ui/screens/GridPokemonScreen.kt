@@ -6,29 +6,36 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -41,14 +48,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import coil.imageLoader
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.project.mypokedex.R
+import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.listPokemons
-import com.project.mypokedex.ui.components.PokemonGridCard
+import com.project.mypokedex.ui.components.PokemonTypeToUI
+import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.AnimatedEnterStateHolder
@@ -66,14 +87,17 @@ import com.project.mypokedex.ui.viewmodels.GridPokemonScreenViewModel
 
 
 @Composable
-fun GridPokemonScreen(viewModel: GridPokemonScreenViewModel) {
+fun GridPokemonScreen(viewModel: GridPokemonScreenViewModel, onClick: (Pokemon) -> Unit = {}) {
     val state = viewModel.uiState.collectAsState().value
-    GridPokemonScreen(state = state)
+    GridPokemonScreen(state = state, onClick = onClick)
 }
 
 @Composable
-fun GridPokemonScreen(state: GridScreenStateHolder = GridScreenStateHolder()) {
-    Screen(state = state)
+fun GridPokemonScreen(
+    state: GridScreenStateHolder = GridScreenStateHolder(),
+    onClick: (Pokemon) -> Unit = {}
+) {
+    Screen(state = state, onClick = onClick)
 }
 
 @Composable
@@ -221,7 +245,7 @@ fun AnimatedEnter(state: AnimatedEnterStateHolder) {
 }
 
 @Composable
-fun Screen(state: GridScreenStateHolder) {
+fun Screen(state: GridScreenStateHolder, onClick: (Pokemon) -> Unit = {}) {
     Column {
         AnimatedVisibility(
             visible = state.isSearching,
@@ -273,11 +297,106 @@ fun Screen(state: GridScreenStateHolder) {
                         contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
                     ) {
                         items(state.pokemonList) { pokemon ->
-                            PokemonGridCard(pokemon = pokemon)
+                            PokemonGridCard(pokemon = pokemon, onClick = onClick)
                         }
                     }
                 }
 
+            }
+        }
+    }
+}
+
+@Composable
+fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
+    Card(
+        modifier = Modifier
+            .width(130.dp)
+            .height(150.dp)
+            .clickable {
+                onClick(pokemon)
+            },
+        shape = RoundedCornerShape(10.dp),
+        border = BorderStroke(1.dp, BorderBlack)
+    ) {
+
+        Surface {
+            Image(
+                painter = painterResource(id = R.drawable.ic_screen_background),
+                contentDescription = "Screen Background",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+
+            Column(
+                modifier = Modifier
+                    .padding(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = pokemon.formattedID(),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight(500),
+                    color = Color.DarkGray,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = PokemonGB
+                )
+                ResponsiveText(
+                    text = pokemon.formattedName(),
+                    targetTextSizeHeight = 10.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color.DarkGray,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    textStyle = PokemonGB,
+                    maxLines = 1
+                )
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    items(pokemon.types) {
+                        PokemonTypeToUI(pokemonType = it)
+                    }
+                }
+
+                SubcomposeAsyncImage(
+                    model = pokemon.getGifOrImage(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    imageLoader = LocalContext.current.imageLoader,
+                    filterQuality = FilterQuality.High
+                ) {
+                    when (painter.state) {
+                        is AsyncImagePainter.State.Loading -> {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .padding(40.dp),
+                                color = BorderBlack
+                            )
+                        }
+
+                        is AsyncImagePainter.State.Error -> {
+                            Image(
+                                modifier = Modifier
+                                    .padding(40.dp),
+                                painter = painterResource(id = R.drawable.ic_error),
+                                contentDescription = "Error",
+                                colorFilter = ColorFilter.tint(BorderBlack)
+                            )
+                        }
+
+                        else -> {
+                            SubcomposeAsyncImageContent()
+                        }
+                    }
+                }
             }
         }
     }
@@ -346,6 +465,16 @@ fun GridPokemonScreenPreview() {
                     pokemonList = listPokemons
                 )
             )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PokemonGridCardPreview() {
+    MyPokedexTheme {
+        Surface {
+            PokemonGridCard(charizard)
         }
     }
 }

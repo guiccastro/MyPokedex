@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.ListPokemonScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -24,7 +26,6 @@ class ListPokemonScreenViewModel @Inject constructor(
     private val formatter = DecimalFormat("#")
 
     init {
-        repository.getPokemon(1)
         _uiState.update { currentState ->
             currentState.copy(
                 onSearchChange = {
@@ -64,7 +65,9 @@ class ListPokemonScreenViewModel @Inject constructor(
 
     private fun searchPokemonById(id: Int?) {
         id?.let {
-            repository.getPokemon(id)
+            CoroutineScope(IO).launch {
+                repository.getPokemon(id)
+            }
         }
     }
 }

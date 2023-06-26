@@ -14,6 +14,7 @@ import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.bottomAppBarItems
 import com.project.mypokedex.navigation.AppNavHost
 import com.project.mypokedex.navigation.destinations.navigateSingleTopWithPopUpTo
+import com.project.mypokedex.navigation.destinations.navigateToDetailsScreen
 import com.project.mypokedex.ui.scaffold.MainScaffold
 import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.theme.MyPokedexTheme
@@ -49,6 +50,9 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         onNewRoute = { newTopAppBarState ->
                             topAppBarState = newTopAppBarState
+                        },
+                        onClickPokemon = { pokemon ->
+                            navController.navigateToDetailsScreen(pokemonId = pokemon.id)
                         }
                     )
                 }

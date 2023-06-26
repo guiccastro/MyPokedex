@@ -37,6 +37,8 @@ class PokemonRepository @Inject constructor(
         CoroutineScope(IO).launch {
             pokemonList.value = dao.getAll()
 
+            Log.println(Log.ASSERT, "pokemonList", pokemonList.value.toString())
+
             if (pokemonList.value.isEmpty()) {
                 getBasicKeys()
             } else {
@@ -142,25 +144,9 @@ class PokemonRepository @Inject constructor(
         Log.i(TAG, "ProgressRequest: ${progressRequest.value}%")
     }
 
-    fun searchBasicKey(name: String) {
-        pokemonBasicKeyName.keys.forEach { nameKey ->
-            if (nameKey.contains(name)) {
-                pokemonBasicKeyName[nameKey]?.let { id ->
-                    getPokemon(id)
-                }
-            }
-        }
-    }
-
     fun getPokemon(id: Int): Pokemon? {
         return pokemonList.value.find {
             it.id == id
-        }
-    }
-
-    fun getPokemon(name: String): Pokemon? {
-        return pokemonList.value.find {
-            it.name == name
-        }
+        } ?: dao.getById(id)
     }
 }

@@ -5,16 +5,20 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
 import androidx.navigation.navOptions
 import com.project.mypokedex.model.BottomAppBarItem
+import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 
 internal const val homeGraphRoute = "home"
 
-fun NavGraphBuilder.homeGraph(onNewRoute: (TopAppBarStateHolder) -> Unit = {}) {
+fun NavGraphBuilder.homeGraph(
+    onNewRoute: (TopAppBarStateHolder) -> Unit = {},
+    onClickPokemon: (Pokemon) -> Unit = {}
+) {
     navigation(
         startDestination = gridRoute,
         route = homeGraphRoute
     ) {
-        gridScreen(onNewRoute)
+        gridScreen(onNewRoute, onClickPokemon = onClickPokemon)
         listScreen(onNewRoute)
     }
 }

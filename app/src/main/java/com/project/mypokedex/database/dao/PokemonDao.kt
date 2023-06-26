@@ -22,4 +22,7 @@ interface PokemonDao {
     @Query("SELECT * FROM Pokemon ORDER BY id")
     fun getAll(): List<Pokemon>
 
+    @Query("SELECT * FROM Pokemon WHERE id = :id")
+    fun getById(id: Int): Pokemon?
+
 }

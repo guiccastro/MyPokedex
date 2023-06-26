@@ -83,11 +83,15 @@ fun DetailsScreen(state: DetailsScreenStateHolder) {
 }
 
 @Composable
-fun PokemonDetails(pokemon: Pokemon) {
+fun PokemonDetails(pokemon: Pokemon?) {
+    if (pokemon == null) {
+        return
+    }
     Box(
         modifier = Modifier
             .height(150.dp)
             .width(500.dp)
+            .padding(all = 10.dp)
     ) {
         Row {
             SubcomposeAsyncImage(
