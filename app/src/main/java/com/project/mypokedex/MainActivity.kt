@@ -13,8 +13,8 @@ import androidx.navigation.compose.rememberNavController
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.bottomAppBarItems
 import com.project.mypokedex.navigation.AppNavHost
-import com.project.mypokedex.navigation.destinations.navigateSingleTopWithPopUpTo
-import com.project.mypokedex.navigation.destinations.navigateToDetailsScreen
+import com.project.mypokedex.navigation.destinations.DetailsScreen
+import com.project.mypokedex.navigation.getSingleTopWithPopUpTo
 import com.project.mypokedex.ui.scaffold.MainScaffold
 import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.theme.MyPokedexTheme
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                 var topAppBarState by remember { mutableStateOf(TopAppBarStateHolder()) }
                 var bottomAppBarSelectedItem by remember {
                     mutableStateOf<BottomAppBarItem>(
-                        BottomAppBarItem.GridScreen
+                        BottomAppBarItem.GridScreenBottomAppBar
                     )
                 }
                 MainScaffold(
@@ -43,16 +43,31 @@ class MainActivity : ComponentActivity() {
                     bottomAppBarItems = bottomAppBarItems,
                     onClickBottomAppBarItem = { bottomAppBarItem ->
                         bottomAppBarSelectedItem = bottomAppBarItem
-                        navController.navigateSingleTopWithPopUpTo(bottomAppBarItem)
+                        val topAppBarComponent = bottomAppBarItem.screen.topAppBarComponent
+                        topAppBarState = TopAppBarStateHolder(
+                            itemsList = topAppBarComponent?.getItems() ?: emptyList(),
+                            title = topAppBarComponent?.getTitle()
+                        )
+                        navController.apply {
+                            bottomAppBarItems.find { it == bottomAppBarItem }?.screen?.apply {
+                                navigateToItself(navOptions = getSingleTopWithPopUpTo(getRoute()))
+                            }
+                        }
                     }
                 ) {
                     AppNavHost(
                         navController = navController,
-                        onNewRoute = { newTopAppBarState ->
-                            topAppBarState = newTopAppBarState
-                        },
                         onClickPokemon = { pokemon ->
-                            navController.navigateToDetailsScreen(pokemonId = pokemon.id)
+                            topAppBarState = TopAppBarStateHolder(
+                                itemsList = DetailsScreen.topAppBarComponent.getItems(),
+                                title = DetailsScreen.topAppBarComponent.getTitle()
+                            )
+
+                            navController.apply {
+                                DetailsScreen.apply {
+                                    navigateToItself(pokemonId = pokemon.id)
+                                }
+                            }
                         }
                     )
                 }

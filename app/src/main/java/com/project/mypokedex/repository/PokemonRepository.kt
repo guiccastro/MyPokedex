@@ -37,8 +37,6 @@ class PokemonRepository @Inject constructor(
         CoroutineScope(IO).launch {
             pokemonList.value = dao.getAll()
 
-            Log.println(Log.ASSERT, "pokemonList", pokemonList.value.toString())
-
             if (pokemonList.value.isEmpty()) {
                 getBasicKeys()
             } else {

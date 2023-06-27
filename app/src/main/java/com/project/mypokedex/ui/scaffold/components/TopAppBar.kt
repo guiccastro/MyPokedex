@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.components.bottomBorder
 import com.project.mypokedex.ui.components.customShadow
+import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.PokemonGB
 
@@ -32,7 +32,7 @@ fun TopBar(state: TopAppBarStateHolder) {
             ),
         title = {
             Text(
-                text = "MyPokedex",
+                text = state.title ?: "MyPokedex",
                 style = PokemonGB,
                 color = BorderBlack,
                 fontSize = 14.sp

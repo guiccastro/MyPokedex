@@ -2,48 +2,48 @@ package com.project.mypokedex.navigation.destinations
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.navigation
-import androidx.navigation.navOptions
-import com.project.mypokedex.model.BottomAppBarItem
+import com.project.mypokedex.interfaces.GroupNavigation
+import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.model.Pokemon
-import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 
 internal const val homeGraphRoute = "home"
 
-fun NavGraphBuilder.homeGraph(
-    onNewRoute: (TopAppBarStateHolder) -> Unit = {},
-    onClickPokemon: (Pokemon) -> Unit = {}
-) {
-    navigation(
-        startDestination = gridRoute,
-        route = homeGraphRoute
+object HomeGroupScreen : GroupNavigation {
+    override val listScreens: List<Screen>
+        get() = listOf(
+            GridScreen,
+            ListScreen
+        )
+
+    override fun NavGraphBuilder.graph(
+        onClickPokemon: (Pokemon) -> Unit
     ) {
-        gridScreen(onNewRoute, onClickPokemon = onClickPokemon)
-        listScreen(onNewRoute)
-    }
-}
-
-fun NavController.navigateToHomeGraph() {
-    navigate(homeGraphRoute)
-}
-
-fun NavController.navigateSingleTopWithPopUpTo(bottomAppBarItem: BottomAppBarItem) {
-    val (route, navigate) = when (bottomAppBarItem) {
-        BottomAppBarItem.GridScreen -> Pair(
-            gridRoute,
-            ::navigateToGridScreen
-        )
-
-        BottomAppBarItem.ListScreen -> Pair(
-            listRoute,
-            ::navigateToListScreen
-        )
+        navigation(
+            startDestination = GridScreen.getRoute(),
+            route = homeGraphRoute
+        ) {
+            listScreens.forEach {
+                it.apply {
+                    screen(onClickPokemon)
+                }
+            }
+        }
     }
 
-    val navOptions = navOptions {
-        launchSingleTop = true
-        popUpTo(route)
+    override fun NavController.navigateTo(route: String, navOptions: NavOptions?) {
+        listScreens.find {
+            it.getRoute() == route
+        }?.let {
+            it.apply {
+                navigateToItself(navOptions = navOptions)
+            }
+        }
     }
 
-    navigate(navOptions)
+    override fun getRoute(): String = homeGraphRoute
+
+    override fun NavController.navigateToItself(pokemonId: Int?, navOptions: NavOptions?) =
+        navigate(homeGraphRoute)
 }
