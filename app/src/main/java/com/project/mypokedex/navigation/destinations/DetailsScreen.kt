@@ -13,13 +13,14 @@ import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.TopAppBarItem
-import com.project.mypokedex.ui.screens.DetailsScreen
+import com.project.mypokedex.ui.screens.DetailsUIScreen
 import com.project.mypokedex.ui.viewmodels.DetailsScreenViewModel
 
-private const val detailsRoute = "DetailsScreen"
-internal const val pokemonIdArgument = "pokemonId"
-
 object DetailsScreen : Screen {
+
+    private const val detailsRoute = "DetailsScreen"
+    const val pokemonIdArgument = "pokemonId"
+
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
         override fun getTitle(): String = "Details"
 
@@ -39,7 +40,7 @@ object DetailsScreen : Screen {
         ) {
             val viewModel: DetailsScreenViewModel = hiltViewModel()
             val state = viewModel.uiState.collectAsState().value
-            DetailsScreen(state = state)
+            DetailsUIScreen(state = state)
         }
     }
 

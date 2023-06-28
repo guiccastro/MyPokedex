@@ -1,6 +1,6 @@
 package com.project.mypokedex.ui.stateholders
 
-data class AnimatedEnterStateHolder(
+data class AnimatedEnterUIState(
     val isDownloading: Boolean = true,
     val downloadProgress: Float = 0F,
     val formattedDownloadProgress: String = "",

@@ -17,8 +17,8 @@ import com.project.mypokedex.navigation.destinations.DetailsScreen
 import com.project.mypokedex.navigation.getScreen
 import com.project.mypokedex.navigation.getSingleTopWithPopUpTo
 import com.project.mypokedex.ui.scaffold.MainScaffold
-import com.project.mypokedex.ui.stateholders.BottomAppBarStateHolder
-import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
+import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
+import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.viewmodels.AnimatedEnterViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,8 +32,8 @@ class MainActivity : ComponentActivity() {
             MyPokedexTheme {
                 val animatedEnterViewModel: AnimatedEnterViewModel by viewModels()
                 val navController = rememberNavController()
-                var topAppBarState by remember { mutableStateOf(TopAppBarStateHolder()) }
-                var bottomAppBarState by remember { mutableStateOf(BottomAppBarStateHolder()) }
+                var topAppBarState by remember { mutableStateOf(TopAppBarUIState()) }
+                var bottomAppBarState by remember { mutableStateOf(BottomAppBarUIState()) }
                 LaunchedEffect(Unit) {
                     navController.addOnDestinationChangedListener { _, destination, _ ->
                         val route = destination.route?.split("/")?.first() ?: ""
@@ -41,11 +41,11 @@ class MainActivity : ComponentActivity() {
                         val bottomAppBarItemSelected =
                             bottomAppBarItems.find { it.screen == screen }
 
-                        topAppBarState = TopAppBarStateHolder(
+                        topAppBarState = TopAppBarUIState(
                             itemsList = screen?.topAppBarComponent?.getItems() ?: emptyList(),
                             title = screen?.topAppBarComponent?.getTitle()
                         )
-                        bottomAppBarState = BottomAppBarStateHolder(
+                        bottomAppBarState = BottomAppBarUIState(
                             selectedItem = bottomAppBarItemSelected,
                             bottomAppBarComponent = screen?.bottomAppBarComponent
                         )
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 MainScaffold(
-                    animatedEnterState = animatedEnterViewModel.animatedEnterStateHolder.collectAsState().value,
+                    animatedEnterState = animatedEnterViewModel.animatedEnterUIState.collectAsState().value,
                     topAppBarState = topAppBarState,
                     bottomAppBarState = bottomAppBarState,
                     onClickBottomAppBarItem = { bottomAppBarItem ->

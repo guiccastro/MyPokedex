@@ -10,7 +10,6 @@ import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.navigation.destinations.DetailsScreen
 import com.project.mypokedex.navigation.destinations.HomeGroupScreen
-import com.project.mypokedex.navigation.destinations.homeGraphRoute
 
 @Composable
 fun AppNavHost(
@@ -19,7 +18,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = homeGraphRoute
+        startDestination = HomeGroupScreen.getRoute()
     ) {
         groupNavigation.forEach {
             it.apply {

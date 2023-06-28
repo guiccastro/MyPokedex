@@ -54,23 +54,23 @@ import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.components.PokemonTypeToUI
-import com.project.mypokedex.ui.stateholders.ListPokemonScreenUIState
+import com.project.mypokedex.ui.stateholders.ListScreenUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.Green
 import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
-import com.project.mypokedex.ui.viewmodels.ListPokemonScreenViewModel
+import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
 
 @Composable
-fun ListPokemonScreen(viewModel: ListPokemonScreenViewModel) {
+fun ListUIScreen(viewModel: ListScreenViewModel) {
     val state = viewModel.uiState.collectAsState().value
-    ListPokemonScreen(state = state)
+    ListUIScreen(state = state)
 }
 
 @Composable
-fun ListPokemonScreen(state: ListPokemonScreenUIState = ListPokemonScreenUIState()) {
+fun ListUIScreen(state: ListScreenUIState = ListScreenUIState()) {
     Background()
 
     Column(
@@ -86,7 +86,7 @@ fun ListPokemonScreen(state: ListPokemonScreenUIState = ListPokemonScreenUIState
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SearchPokemon(state)
+            SearchInputText(state)
             DirectionalButtons(state)
         }
     }
@@ -95,7 +95,7 @@ fun ListPokemonScreen(state: ListPokemonScreenUIState = ListPokemonScreenUIState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Screen(state: ListPokemonScreenUIState) {
+fun Screen(state: ListScreenUIState) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -131,7 +131,7 @@ fun Screen(state: ListPokemonScreenUIState) {
                     state = rememberPagerState { state.pokemonList.size },
                     pageSpacing = 10.dp
                 ) {
-                    PokemonSingleCard(pokemon = state.pokemonList[it])
+                    PokemonListCard(pokemon = state.pokemonList[it])
                 }
             }
         }
@@ -140,7 +140,7 @@ fun Screen(state: ListPokemonScreenUIState) {
 }
 
 @Composable
-fun DirectionalButtons(state: ListPokemonScreenUIState) {
+fun DirectionalButtons(state: ListScreenUIState) {
     val directionalsSize = 120.dp
     val buttonWidth = (directionalsSize.value / 3.44).dp
     val buttonHeight = (directionalsSize.value / 2.81).dp
@@ -237,7 +237,7 @@ fun DirectionalButtons(state: ListPokemonScreenUIState) {
 }
 
 @Composable
-fun PokemonSingleCard(pokemon: Pokemon) {
+fun PokemonListCard(pokemon: Pokemon) {
     Row(modifier = Modifier.padding(horizontal = 6.dp)) {
         Box(modifier = Modifier.size(150.dp)) {
             AsyncImage(
@@ -299,7 +299,7 @@ fun PokemonSingleCard(pokemon: Pokemon) {
 }
 
 @Composable
-fun SearchPokemon(state: ListPokemonScreenUIState) {
+fun SearchInputText(state: ListScreenUIState) {
     OutlinedTextField(
         modifier = Modifier
             .width(220.dp)
@@ -345,16 +345,16 @@ fun SearchPokemon(state: ListPokemonScreenUIState) {
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
+fun ListUiScreenPreview() {
     MyPokedexTheme {
         Surface {
-            ListPokemonScreen()
+            ListUIScreen()
         }
     }
 }
 
 @Preview
 @Composable
-fun PokemonCardPreview() {
-    PokemonSingleCard(charizard)
+fun PokemonListCardPreview() {
+    PokemonListCard(charizard)
 }

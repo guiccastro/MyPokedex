@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.ui.components.bottomBorder
 import com.project.mypokedex.ui.components.customShadow
-import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
+import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(state: TopAppBarStateHolder) {
+fun TopBar(state: TopAppBarUIState) {
     TopAppBar(
         modifier = Modifier
             .bottomBorder(1.dp, BorderBlack)

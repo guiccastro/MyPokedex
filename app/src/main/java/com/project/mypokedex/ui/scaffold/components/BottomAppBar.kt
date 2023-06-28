@@ -25,14 +25,14 @@ import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.navigation.destinations.DetailsScreen
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
-import com.project.mypokedex.ui.stateholders.BottomAppBarStateHolder
+import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BottomAppBarSelectedItem
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun BottomBar(
-    state: BottomAppBarStateHolder = BottomAppBarStateHolder(),
+    state: BottomAppBarUIState = BottomAppBarUIState(),
     onClickItem: (BottomAppBarItem) -> Unit = {}
 ) {
     val hasBottomAppBar = state.bottomAppBarComponent != null
@@ -98,7 +98,7 @@ fun BottomAppBarPreview() {
         Surface {
             Scaffold(
                 bottomBar = {
-                    BottomBar(state = BottomAppBarStateHolder(bottomAppBarComponent = DetailsScreen.bottomAppBarComponent))
+                    BottomBar(state = BottomAppBarUIState(bottomAppBarComponent = DetailsScreen.bottomAppBarComponent))
                 }
             ) {
                 Surface(modifier = Modifier.padding(it)) {

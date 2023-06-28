@@ -11,16 +11,16 @@ import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.scaffold.components.BottomBar
 import com.project.mypokedex.ui.scaffold.components.TopBar
 import com.project.mypokedex.ui.screens.AnimatedEnter
-import com.project.mypokedex.ui.stateholders.AnimatedEnterStateHolder
-import com.project.mypokedex.ui.stateholders.BottomAppBarStateHolder
-import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
+import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
+import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
+import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun MainScaffold(
-    animatedEnterState: AnimatedEnterStateHolder = AnimatedEnterStateHolder(),
-    topAppBarState: TopAppBarStateHolder = TopAppBarStateHolder(),
-    bottomAppBarState: BottomAppBarStateHolder = BottomAppBarStateHolder(),
+    animatedEnterState: AnimatedEnterUIState = AnimatedEnterUIState(),
+    topAppBarState: TopAppBarUIState = TopAppBarUIState(),
+    bottomAppBarState: BottomAppBarUIState = BottomAppBarUIState(),
     onClickBottomAppBarItem: (BottomAppBarItem) -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -51,7 +51,7 @@ fun MainScaffold(
 fun MyPokedexAppPreview() {
     MyPokedexTheme {
         Surface {
-            MainScaffold(AnimatedEnterStateHolder(isDownloading = false)) {
+            MainScaffold(AnimatedEnterUIState(isDownloading = false)) {
 
             }
         }

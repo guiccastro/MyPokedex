@@ -36,7 +36,7 @@ import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
-import com.project.mypokedex.ui.stateholders.DetailsScreenStateHolder
+import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.HomeScreenCard
@@ -45,7 +45,7 @@ import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @Composable
-fun DetailsScreen(state: DetailsScreenStateHolder) {
+fun DetailsUIScreen(state: DetailsScreenUIState) {
     val externalCorner = 8.dp
     val internalCorner = 6.dp
     val externalShape = RoundedCornerShape(externalCorner)
@@ -163,10 +163,10 @@ fun PokemonDetails(pokemon: Pokemon?) {
 
 @Preview
 @Composable
-fun DetailsPokemonScreenPreview() {
+fun DetailsUIScreenPreview() {
     MyPokedexTheme {
         Surface {
-            DetailsScreen(DetailsScreenStateHolder(pokemon = charizard))
+            DetailsUIScreen(DetailsScreenUIState(pokemon = charizard))
         }
     }
 }

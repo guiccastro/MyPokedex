@@ -3,7 +3,7 @@ package com.project.mypokedex.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.repository.PokemonRepository
-import com.project.mypokedex.ui.stateholders.ListPokemonScreenUIState
+import com.project.mypokedex.ui.stateholders.ListScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -15,12 +15,12 @@ import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
-class ListPokemonScreenViewModel @Inject constructor(
+class ListScreenViewModel @Inject constructor(
     private val repository: PokemonRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<ListPokemonScreenUIState> =
-        MutableStateFlow(ListPokemonScreenUIState())
+    private val _uiState: MutableStateFlow<ListScreenUIState> =
+        MutableStateFlow(ListScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
     private val formatter = DecimalFormat("#")

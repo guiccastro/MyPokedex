@@ -5,37 +5,25 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.project.mypokedex.R
 import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.TopAppBarItem
-import com.project.mypokedex.ui.screens.GridPokemonScreen
-import com.project.mypokedex.ui.theme.BorderBlack
-import com.project.mypokedex.ui.viewmodels.GridPokemonScreenViewModel
+import com.project.mypokedex.ui.screens.ListUIScreen
+import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
 
-internal const val gridRoute = "GridScreen"
+object ListScreen : Screen {
 
-object GridScreen : Screen {
-
-    lateinit var viewModel: GridPokemonScreenViewModel
+    private const val listRoute = "ListScreen"
 
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
-        override fun getTitle(): String = "Grid Screen"
+        override fun getTitle(): String = "List Screen"
 
         override fun hasReturn(): Boolean = false
 
-        override fun getItems(): List<TopAppBarItem> = listOf(
-            TopAppBarItem(
-                icon = R.drawable.ic_search,
-                iconColor = BorderBlack,
-                onClickEvent = {
-                    viewModel.onSearchClick()
-                }
-            )
-        )
+        override fun getItems(): List<TopAppBarItem> = emptyList()
     }
 
     override val bottomAppBarComponent: BottomAppBarComponent = object : BottomAppBarComponent {
@@ -50,14 +38,16 @@ object GridScreen : Screen {
     override fun NavGraphBuilder.screen(
         onClickPokemon: (Pokemon) -> Unit
     ) {
-        composable(gridRoute) {
-            viewModel = hiltViewModel()
-            GridPokemonScreen(viewModel = viewModel, onClick = onClickPokemon)
+        composable(listRoute) {
+            val viewModel: ListScreenViewModel = hiltViewModel()
+            ListUIScreen(viewModel = viewModel)
         }
     }
 
-    override fun getRoute(): String = gridRoute
+    override fun getRoute(): String = listRoute
 
     override fun NavController.navigateToItself(pokemonId: Int?, navOptions: NavOptions?) =
-        navigate(gridRoute, navOptions)
+        navigate(listRoute, navOptions)
+
+
 }

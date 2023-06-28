@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
-import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenStateHolder
+import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,12 +14,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GridPokemonScreenViewModel @Inject constructor(
+class GridScreenViewModel @Inject constructor(
     private val repository: PokemonRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<GridScreenStateHolder> =
-        MutableStateFlow(GridScreenStateHolder())
+    private val _uiState: MutableStateFlow<GridScreenUIState> =
+        MutableStateFlow(GridScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
     init {

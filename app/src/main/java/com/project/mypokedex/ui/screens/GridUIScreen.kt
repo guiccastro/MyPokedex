@@ -72,8 +72,8 @@ import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
-import com.project.mypokedex.ui.stateholders.AnimatedEnterStateHolder
-import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenStateHolder
+import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
+import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.Green
@@ -83,25 +83,16 @@ import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MainRed
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
-import com.project.mypokedex.ui.viewmodels.GridPokemonScreenViewModel
-
+import com.project.mypokedex.ui.viewmodels.GridScreenViewModel
 
 @Composable
-fun GridPokemonScreen(viewModel: GridPokemonScreenViewModel, onClick: (Pokemon) -> Unit = {}) {
+fun GridUIScreen(viewModel: GridScreenViewModel, onClick: (Pokemon) -> Unit = {}) {
     val state = viewModel.uiState.collectAsState().value
-    GridPokemonScreen(state = state, onClick = onClick)
+    GridUIScreen(state = state, onClick = onClick)
 }
 
 @Composable
-fun GridPokemonScreen(
-    state: GridScreenStateHolder = GridScreenStateHolder(),
-    onClick: (Pokemon) -> Unit = {}
-) {
-    Screen(state = state, onClick = onClick)
-}
-
-@Composable
-fun AnimatedEnter(state: AnimatedEnterStateHolder) {
+fun AnimatedEnter(state: AnimatedEnterUIState) {
     val animVisibleState = remember { MutableTransitionState(state.isDownloading) }.apply {
         targetState = state.isDownloading
     }
@@ -245,14 +236,14 @@ fun AnimatedEnter(state: AnimatedEnterStateHolder) {
 }
 
 @Composable
-fun Screen(state: GridScreenStateHolder, onClick: (Pokemon) -> Unit = {}) {
+fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
     Column {
         AnimatedVisibility(
             visible = state.isSearching,
             enter = expandVertically(),
             exit = shrinkVertically()
         ) {
-            SearchPokemon(
+            SearchInputText(
                 state = state
             )
         }
@@ -403,7 +394,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
 }
 
 @Composable
-fun SearchPokemon(state: GridScreenStateHolder) {
+fun SearchInputText(state: GridScreenUIState) {
     val shape = RoundedCornerShape(4.dp)
     OutlinedTextField(
         modifier = Modifier
@@ -457,11 +448,11 @@ fun SearchPokemon(state: GridScreenStateHolder) {
 
 @Preview
 @Composable
-fun GridPokemonScreenPreview() {
+fun GridUIScreenPreview() {
     MyPokedexTheme {
         Surface {
-            GridPokemonScreen(
-                GridScreenStateHolder(
+            GridUIScreen(
+                GridScreenUIState(
                     pokemonList = listPokemons
                 )
             )

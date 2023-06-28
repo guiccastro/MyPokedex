@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
-import com.project.mypokedex.navigation.destinations.pokemonIdArgument
+import com.project.mypokedex.navigation.destinations.DetailsScreen.pokemonIdArgument
 import com.project.mypokedex.repository.PokemonRepository
-import com.project.mypokedex.ui.stateholders.DetailsScreenStateHolder
+import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -23,8 +23,8 @@ class DetailsScreenViewModel @Inject constructor(
     private val repository: PokemonRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<DetailsScreenStateHolder> =
-        MutableStateFlow(DetailsScreenStateHolder())
+    private val _uiState: MutableStateFlow<DetailsScreenUIState> =
+        MutableStateFlow(DetailsScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
     init {

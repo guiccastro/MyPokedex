@@ -8,9 +8,10 @@ import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.model.Pokemon
 
-internal const val homeGraphRoute = "home"
-
 object HomeGroupScreen : GroupNavigation {
+
+    private const val homeGraphRoute = "home"
+
     override val listScreens: List<Screen>
         get() = listOf(
             GridScreen,
