@@ -12,7 +12,7 @@ import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.Pokemon
-import com.project.mypokedex.model.TopAppBarItem
+import com.project.mypokedex.model.TopAppBarActionItem
 import com.project.mypokedex.ui.screens.DetailsUIScreen
 import com.project.mypokedex.ui.viewmodels.DetailsScreenViewModel
 
@@ -24,9 +24,9 @@ object DetailsScreen : Screen {
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
         override fun getTitle(): String = "Details"
 
-        override fun hasReturn(): Boolean = false
+        override fun hasReturn(): Boolean = true
 
-        override fun getItems(): List<TopAppBarItem> = emptyList()
+        override fun getActionItems(): List<TopAppBarActionItem> = emptyList()
     }
 
     override val bottomAppBarComponent: BottomAppBarComponent? = null

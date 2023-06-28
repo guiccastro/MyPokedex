@@ -11,8 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.mypokedex.R
+import com.project.mypokedex.sampledata.actionItemsSample
 import com.project.mypokedex.ui.components.bottomBorder
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
@@ -21,7 +24,7 @@ import com.project.mypokedex.ui.theme.PokemonGB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(state: TopAppBarUIState) {
+fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
     TopAppBar(
         modifier = Modifier
             .bottomBorder(1.dp, BorderBlack)
@@ -38,8 +41,22 @@ fun TopBar(state: TopAppBarUIState) {
                 fontSize = 14.sp
             )
         },
+        navigationIcon = {
+            if (state.hasReturn) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_return),
+                    contentDescription = "Return",
+                    colorFilter = ColorFilter.tint(BorderBlack),
+                    modifier = Modifier
+                        .padding(end = 10.dp)
+                        .clickable(
+                            onClick = state.onClickReturn
+                        )
+                )
+            }
+        },
         actions = {
-            state.itemsList.forEach { item ->
+            state.actionItems.forEach { item ->
                 Image(
                     painter = painterResource(id = item.icon),
                     contentDescription = null,
@@ -47,10 +64,21 @@ fun TopBar(state: TopAppBarUIState) {
                     modifier = Modifier
                         .padding(end = 10.dp)
                         .clickable(
-                            onClick = item.onClickEvent
+                            onClick = item.onClick
                         )
                 )
             }
         }
+    )
+}
+
+@Preview
+@Composable
+fun TopBarPreview() {
+    TopBar(
+        TopAppBarUIState(
+            hasReturn = true,
+            actionItems = actionItemsSample
+        )
     )
 }

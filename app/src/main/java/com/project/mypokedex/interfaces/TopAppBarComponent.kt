@@ -1,6 +1,6 @@
 package com.project.mypokedex.interfaces
 
-import com.project.mypokedex.model.TopAppBarItem
+import com.project.mypokedex.model.TopAppBarActionItem
 
 interface TopAppBarComponent {
 
@@ -8,5 +8,5 @@ interface TopAppBarComponent {
 
     fun hasReturn(): Boolean
 
-    fun getItems(): List<TopAppBarItem>
+    fun getActionItems(): List<TopAppBarActionItem>
 }

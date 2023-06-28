@@ -11,7 +11,7 @@ import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.Pokemon
-import com.project.mypokedex.model.TopAppBarItem
+import com.project.mypokedex.model.TopAppBarActionItem
 import com.project.mypokedex.ui.screens.GridUIScreen
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.viewmodels.GridScreenViewModel
@@ -26,11 +26,11 @@ object GridScreen : Screen {
 
         override fun hasReturn(): Boolean = false
 
-        override fun getItems(): List<TopAppBarItem> = listOf(
-            TopAppBarItem(
+        override fun getActionItems(): List<TopAppBarActionItem> = listOf(
+            TopAppBarActionItem(
                 icon = R.drawable.ic_search,
                 iconColor = BorderBlack,
-                onClickEvent = {
+                onClick = {
                     viewModel.onSearchClick()
                 }
             )
