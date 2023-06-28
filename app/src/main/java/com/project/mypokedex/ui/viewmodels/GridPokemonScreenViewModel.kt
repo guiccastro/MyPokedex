@@ -2,13 +2,9 @@ package com.project.mypokedex.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.project.mypokedex.R
-import com.project.mypokedex.model.TopAppBarItem
-import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenStateHolder
-import com.project.mypokedex.ui.theme.BorderBlack
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,10 +22,6 @@ class GridPokemonScreenViewModel @Inject constructor(
         MutableStateFlow(GridScreenStateHolder())
     val uiState get() = _uiState.asStateFlow()
 
-    private val _topBarState: MutableStateFlow<TopAppBarStateHolder> =
-        MutableStateFlow(TopAppBarStateHolder())
-    val topBarState get() = _topBarState.asStateFlow()
-
     init {
         _uiState.update { currentState ->
             currentState.copy(
@@ -39,17 +31,6 @@ class GridPokemonScreenViewModel @Inject constructor(
             )
         }
 
-        _topBarState.update { currentState ->
-            currentState.copy(
-                itemsList = listOf(
-                    TopAppBarItem(
-                        icon = R.drawable.ic_search,
-                        iconColor = BorderBlack,
-                        onClickEvent = { onSearchClick() }
-                    )
-                )
-            )
-        }
         viewModelScope.launch {
             repository.pokemonList.collect {
                 _uiState.value = _uiState.value.copy(
@@ -66,7 +47,7 @@ class GridPokemonScreenViewModel @Inject constructor(
         }
     }
 
-    private fun onSearchClick() {
+    fun onSearchClick() {
         _uiState.value = _uiState.value.copy(
             pokemonList = repository.pokemonList.value,
             isSearching = !_uiState.value.isSearching,

@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.project.mypokedex.R
 import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
@@ -12,17 +13,29 @@ import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.TopAppBarItem
 import com.project.mypokedex.ui.screens.GridPokemonScreen
+import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.viewmodels.GridPokemonScreenViewModel
 
 internal const val gridRoute = "GridScreen"
 
 object GridScreen : Screen {
+
+    lateinit var viewModel: GridPokemonScreenViewModel
+
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
         override fun getTitle(): String = "Grid Screen"
 
         override fun hasReturn(): Boolean = false
 
-        override fun getItems(): List<TopAppBarItem> = emptyList()
+        override fun getItems(): List<TopAppBarItem> = listOf(
+            TopAppBarItem(
+                icon = R.drawable.ic_search,
+                iconColor = BorderBlack,
+                onClickEvent = {
+                    viewModel.onSearchClick()
+                }
+            )
+        )
     }
 
     override val bottomAppBarComponent: BottomAppBarComponent = object : BottomAppBarComponent {
@@ -38,7 +51,7 @@ object GridScreen : Screen {
         onClickPokemon: (Pokemon) -> Unit
     ) {
         composable(gridRoute) {
-            val viewModel: GridPokemonScreenViewModel = hiltViewModel()
+            viewModel = hiltViewModel()
             GridPokemonScreen(viewModel = viewModel, onClick = onClickPokemon)
         }
     }
