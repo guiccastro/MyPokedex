@@ -12,6 +12,7 @@ import com.project.mypokedex.ui.scaffold.components.BottomBar
 import com.project.mypokedex.ui.scaffold.components.TopBar
 import com.project.mypokedex.ui.screens.AnimatedEnter
 import com.project.mypokedex.ui.stateholders.AnimatedEnterStateHolder
+import com.project.mypokedex.ui.stateholders.BottomAppBarStateHolder
 import com.project.mypokedex.ui.stateholders.TopAppBarStateHolder
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
@@ -19,8 +20,7 @@ import com.project.mypokedex.ui.theme.MyPokedexTheme
 fun MainScaffold(
     animatedEnterState: AnimatedEnterStateHolder = AnimatedEnterStateHolder(),
     topAppBarState: TopAppBarStateHolder = TopAppBarStateHolder(),
-    bottomAppBarSelectedItem: BottomAppBarItem? = null,
-    bottomAppBarItems: List<BottomAppBarItem> = emptyList(),
+    bottomAppBarState: BottomAppBarStateHolder = BottomAppBarStateHolder(),
     onClickBottomAppBarItem: (BottomAppBarItem) -> Unit = {},
     content: @Composable () -> Unit
 ) {
@@ -30,8 +30,7 @@ fun MainScaffold(
         topBar = { TopBar(state = topAppBarState) },
         bottomBar = {
             BottomBar(
-                selectedItem = bottomAppBarSelectedItem,
-                items = bottomAppBarItems,
+                state = bottomAppBarState,
                 onClickItem = onClickBottomAppBarItem
             )
         }

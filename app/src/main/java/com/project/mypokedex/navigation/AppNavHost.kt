@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
-import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.navigation.destinations.DetailsScreen
 import com.project.mypokedex.navigation.destinations.HomeGroupScreen
@@ -35,7 +34,7 @@ fun AppNavHost(
     }
 }
 
-val screensList = listOf(
+val screensList = listOf<Screen>(
     DetailsScreen
 )
 
@@ -43,26 +42,22 @@ val groupNavigation = listOf<GroupNavigation>(
     HomeGroupScreen
 )
 
+fun getAllScreens(): List<Screen> {
+    val screens = ArrayList<Screen>()
+    screens.addAll(screensList)
+    groupNavigation.forEach { screens.addAll(it.listScreens) }
+    return screens
+}
+
+fun getScreen(route: String): Screen? {
+    return getAllScreens().find {
+        it.getRoute() == route
+    }
+}
+
 fun getSingleTopWithPopUpTo(route: String): NavOptions {
     return navOptions {
         launchSingleTop = true
         popUpTo(route)
-    }
-}
-
-fun NavHostController.findRoute(bottomItem: BottomAppBarItem) {
-    val currentRoute = currentBackStack.value.last().destination.route?.split("/")?.first()
-
-    var currentScreen: Screen? = null
-    groupNavigation.forEach { group ->
-        group.listScreens.find { screen ->
-            screen.getRoute() == currentRoute
-        }?.let {
-            currentScreen = it
-        }
-    }
-
-    currentScreen?.bottomAppBarComponent?.getItems()?.forEach {
-
     }
 }
