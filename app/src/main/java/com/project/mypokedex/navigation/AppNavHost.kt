@@ -8,8 +8,8 @@ import androidx.navigation.navOptions
 import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.model.Pokemon
-import com.project.mypokedex.navigation.destinations.DetailsScreen
-import com.project.mypokedex.navigation.destinations.HomeGroupScreen
+import com.project.mypokedex.navigation.screens.DetailsScreen
+import com.project.mypokedex.navigation.screens.HomeGroupScreen
 
 @Composable
 fun AppNavHost(

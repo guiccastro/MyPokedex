@@ -13,7 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.navigation.AppNavHost
-import com.project.mypokedex.navigation.destinations.DetailsScreen
+import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.getScreen
 import com.project.mypokedex.navigation.getSingleTopWithPopUpTo
 import com.project.mypokedex.ui.scaffold.MainScaffold

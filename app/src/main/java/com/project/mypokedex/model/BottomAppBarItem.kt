@@ -5,8 +5,8 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.List
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.project.mypokedex.interfaces.Screen
-import com.project.mypokedex.navigation.destinations.GridScreen
-import com.project.mypokedex.navigation.destinations.ListScreen
+import com.project.mypokedex.navigation.screens.GridScreen
+import com.project.mypokedex.navigation.screens.ListScreen
 
 enum class BottomAppBarItem(
     val label: String,

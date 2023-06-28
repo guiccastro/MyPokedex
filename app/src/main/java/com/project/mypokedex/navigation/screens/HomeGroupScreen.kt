@@ -1,4 +1,4 @@
-package com.project.mypokedex.navigation.destinations
+package com.project.mypokedex.navigation.screens
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

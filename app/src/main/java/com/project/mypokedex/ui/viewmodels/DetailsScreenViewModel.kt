@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
-import com.project.mypokedex.navigation.destinations.DetailsScreen.pokemonIdArgument
+import com.project.mypokedex.navigation.screens.DetailsScreen.pokemonIdArgument
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
