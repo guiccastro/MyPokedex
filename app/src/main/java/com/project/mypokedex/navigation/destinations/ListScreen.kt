@@ -29,8 +29,8 @@ object ListScreen : Screen {
     override val bottomAppBarComponent: BottomAppBarComponent = object : BottomAppBarComponent {
         override fun getItems(): List<BottomAppBarItem> {
             return listOf(
-                BottomAppBarItem.GridScreenBottomAppBar,
-                BottomAppBarItem.ListScreenBottomAppBar
+                BottomAppBarItem.GridScreenBottomAppBarItem,
+                BottomAppBarItem.ListScreenBottomAppBarItem
             )
         }
     }

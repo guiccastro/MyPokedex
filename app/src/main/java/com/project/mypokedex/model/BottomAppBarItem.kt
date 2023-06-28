@@ -8,26 +8,26 @@ import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.navigation.destinations.GridScreen
 import com.project.mypokedex.navigation.destinations.ListScreen
 
-sealed class BottomAppBarItem(
+enum class BottomAppBarItem(
     val label: String,
     val icon: ImageVector,
     val screen: Screen
 ) {
-    object GridScreenBottomAppBar :
-        BottomAppBarItem(
-            label = "Grid",
-            icon = Icons.Default.List,
-            screen = GridScreen
-        )
+    GridScreenBottomAppBarItem(
+        label = "Grid",
+        icon = Icons.Default.List,
+        screen = GridScreen
+    ),
 
-    object ListScreenBottomAppBar : BottomAppBarItem(
+    ListScreenBottomAppBarItem(
         label = "List",
         icon = Icons.Default.AccountBox,
         screen = ListScreen
-    )
-}
+    );
 
-val bottomAppBarItems = listOf(
-    BottomAppBarItem.GridScreenBottomAppBar,
-    BottomAppBarItem.ListScreenBottomAppBar,
-)
+    companion object {
+        fun findByScreen(screen: Screen?): BottomAppBarItem? {
+            return values().find { it.screen == screen }
+        }
+    }
+}

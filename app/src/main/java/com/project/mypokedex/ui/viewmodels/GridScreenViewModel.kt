@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
-import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenUIState
+import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,4 +1,4 @@
-package com.project.mypokedex.ui.stateholders.gridscreen
+package com.project.mypokedex.ui.stateholders
 
 import com.project.mypokedex.model.Pokemon
 

@@ -73,7 +73,7 @@ import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
-import com.project.mypokedex.ui.stateholders.gridscreen.GridScreenUIState
+import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.Green

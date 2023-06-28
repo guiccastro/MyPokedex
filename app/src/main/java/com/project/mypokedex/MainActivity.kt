@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
-import com.project.mypokedex.model.bottomAppBarItems
+import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.navigation.AppNavHost
 import com.project.mypokedex.navigation.destinations.DetailsScreen
 import com.project.mypokedex.navigation.getScreen
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                         val route = destination.route?.split("/")?.first() ?: ""
                         val screen = getScreen(route)
                         val bottomAppBarItemSelected =
-                            bottomAppBarItems.find { it.screen == screen }
+                            BottomAppBarItem.findByScreen(screen)
 
                         topAppBarState = TopAppBarUIState(
                             itemsList = screen?.topAppBarComponent?.getItems() ?: emptyList(),
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     bottomAppBarState = bottomAppBarState,
                     onClickBottomAppBarItem = { bottomAppBarItem ->
                         navController.apply {
-                            bottomAppBarItems.find { it == bottomAppBarItem }?.screen?.apply {
+                            bottomAppBarItem.screen.apply {
                                 navigateToItself(navOptions = getSingleTopWithPopUpTo(getRoute()))
                             }
                         }

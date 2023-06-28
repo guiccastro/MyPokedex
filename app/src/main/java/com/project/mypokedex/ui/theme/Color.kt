@@ -1,7 +1,6 @@
 package com.project.mypokedex.ui.theme
 
 import androidx.compose.ui.graphics.Color
-import com.project.mypokedex.model.BottomAppBarItem
 
 val MainRed = Color(0xFFf14948)
 val HeavyRed = Color(0xFFdd3524)
