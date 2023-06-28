@@ -6,17 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -89,16 +86,50 @@ fun PokemonDetails(pokemon: Pokemon?) {
     }
     Box(
         modifier = Modifier
-            .height(150.dp)
-            .width(500.dp)
+            .fillMaxWidth()
             .padding(all = 10.dp)
     ) {
-        Row {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = pokemon.formattedID(),
+                fontSize = 14.sp,
+                fontWeight = FontWeight(500),
+                color = Color.DarkGray,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = PokemonGB
+            )
+            ResponsiveText(
+                text = pokemon.formattedName(),
+                targetTextSizeHeight = 14.sp,
+                fontWeight = FontWeight(400),
+                color = Color.DarkGray,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 2.dp, bottom = 4.dp),
+                textAlign = TextAlign.Center,
+                textStyle = PokemonGB,
+                maxLines = 1
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                pokemon.types.forEach {
+                    PokemonTypeToUI(pokemonType = it, fontSize = 12.sp)
+                }
+            }
             SubcomposeAsyncImage(
                 model = pokemon.getGifOrImage(),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(150.dp),
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .align(CenterHorizontally),
                 imageLoader = LocalContext.current.imageLoader,
                 filterQuality = FilterQuality.High
             ) {
@@ -126,47 +157,8 @@ fun PokemonDetails(pokemon: Pokemon?) {
                     }
                 }
             }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(vertical = 8.dp),
-                verticalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Text(
-                    text = pokemon.formattedID(),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(500),
-                    color = Color.DarkGray,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = PokemonGB
-                )
-                ResponsiveText(
-                    text = pokemon.formattedName(),
-                    targetTextSizeHeight = 14.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color.DarkGray,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    textStyle = PokemonGB,
-                    maxLines = 1
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    pokemon.types.forEach {
-                        PokemonTypeToUI(pokemonType = it, fontSize = 12.sp)
-                    }
-                }
-            }
         }
     }
-
 }
 
 @Preview
