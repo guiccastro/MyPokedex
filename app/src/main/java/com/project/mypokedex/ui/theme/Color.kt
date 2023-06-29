@@ -13,6 +13,7 @@ val Yellow = Color(0xFFfdef5e)
 val Green = Color(0xFF48b699)
 val MainBlack = Color(0xFF494141)
 val MainGray = Color(0xFF565e5f)
+val White = Color(0xFFFFFFFF)
 
 /** Home Screen **/
 val HomeScreenBackground = MainRed
