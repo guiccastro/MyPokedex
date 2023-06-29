@@ -10,8 +10,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.project.mypokedex.MainBottomAppBarComponent.updateBottomAppBarState
-import com.project.mypokedex.MainTopAppBarComponent.updateTopAppBarState
+import com.project.mypokedex.model.MainBottomAppBarComponent.updateBottomAppBarState
+import com.project.mypokedex.model.MainTopAppBarComponent.updateTopAppBarState
 import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.model.BottomAppBarItem

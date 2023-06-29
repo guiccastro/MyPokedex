@@ -6,8 +6,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.project.mypokedex.MainBottomAppBarComponent
-import com.project.mypokedex.MainTopAppBarComponent
+import com.project.mypokedex.model.MainBottomAppBarComponent
+import com.project.mypokedex.model.MainTopAppBarComponent
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.scaffold.components.BottomBar
 import com.project.mypokedex.ui.scaffold.components.TopBar

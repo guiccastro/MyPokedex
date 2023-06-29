@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.project.mypokedex.MainBottomAppBarComponent.onClickBottomAppBarItem
+import com.project.mypokedex.model.MainBottomAppBarComponent.onClickBottomAppBarItem
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder

@@ -1,8 +1,7 @@
-package com.project.mypokedex
+package com.project.mypokedex.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.navigation.MainNavComponent
 import com.project.mypokedex.navigation.MainNavComponent.Companion.navController
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState

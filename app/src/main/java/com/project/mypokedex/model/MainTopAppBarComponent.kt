@@ -1,4 +1,4 @@
-package com.project.mypokedex
+package com.project.mypokedex.model
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
