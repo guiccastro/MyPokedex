@@ -11,15 +11,12 @@ import com.project.mypokedex.model.MainTopAppBarComponent
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.scaffold.components.BottomBar
 import com.project.mypokedex.ui.scaffold.components.TopBar
-import com.project.mypokedex.ui.screens.AnimatedEnter
-import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun MainScaffold(
-    animatedEnterState: AnimatedEnterUIState = AnimatedEnterUIState(),
     topAppBarState: TopAppBarUIState = MainTopAppBarComponent.topAppBarState(),
     bottomAppBarState: BottomAppBarUIState = MainBottomAppBarComponent.bottomAppBarState(),
     content: @Composable () -> Unit
@@ -37,8 +34,6 @@ fun MainScaffold(
             content()
         }
     }
-
-    AnimatedEnter(state = animatedEnterState)
 }
 
 @Preview
@@ -46,8 +41,7 @@ fun MainScaffold(
 fun MyPokedexAppPreview() {
     MyPokedexTheme {
         Surface {
-            MainScaffold(AnimatedEnterUIState(isDownloading = false)) {
-
+            MainScaffold {
             }
         }
     }

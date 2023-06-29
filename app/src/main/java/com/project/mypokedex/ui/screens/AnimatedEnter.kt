@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,12 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.HeavyRed
 import com.project.mypokedex.ui.theme.MainRed
+import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun AnimatedEnter(state: AnimatedEnterUIState) {
@@ -171,6 +174,16 @@ fun AnimatedEnter(state: AnimatedEnterUIState) {
                     color = BorderBlack
                 )
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun AnimatedEnterPreview() {
+    MyPokedexTheme {
+        Surface {
+            AnimatedEnter(state = AnimatedEnterUIState(isDownloading = true))
         }
     }
 }

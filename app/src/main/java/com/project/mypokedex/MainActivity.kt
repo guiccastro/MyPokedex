@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.project.mypokedex.navigation.MainNavComponent.Companion.AppNavHost
 import com.project.mypokedex.ui.scaffold.MainScaffold
+import com.project.mypokedex.ui.screens.AnimatedEnter
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.viewmodels.AnimatedEnterViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,13 +19,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyPokedexTheme {
-                val animatedEnterViewModel: AnimatedEnterViewModel = hiltViewModel()
-
-                MainScaffold(
-                    animatedEnterState = animatedEnterViewModel.animatedEnterUIState.collectAsState().value
-                ) {
+                MainScaffold {
                     AppNavHost()
                 }
+
+                val animatedEnterViewModel: AnimatedEnterViewModel = hiltViewModel()
+                AnimatedEnter(state = animatedEnterViewModel.animatedEnterUIState.collectAsState().value)
             }
         }
     }
