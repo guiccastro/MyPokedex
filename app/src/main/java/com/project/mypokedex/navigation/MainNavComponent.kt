@@ -1,23 +1,30 @@
 package com.project.mypokedex.navigation
 
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.project.mypokedex.MainBottomAppBarComponent.updateBottomAppBarState
+import com.project.mypokedex.MainTopAppBarComponent.updateTopAppBarState
 import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
+import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.screens.HomeGroupScreen
+import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
+import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 
 class MainNavComponent private constructor() {
 
     private lateinit var _navController: NavHostController
 
-    companion object {
+    companion object : NavController.OnDestinationChangedListener {
 
         @Volatile
         private var instance: MainNavComponent? = null
@@ -38,15 +45,11 @@ class MainNavComponent private constructor() {
         val navController: NavHostController get() = getInstance()._navController
 
         @Composable
-        fun AppNavHost(
-            onDestinationChanged: (NavDestination) -> Unit
-        ) {
+        fun AppNavHost() {
             getInstance()._navController = rememberNavController()
 
             LaunchedEffect(Unit) {
-                navController.addOnDestinationChangedListener { _, destination, _ ->
-                    onDestinationChanged(destination)
-                }
+                navController.addOnDestinationChangedListener(this@Companion)
             }
 
             NavHost(
@@ -70,6 +73,35 @@ class MainNavComponent private constructor() {
                     }
                 }
             }
+        }
+
+        override fun onDestinationChanged(
+            controller: NavController,
+            destination: NavDestination,
+            arguments: Bundle?
+        ) {
+            val route = destination.route?.split("/")?.first() ?: ""
+            val screen = getScreen(route)
+            val bottomAppBarItemSelected =
+                BottomAppBarItem.findByScreen(screen)
+
+            screen?.topAppBarComponent?.let { topAppBarComponent ->
+                updateTopAppBarState(
+                    TopAppBarUIState(
+                        title = topAppBarComponent.getTitle(),
+                        hasReturn = topAppBarComponent.hasReturn(),
+                        onClickReturn = { navController.popBackStack() },
+                        actionItems = topAppBarComponent.getActionItems()
+                    )
+                )
+            }
+
+            updateBottomAppBarState(
+                BottomAppBarUIState(
+                    selectedItem = bottomAppBarItemSelected,
+                    bottomAppBarComponent = screen?.bottomAppBarComponent
+                )
+            )
         }
 
         fun getAllScreens(): List<Screen> {
