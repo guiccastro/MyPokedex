@@ -101,4 +101,6 @@ dependencies {
 
     // Navigation
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.11'
 }
