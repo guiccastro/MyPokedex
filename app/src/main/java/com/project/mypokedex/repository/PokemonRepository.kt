@@ -93,18 +93,20 @@ class PokemonRepository @Inject constructor(
                 try {
                     Log.i(TAG, "requestPokemon: $id")
                     val pokemon = client.getPokemon(id)
-                    parseAndSavePokemon(pokemon)
-                    calculateProgressRequest()
-                    requestPokemons.remove(id)
-                    responseCount++
-                    if (responseCount == toIndex) {
-                        requestAllPokemons()
-                    }
                     Log.i(TAG, "onResponse: Pokemon - $id")
 
+                    parseAndSavePokemon(pokemon)
+                    requestPokemons.remove(id)
                     if (requestPokemons.isEmpty()) {
                         pokemonList.value = pokemonList.value.sortedBy { it.id }
                         Log.i(TAG, "onResponse: All Pokemons requested correctly!")
+                    }
+
+                    calculateProgressRequest()
+
+                    responseCount++
+                    if (responseCount == toIndex) {
+                        requestAllPokemons()
                     }
                 } catch (e: Exception) {
                     Log.i(TAG, "onFailure: Pokemon - $id - $e")
