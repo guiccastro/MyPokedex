@@ -39,10 +39,7 @@ object GridScreen : Screen {
 
     override val bottomAppBarComponent: BottomAppBarComponent = object : BottomAppBarComponent {
         override fun getItems(): List<BottomAppBarItem> {
-            return listOf(
-                BottomAppBarItem.GridScreenBottomAppBarItem,
-                BottomAppBarItem.ListScreenBottomAppBarItem
-            )
+            return BottomAppBarItem.HomeBottomAppBarItems
         }
     }
 

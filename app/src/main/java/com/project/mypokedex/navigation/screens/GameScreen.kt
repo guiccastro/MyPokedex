@@ -1,5 +1,6 @@
 package com.project.mypokedex.navigation.screens
 
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -10,41 +11,28 @@ import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.Pokemon
-import com.project.mypokedex.model.TopAppBarActionItem
-import com.project.mypokedex.ui.screens.ListUIScreen
-import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
+import com.project.mypokedex.ui.screens.GameUIScreen
+import com.project.mypokedex.ui.viewmodels.GameScreenViewModel
 
-object ListScreen : Screen {
+object GameScreen : Screen {
+    private const val gameRoute = "GameScreen"
 
-    private const val listRoute = "ListScreen"
-
-    override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
-        override fun getTitle(): String = "List Screen"
-
-        override fun hasReturn(): Boolean = false
-
-        override fun getActionItems(): List<TopAppBarActionItem> = emptyList()
-    }
-
+    override val topAppBarComponent: TopAppBarComponent? = null
     override val bottomAppBarComponent: BottomAppBarComponent = object : BottomAppBarComponent {
         override fun getItems(): List<BottomAppBarItem> {
             return BottomAppBarItem.HomeBottomAppBarItems
         }
     }
 
-    override fun NavGraphBuilder.screen(
-        onClickPokemon: (Pokemon) -> Unit
-    ) {
-        composable(listRoute) {
-            val viewModel: ListScreenViewModel = hiltViewModel()
-            ListUIScreen(viewModel = viewModel)
+    override fun NavGraphBuilder.screen(onClickPokemon: (Pokemon) -> Unit) {
+        composable(gameRoute) {
+            val viewModel: GameScreenViewModel = hiltViewModel()
+            GameUIScreen(state = viewModel.uiState.collectAsState().value)
         }
     }
 
-    override fun getRoute(): String = listRoute
+    override fun getRoute(): String = gameRoute
 
     override fun NavController.navigateToItself(pokemonId: Int?, navOptions: NavOptions?) =
-        navigate(listRoute, navOptions)
-
-
+        navigate(gameRoute, navOptions)
 }

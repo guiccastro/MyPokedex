@@ -9,8 +9,10 @@ import com.project.mypokedex.network.responses.PokemonResponse
 import com.project.mypokedex.network.services.PokemonService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -34,13 +36,16 @@ class PokemonRepository @Inject constructor(
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
 
     init {
-        CoroutineScope(IO).launch {
-            pokemonList.value = dao.getAll()
+        CoroutineScope(Main).launch {
+            withContext(IO) {
+                pokemonList.value = dao.getAll()
 
-            if (pokemonList.value.isEmpty()) {
-                getBasicKeys()
-            } else {
-                progressRequest.value = 1F
+                if (pokemonList.value.isEmpty()) {
+                    getBasicKeys()
+                } else {
+                    totalPokemons = pokemonList.value.size
+                    progressRequest.value = 1F
+                }
             }
         }
     }
@@ -148,5 +153,32 @@ class PokemonRepository @Inject constructor(
         return pokemonList.value.find {
             it.id == id
         } ?: dao.getById(id)
+    }
+
+    suspend fun getRandomPokemons(quantity: Int): List<Pokemon> {
+        if (totalPokemons == 0) return emptyList()
+        val idList = 1.rangeTo(totalPokemons).toMutableList()
+        val selectedIds = ArrayList<Int>()
+
+        repeat(quantity) {
+            val id = idList.toIntArray().random()
+            selectedIds.add(id)
+            idList.remove(id)
+        }
+
+        val selectedPokemons = ArrayList<Pokemon>()
+        selectedIds.forEach { id ->
+            withContext(IO) {
+                getPokemon(id)?.let { pokemon ->
+                    selectedPokemons.add(pokemon)
+                }
+            }
+        }
+
+        if (selectedPokemons.size != quantity) {
+            selectedPokemons.addAll(getRandomPokemons(selectedPokemons.size - quantity))
+        }
+
+        return selectedPokemons
     }
 }

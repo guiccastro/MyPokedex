@@ -3,6 +3,30 @@ package com.project.mypokedex.sampledata
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 
+val bulbasaur = Pokemon(
+    1,
+    "bulbasaur",
+    listOf(PokemonType.Grass, PokemonType.Poison),
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/1.gif"
+)
+
+val charmander = Pokemon(
+    4,
+    "charmander",
+    listOf(PokemonType.Fire),
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/4.gif"
+)
+
+val squirtle = Pokemon(
+    7,
+    "squirtle",
+    listOf(PokemonType.Water),
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png",
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/7.gif"
+)
+
 val charizard = Pokemon(
     6,
     "charizard",
@@ -11,4 +35,4 @@ val charizard = Pokemon(
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/6.gif"
 )
 
-val listPokemons = listOf(charizard, charizard, charizard)
+val listPokemons = listOf(bulbasaur, charmander, squirtle)

@@ -15,7 +15,8 @@ object HomeGroupScreen : GroupNavigation {
     override val listScreens: List<Screen>
         get() = listOf(
             GridScreen,
-            ListScreen
+            ListScreen,
+            GameScreen
         )
 
     override fun NavGraphBuilder.graph(

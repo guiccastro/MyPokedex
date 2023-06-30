@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.project.mypokedex.database.PokemonDatabase
 import com.project.mypokedex.database.dao.PokemonDao
+import com.project.mypokedex.network.services.PokemonService
+import com.project.mypokedex.repository.PokemonRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +30,14 @@ class DatabaseModule {
     }
 
     @Provides
+    @Singleton
     fun providePokemonDao(database: PokemonDatabase): PokemonDao {
         return database.pokemonDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepository(dao: PokemonDao, client: PokemonService): PokemonRepository {
+        return PokemonRepository(dao, client)
     }
 }
