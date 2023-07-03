@@ -1,14 +1,19 @@
 package com.project.mypokedex.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.navigation.MainNavComponent.Companion.navController
+import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
+import com.project.mypokedex.ui.theme.CorrectAnswer
+import com.project.mypokedex.ui.theme.HomeScreenCard
+import com.project.mypokedex.ui.theme.WrongAnswer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,13 +26,27 @@ class GameScreenViewModel @Inject constructor(
         MutableStateFlow(GameScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
+    init {
+        _uiState.update { currentState ->
+            currentState.copy(
+                onOptionClick = { pokemon ->
+                    onOptionClick(pokemon)
+                },
+                onClickNext = {
+                    onClickNext()
+                },
+                onClickPokemon = {
+                    onClickPokemon()
+                }
+            )
+        }
+
+        setGame()
+    }
+
     private fun List<Pokemon>.getPokemon(): Pokemon? {
         if (isEmpty()) return null
         return this[indices.random()]
-    }
-
-    init {
-        setGame()
     }
 
     private fun setGame() {
@@ -35,8 +54,60 @@ class GameScreenViewModel @Inject constructor(
             val options = repository.getRandomPokemons(3)
             _uiState.value = _uiState.value.copy(
                 options = options,
-                pokemon = options.getPokemon()
+                pokemon = options.getPokemon(),
+                answered = false,
+                isCorrect = false,
+                buttonsUIState = emptyList()
             )
+        }
+    }
+
+    private fun onOptionClick(pokemon: Pokemon) {
+        if (!_uiState.value.answered) {
+            _uiState.value = _uiState.value.copy(
+                answered = true,
+                isCorrect = _uiState.value.pokemon?.id == pokemon.id
+            )
+
+            val buttonsUIState = _uiState.value.options.map {
+                if (_uiState.value.answered) {
+                    if (_uiState.value.isCorrect) {
+                        if (it == pokemon) {
+                            Pair(CorrectAnswer, true)
+                        } else {
+                            Pair(HomeScreenCard, false)
+                        }
+                    } else {
+                        if (it == pokemon) {
+                            Pair(WrongAnswer, true)
+                        } else {
+                            if (it == _uiState.value.pokemon) {
+                                Pair(CorrectAnswer, true)
+                            } else {
+                                Pair(HomeScreenCard, false)
+                            }
+                        }
+                    }
+                } else {
+                    Pair(HomeScreenCard, true)
+                }
+            }
+
+            _uiState.value = _uiState.value.copy(
+                buttonsUIState = buttonsUIState
+            )
+        }
+    }
+
+    private fun onClickNext() {
+        setGame()
+    }
+
+    private fun onClickPokemon() {
+        navController.apply {
+            DetailsScreen.apply {
+                navigateToItself(pokemonId = _uiState.value.pokemon?.id)
+            }
         }
     }
 }

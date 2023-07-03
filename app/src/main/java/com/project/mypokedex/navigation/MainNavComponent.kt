@@ -10,11 +10,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.project.mypokedex.model.MainBottomAppBarComponent.updateBottomAppBarState
-import com.project.mypokedex.model.MainTopAppBarComponent.updateTopAppBarState
 import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.model.BottomAppBarItem
+import com.project.mypokedex.model.MainBottomAppBarComponent.updateBottomAppBarState
+import com.project.mypokedex.model.MainTopAppBarComponent.updateTopAppBarState
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.screens.HomeGroupScreen
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
@@ -82,20 +82,29 @@ class MainNavComponent private constructor() {
         ) {
             val route = destination.route?.split("/")?.first() ?: ""
             val screen = getScreen(route)
-            val bottomAppBarItemSelected =
-                BottomAppBarItem.findByScreen(screen)
 
-            screen?.topAppBarComponent?.let { topAppBarComponent ->
-                updateTopAppBarState(
+            updateTopBar(screen)
+            updateBottomBar(screen)
+        }
+
+        private fun updateTopBar(screen: Screen?) {
+            val topAppBarComponent = screen?.topAppBarComponent
+            updateTopAppBarState(
+                topAppBarComponent?.let {
                     TopAppBarUIState(
                         title = topAppBarComponent.getTitle(),
                         hasReturn = topAppBarComponent.hasReturn(),
                         onClickReturn = { navController.popBackStack() },
                         actionItems = topAppBarComponent.getActionItems()
                     )
-                )
-            }
+                } ?: run {
+                    TopAppBarUIState()
+                }
+            )
+        }
 
+        private fun updateBottomBar(screen: Screen?) {
+            val bottomAppBarItemSelected = BottomAppBarItem.findByScreen(screen)
             updateBottomAppBarState(
                 BottomAppBarUIState(
                     selectedItem = bottomAppBarItemSelected,

@@ -19,6 +19,10 @@ val White = Color(0xFFFFFFFF)
 val HomeScreenBackground = MainRed
 val HomeScreenCard = LightGray
 
+/** Game Screen **/
+val CorrectAnswer = Color(0xFF12C70F)
+val WrongAnswer = Color(0xFFDD201E)
+
 /** Bottom App Bar **/
 val BottomAppBarSelectedItem = Color(0xFFC93D3C)
 

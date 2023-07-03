@@ -11,13 +11,21 @@ import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.TopAppBarActionItem
 import com.project.mypokedex.ui.screens.GameUIScreen
 import com.project.mypokedex.ui.viewmodels.GameScreenViewModel
 
 object GameScreen : Screen {
     private const val gameRoute = "GameScreen"
 
-    override val topAppBarComponent: TopAppBarComponent? = null
+    override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
+        override fun getTitle(): String = "Game Screen"
+
+        override fun hasReturn(): Boolean = false
+
+        override fun getActionItems(): List<TopAppBarActionItem> = emptyList()
+
+    }
     override val bottomAppBarComponent: BottomAppBarComponent = object : BottomAppBarComponent {
         override fun getItems(): List<BottomAppBarItem> {
             return BottomAppBarItem.HomeBottomAppBarItems
