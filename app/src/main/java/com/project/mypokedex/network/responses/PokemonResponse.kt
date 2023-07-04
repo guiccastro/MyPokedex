@@ -27,7 +27,8 @@ data class BlackWhiteResponse(
 )
 
 data class AnimatedResponse(
-    @field:Json(name = "front_default") val frontDefault: String?
+    @field:Json(name = "front_default") val frontDefault: String?,
+    @field:Json(name = "back_default") val backDefault: String?
 )
 
 data class TypeListResponse(

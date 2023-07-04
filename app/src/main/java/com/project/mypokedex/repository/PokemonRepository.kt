@@ -134,8 +134,9 @@ class PokemonRepository @Inject constructor(
         }
         val image = info.sprites.frontDefault ?: ""
         val gif = info.sprites.versions?.generationV?.blackWhite?.animated?.frontDefault ?: ""
+        val backGif = info.sprites.versions?.generationV?.blackWhite?.animated?.backDefault ?: ""
 
-        val newPokemon = Pokemon(id, name, types, image, gif)
+        val newPokemon = Pokemon(id, name, types, image, gif, backGif)
         Log.i(TAG, "parseAndSave: $newPokemon")
         pokemonList.value = (pokemonList.value + newPokemon)
 

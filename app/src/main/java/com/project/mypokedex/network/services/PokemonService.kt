@@ -11,9 +11,6 @@ interface PokemonService {
     @GET("/api/v2/pokemon/{id}")
     suspend fun getPokemon(@Path("id") id: Int): PokemonResponse
 
-    @GET("/api/v2/pokemon/{id}")
-    fun getPokemon(@Path("id") name: String): Call<String>
-
     @GET("/api/v2/pokemon?limit=100000&offset=0")
     suspend fun getBasicKeys(): BasicKeysResponse
 

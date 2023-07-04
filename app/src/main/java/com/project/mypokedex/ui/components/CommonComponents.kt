@@ -3,33 +3,47 @@ package com.project.mypokedex.ui.components
 import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import coil.imageLoader
+import com.project.mypokedex.R
+import com.project.mypokedex.model.RotationalImageSide
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.HomeScreenBackground
-import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
 fun Background() {
@@ -186,3 +200,98 @@ fun Modifier.topBorder(strokeWidth: Dp, color: Color) = composed(
         }
     }
 )
+
+@Composable
+fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
+    var degrees by remember { mutableFloatStateOf(0F) }
+    var side by remember { mutableStateOf(RotationalImageSide.Front) }
+    Box(
+        modifier = Modifier
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    degrees += dragAmount.x
+                    if (degrees < -275F) {
+                        degrees = 90F
+                    }
+                    if (degrees > 275F) {
+                        degrees = -90F
+                    }
+                    side =
+                        if (degrees < 90F && degrees > -90) RotationalImageSide.Front else RotationalImageSide.Back
+                    change.consume()
+                }
+            }
+            .graphicsLayer {
+                rotationY = degrees
+            }
+    ) {
+        SubcomposeAsyncImage(
+            model = frontImage,
+            contentDescription = null,
+            modifier = modifier
+                .alpha(if (side == RotationalImageSide.Front) 1F else 0F),
+            imageLoader = LocalContext.current.imageLoader,
+            filterQuality = FilterQuality.High
+        ) {
+            when (painter.state) {
+                is AsyncImagePainter.State.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(40.dp),
+                        color = BorderBlack
+                    )
+                }
+
+                is AsyncImagePainter.State.Error -> {
+                    Image(
+                        modifier = Modifier
+                            .padding(40.dp),
+                        painter = painterResource(id = R.drawable.ic_error),
+                        contentDescription = "Error",
+                        colorFilter = ColorFilter.tint(BorderBlack)
+                    )
+                }
+
+                else -> {
+                    SubcomposeAsyncImageContent()
+                }
+            }
+        }
+
+        SubcomposeAsyncImage(
+            model = backImage,
+            contentDescription = null,
+            modifier = modifier
+                .graphicsLayer {
+                    rotationY = 180F
+                }
+                .alpha(if (side == RotationalImageSide.Back) 1F else 0F),
+            imageLoader = LocalContext.current.imageLoader,
+            filterQuality = FilterQuality.High
+        ) {
+            when (painter.state) {
+                is AsyncImagePainter.State.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(40.dp),
+                        color = BorderBlack
+                    )
+                }
+
+                is AsyncImagePainter.State.Error -> {
+                    Image(
+                        modifier = Modifier
+                            .padding(40.dp),
+                        painter = painterResource(id = R.drawable.ic_error),
+                        contentDescription = "Error",
+                        colorFilter = ColorFilter.tint(BorderBlack)
+                    )
+                }
+
+                else -> {
+                    SubcomposeAsyncImageContent()
+                }
+            }
+        }
+    }
+}
