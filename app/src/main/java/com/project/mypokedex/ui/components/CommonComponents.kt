@@ -6,6 +6,7 @@ import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -203,13 +204,14 @@ fun Modifier.topBorder(strokeWidth: Dp, color: Color) = composed(
 
 @Composable
 fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
+    val rotationSensitivity = 0.5F
     var degrees by remember { mutableFloatStateOf(0F) }
     var side by remember { mutableStateOf(RotationalImageSide.Front) }
     Box(
         modifier = Modifier
             .pointerInput(Unit) {
                 detectDragGestures { change, dragAmount ->
-                    degrees += dragAmount.x
+                    degrees += dragAmount.x * rotationSensitivity
                     if (degrees < -275F) {
                         degrees = 90F
                     }
@@ -220,6 +222,14 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                         if (degrees < 90F && degrees > -90) RotationalImageSide.Front else RotationalImageSide.Back
                     change.consume()
                 }
+            }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = {
+                        degrees = 0F
+                        side = RotationalImageSide.Front
+                    }
+                )
             }
             .graphicsLayer {
                 rotationY = degrees
