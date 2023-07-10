@@ -37,7 +37,7 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideRepository(dao: PokemonDao, client: PokemonService): PokemonRepository {
-        return PokemonRepository(dao, client)
+    fun provideRepository(dao: PokemonDao, client: PokemonService, @ApplicationContext context: Context): PokemonRepository {
+        return PokemonRepository(dao, client, context)
     }
 }

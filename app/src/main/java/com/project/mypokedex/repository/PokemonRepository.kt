@@ -1,24 +1,32 @@
 package com.project.mypokedex.repository
 
+import android.content.Context
 import android.util.Log
 import com.project.mypokedex.database.dao.PokemonDao
+import com.project.mypokedex.getBasicKeysPreferences
+import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 import com.project.mypokedex.network.responses.BasicKeysResponse
 import com.project.mypokedex.network.responses.PokemonResponse
 import com.project.mypokedex.network.services.PokemonService
+import com.project.mypokedex.saveBasicKeysPreferences
+import com.project.mypokedex.saveTotalPokemonsPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
     private val dao: PokemonDao,
-    private val client: PokemonService
+    private val client: PokemonService,
+    private val context: Context
 ) {
     companion object {
         private const val MAX_BASIC_KEY_RETRY = 5
@@ -32,20 +40,52 @@ class PokemonRepository @Inject constructor(
     private val requestPokemons = ArrayList<Int>()
 
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
-
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
 
     init {
         CoroutineScope(Main).launch {
-            withContext(IO) {
+            runBlocking(IO) {
                 pokemonList.value = dao.getAll()
+                setBasicKeys(getBasicKeysPreferences(context).first())
+                totalPokemons = getTotalPokemonsPreferences(context).first()
             }
 
-            if (pokemonList.value.isEmpty()) {
-                getBasicKeys()
-            } else {
-                totalPokemons = pokemonList.value.size
-                progressRequest.value = 1F
+            verifyDaoData()
+        }
+    }
+
+    private fun setBasicKeys(keyList: List<Pair<String, Int>>) {
+        pokemonBasicKeyID = keyList.associate { it.second to it.first }
+        pokemonBasicKeyName = keyList.associate { it.first to it.second }
+    }
+
+    private suspend fun verifyDaoData() {
+        if (needToRequestBasicKeys()) {
+            getBasicKeys()
+        } else {
+            Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
+        }
+
+        if (needToRequestPokemon()) {
+            setRequestPokemons()
+            requestAllPokemons()
+        } else {
+            Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
+            totalPokemons = pokemonList.value.size
+            progressRequest.value = 1F
+        }
+    }
+
+    private fun needToRequestBasicKeys(): Boolean =
+        pokemonBasicKeyID.isEmpty() || pokemonBasicKeyName.isEmpty() || totalPokemons == 0
+
+    private fun needToRequestPokemon(): Boolean =
+        pokemonList.value.isEmpty() || pokemonList.value.size != totalPokemons
+
+    private fun setRequestPokemons() {
+        pokemonBasicKeyID.keys.forEach { keyID ->
+            if (pokemonList.value.indexOfFirst { it.id == keyID } == -1) {
+                requestPokemons.add(keyID)
             }
         }
     }
@@ -58,8 +98,7 @@ class PokemonRepository @Inject constructor(
             val basicKeys = client.getBasicKeys()
             Log.i(TAG, "onResponse: Basic Keys")
 
-            parseBasicKeys(basicKeys)
-            requestAllPokemons()
+            parseAndSaveBasicKeysResponse(basicKeys)
         } catch (e: Exception) {
             onFailureCount++
             Log.i(TAG, "onFailure: Basic Keys - Failures: $onFailureCount - $e")
@@ -69,7 +108,7 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    private fun parseBasicKeys(basicKeys: BasicKeysResponse) {
+    private fun parseAndSaveBasicKeysResponse(basicKeys: BasicKeysResponse) {
         totalPokemons = basicKeys.count
 
         val keyList = ArrayList<Pair<String, Int>>()
@@ -79,10 +118,12 @@ class PokemonRepository @Inject constructor(
             keyList.add(Pair(name, id))
         }
 
-        pokemonBasicKeyID = keyList.associate { it.second to it.first }
-        pokemonBasicKeyName = keyList.associate { it.first to it.second }
+        CoroutineScope(IO).launch {
+            saveBasicKeysPreferences(context, keyList)
+            saveTotalPokemonsPreferences(context, totalPokemons)
+        }
 
-        requestPokemons.addAll(pokemonBasicKeyID.keys)
+        setBasicKeys(keyList)
     }
 
     private suspend fun requestAllPokemons() {
@@ -100,7 +141,7 @@ class PokemonRepository @Inject constructor(
                         val pokemon = client.getPokemon(id)
                         Log.i(TAG, "onResponse: Pokemon - $id")
 
-                        parseAndSavePokemon(pokemon)
+                        parseAndSavePokemonResponse(pokemon)
                         requestPokemons.remove(id)
 
                         calculateProgressRequest()
@@ -113,7 +154,7 @@ class PokemonRepository @Inject constructor(
             }
         }.join()
 
-        if (requestPokemons.isEmpty()) {
+        if (progressRequest.value == 1F) {
             pokemonList.value = pokemonList.value.sortedBy { it.id }
             Log.i(TAG, "onResponse: All Pokemons requested correctly!")
         } else {
@@ -122,7 +163,7 @@ class PokemonRepository @Inject constructor(
 
     }
 
-    private fun parseAndSavePokemon(info: PokemonResponse) {
+    private fun parseAndSavePokemonResponse(info: PokemonResponse) {
         val id = info.id
         val name = info.name
         val types = info.types.mapNotNull {
