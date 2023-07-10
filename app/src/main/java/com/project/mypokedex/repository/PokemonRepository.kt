@@ -10,6 +10,7 @@ import com.project.mypokedex.network.services.PokemonService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,7 +21,6 @@ class PokemonRepository @Inject constructor(
     private val client: PokemonService
 ) {
     companion object {
-        private const val REQUESTS_AT_A_TIME = 100
         private const val MAX_BASIC_KEY_RETRY = 5
         private const val TAG = "PokemonRepository"
     }
@@ -39,13 +39,13 @@ class PokemonRepository @Inject constructor(
         CoroutineScope(Main).launch {
             withContext(IO) {
                 pokemonList.value = dao.getAll()
+            }
 
-                if (pokemonList.value.isEmpty()) {
-                    getBasicKeys()
-                } else {
-                    totalPokemons = pokemonList.value.size
-                    progressRequest.value = 1F
-                }
+            if (pokemonList.value.isEmpty()) {
+                getBasicKeys()
+            } else {
+                totalPokemons = pokemonList.value.size
+                progressRequest.value = 1F
             }
         }
     }
@@ -87,41 +87,39 @@ class PokemonRepository @Inject constructor(
 
     private suspend fun requestAllPokemons() {
         var responseCount = 0
-        val toIndex = if (requestPokemons.size >= REQUESTS_AT_A_TIME) {
-            REQUESTS_AT_A_TIME
+        val toIndex = if (requestPokemons.size >= totalPokemons) {
+            totalPokemons
         } else {
             requestPokemons.size
         }
+        CoroutineScope(Main).launch {
+            requestPokemons.subList(0, toIndex).forEach { id ->
+                async {
+                    try {
+                        Log.i(TAG, "requestPokemon: $id")
+                        val pokemon = client.getPokemon(id)
+                        Log.i(TAG, "onResponse: Pokemon - $id")
 
-        requestPokemons.subList(0, toIndex).forEach { id ->
-            CoroutineScope(IO).launch {
-                try {
-                    Log.i(TAG, "requestPokemon: $id")
-                    val pokemon = client.getPokemon(id)
-                    Log.i(TAG, "onResponse: Pokemon - $id")
+                        parseAndSavePokemon(pokemon)
+                        requestPokemons.remove(id)
 
-                    parseAndSavePokemon(pokemon)
-                    requestPokemons.remove(id)
-                    if (requestPokemons.isEmpty()) {
-                        pokemonList.value = pokemonList.value.sortedBy { it.id }
-                        Log.i(TAG, "onResponse: All Pokemons requested correctly!")
-                    }
+                        calculateProgressRequest()
 
-                    calculateProgressRequest()
-
-                    responseCount++
-                    if (responseCount == toIndex) {
-                        requestAllPokemons()
-                    }
-                } catch (e: Exception) {
-                    Log.i(TAG, "onFailure: Pokemon - $id - $e")
-                    responseCount++
-                    if (responseCount == toIndex) {
-                        requestAllPokemons()
+                        responseCount++
+                    } catch (e: Exception) {
+                        Log.i(TAG, "onFailure: Pokemon - $id - $e")
                     }
                 }
             }
+        }.join()
+
+        if (requestPokemons.isEmpty()) {
+            pokemonList.value = pokemonList.value.sortedBy { it.id }
+            Log.i(TAG, "onResponse: All Pokemons requested correctly!")
+        } else {
+            requestAllPokemons()
         }
+
     }
 
     private fun parseAndSavePokemon(info: PokemonResponse) {

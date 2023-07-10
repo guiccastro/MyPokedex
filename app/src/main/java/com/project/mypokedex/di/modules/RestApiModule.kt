@@ -27,7 +27,7 @@ class RestApiModule {
     @Singleton
     fun provideRetrofit(circuitBreaker: CircuitBreaker, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .addCallAdapterFactory(CircuitBreakerCallAdapter.of(circuitBreaker))
+            //.addCallAdapterFactory(CircuitBreakerCallAdapter.of(circuitBreaker))
             .baseUrl(POKE_API_URL)
             //.addConverterFactory(GsonConverterFactory.create())
             //.addConverterFactory(ScalarsConverterFactory.create())
