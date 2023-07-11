@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 val MainRed = Color(0xFFf14948)
 val HeavyRed = Color(0xFFdd3524)
-val MainBlue = Color(0xFF44b2c9)
+val MainBlue = Color(0xFF52b2cf)
 val BorderBlack = Color(0xFF3c3635)
 val BorderBlackShadow = Color(0x773C3635)
 val LightGray = Color(0xFFe7e7e5)
@@ -17,7 +17,7 @@ val White = Color(0xFFFFFFFF)
 
 /** Home Screen **/
 val HomeScreenBackground = MainRed
-val HomeScreenCard = LightGray
+val HomeScreenCard = Color(0xFFd6d5c9)
 
 /** Game Screen **/
 val CorrectAnswer = Color(0xFF12C70F)
