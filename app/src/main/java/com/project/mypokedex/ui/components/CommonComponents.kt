@@ -211,24 +211,31 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
     Box(
         modifier = Modifier
             .pointerInput(Unit) {
-                detectDragGestures { change, dragAmount ->
-                    degrees += dragAmount.x * rotationSensitivity
-                    if (degrees < -275F) {
-                        degrees = 90F
+                detectDragGestures(
+                    onDrag = { change, dragAmount ->
+                        degrees += dragAmount.x * rotationSensitivity
+                        if (degrees < -275F) {
+                            degrees = 90F
+                        }
+                        if (degrees > 275F) {
+                            degrees = -90F
+                        }
+                        side =
+                            if (degrees < 90F && degrees > -90) RotationalImageSide.Front else RotationalImageSide.Back
+                        change.consume()
                     }
-                    if (degrees > 275F) {
-                        degrees = -90F
-                    }
-                    side =
-                        if (degrees < 90F && degrees > -90) RotationalImageSide.Front else RotationalImageSide.Back
-                    change.consume()
-                }
+                )
             }
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
-                        degrees = 0F
-                        side = RotationalImageSide.Front
+                        if (side == RotationalImageSide.Front && degrees == 0F) {
+                            degrees = 180F
+                            side = RotationalImageSide.Back
+                        } else {
+                            degrees = 0F
+                            side = RotationalImageSide.Front
+                        }
                     }
                 )
             }
