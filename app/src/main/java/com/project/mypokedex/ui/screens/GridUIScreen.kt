@@ -165,8 +165,6 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                 fontSize = 10.sp,
                 fontWeight = FontWeight(800),
                 color = Color.DarkGray,
-                modifier = Modifier
-                    .fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 style = PokemonGB,
                 maxLines = 1,
