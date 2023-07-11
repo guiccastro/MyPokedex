@@ -56,7 +56,6 @@ import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.PokemonTypeToUI
-import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import com.project.mypokedex.ui.theme.BorderBlack
@@ -95,19 +94,14 @@ fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp)
-                .border((0.3).dp, BorderBlackShadow, externalShape)
-                .customShadow(
-                    color = Color.Black.copy(alpha = 0.7f),
-                    blurRadius = 5.dp,
-                    borderRadius = externalCorner
-                ),
+                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp),
             color = HomeScreenCard,
             shape = externalShape
         ) {
             Surface(
                 modifier = Modifier
                     .padding(all = 10.dp)
+                    .border((0.5).dp, BorderBlack, internalShape)
                     .innerShadow(
                         color = Color.Black,
                         cornersRadius = internalCorner,
