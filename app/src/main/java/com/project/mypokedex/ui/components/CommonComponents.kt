@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
@@ -239,6 +240,8 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
             model = frontImage,
             contentDescription = null,
             modifier = modifier
+                .aspectRatio(1F)
+                .fillMaxSize()
                 .alpha(if (side == RotationalImageSide.Front) 1F else 0F),
             imageLoader = LocalContext.current.imageLoader,
             filterQuality = FilterQuality.High
@@ -272,6 +275,8 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
             model = backImage,
             contentDescription = null,
             modifier = modifier
+                .aspectRatio(1F)
+                .fillMaxSize()
                 .graphicsLayer {
                     rotationY = 180F
                 }
