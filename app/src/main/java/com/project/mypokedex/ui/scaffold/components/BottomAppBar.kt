@@ -14,7 +14,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +26,7 @@ import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
+import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BottomAppBarSelectedItem
 import com.project.mypokedex.ui.theme.MyPokedexTheme
@@ -52,7 +52,7 @@ fun BottomBar(
             modifier = Modifier
                 .topBorder(1.dp, BorderBlack)
                 .customShadow(
-                    color = Color.Black.copy(alpha = 0.7f),
+                    color = Black.copy(alpha = 0.7f),
                     blurRadius = 5.dp,
                     widthOffset = 10.dp
                 )
@@ -68,14 +68,14 @@ fun BottomBar(
                             Image(
                                 imageVector = item.icon,
                                 contentDescription = stringResource(item.label),
-                                colorFilter = ColorFilter.tint(Color.Black)
+                                colorFilter = ColorFilter.tint(Black)
                             )
                         },
                         label = {
                             Text(
                                 text = stringResource(item.label),
                                 fontWeight = FontWeight(500),
-                                color = Color.Black,
+                                color = Black,
                                 textAlign = TextAlign.Center,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis

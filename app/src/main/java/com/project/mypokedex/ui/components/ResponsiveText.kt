@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
+import com.project.mypokedex.ui.theme.Black
 import java.lang.Float.min
 
 private const val TEXT_SCALE_REDUCTION_INTERVAL = 0.9f
@@ -23,7 +24,7 @@ private const val WEIGHT_SCALE_REDUCTION_INTERVAL = 1.1f
 fun ResponsiveText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = Color.Black,
+    color: Color = Black,
     textAlign: TextAlign = TextAlign.Center,
     fontWeight: FontWeight,
     textStyle: TextStyle,

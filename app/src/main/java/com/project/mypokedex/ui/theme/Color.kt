@@ -8,12 +8,14 @@ val MainBlue = Color(0xFF52b2cf)
 val BorderBlack = Color(0xFF3c3635)
 val BorderBlackShadow = Color(0x773C3635)
 val LightGray = Color(0xFFe7e7e5)
-val Transparent = Color(0x00FFFFFF)
 val Yellow = Color(0xFFfdef5e)
 val Green = Color(0xFF48b699)
 val MainBlack = Color(0xFF494141)
 val MainGray = Color(0xFF565e5f)
+
 val White = Color(0xFFFFFFFF)
+val Black = Color(0xFF000000)
+val Transparent = Color(0x00FFFFFF)
 
 /** Home Screen **/
 val HomeScreenBackground = MainRed

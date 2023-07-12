@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
@@ -49,6 +48,7 @@ import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
+import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.White
 
 @Composable
@@ -73,7 +73,7 @@ fun PokemonImage(state: GameScreenUIState) {
         contentDescription = null,
         modifier = Modifier
             .size(300.dp)
-            .background(Brush.radialGradient(listOf(White, Color.Transparent)))
+            .background(Brush.radialGradient(listOf(White, Transparent)))
             .clickable(
                 enabled = state.answered
             ) {

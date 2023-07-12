@@ -35,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
@@ -59,6 +58,7 @@ import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
+import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.Green
@@ -66,6 +66,7 @@ import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
+import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.White
 import com.project.mypokedex.ui.viewmodels.GridScreenViewModel
 
@@ -104,7 +105,7 @@ fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
                     .padding(all = 10.dp)
                     .border((0.5).dp, BorderBlack, internalShape)
                     .innerShadow(
-                        color = Color.Black,
+                        color = Black,
                         cornersRadius = internalCorner,
                         blur = 5.dp
                     ),
@@ -144,7 +145,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
             },
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
+            containerColor = Transparent
         )
     ) {
 
@@ -157,7 +158,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                 text = pokemon.formattedID(),
                 fontSize = 8.sp,
                 fontWeight = FontWeight(400),
-                color = Color.DarkGray,
+                color = BorderBlack,
                 textAlign = TextAlign.Center,
                 style = PokemonGB
             )
@@ -165,7 +166,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                 text = pokemon.formattedName(),
                 fontSize = 10.sp,
                 fontWeight = FontWeight(800),
-                color = Color.DarkGray,
+                color = BorderBlack,
                 textAlign = TextAlign.Center,
                 style = PokemonGB,
                 maxLines = 1,
@@ -192,7 +193,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                         brush = Brush.radialGradient(
                             listOf(
                                 White.copy(alpha = 0.5F),
-                                Color.Transparent
+                                Transparent
                             )
                         )
                     ),

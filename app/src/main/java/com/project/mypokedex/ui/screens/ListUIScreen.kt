@@ -34,7 +34,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
@@ -265,7 +264,7 @@ fun PokemonListCard(pokemon: Pokemon) {
                     text = pokemon.formattedID(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight(500),
-                    color = Color.DarkGray,
+                    color = BorderBlack,
                     modifier = Modifier
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -275,7 +274,7 @@ fun PokemonListCard(pokemon: Pokemon) {
                     text = pokemon.formattedName(),
                     fontSize = 14.sp,
                     fontWeight = FontWeight(400),
-                    color = Color.DarkGray,
+                    color = BorderBlack,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = PokemonGB,

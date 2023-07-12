@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -20,6 +19,7 @@ import com.project.mypokedex.sampledata.actionItemsSample
 import com.project.mypokedex.ui.components.bottomBorder
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
+import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.PokemonGB
 
@@ -30,7 +30,7 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
         modifier = Modifier
             .bottomBorder(1.dp, BorderBlack)
             .customShadow(
-                color = Color.Black.copy(alpha = 0.7f),
+                color = Black.copy(alpha = 0.7f),
                 blurRadius = 5.dp,
                 widthOffset = 10.dp
             ),

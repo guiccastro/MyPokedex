@@ -44,6 +44,7 @@ import coil.compose.SubcomposeAsyncImageContent
 import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.model.RotationalImageSide
+import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.HomeScreenBackground
 
@@ -57,7 +58,7 @@ fun Background() {
 }
 
 fun Modifier.innerShadow(
-    color: Color = Color.Black,
+    color: Color = Black,
     cornersRadius: Dp = 0.dp,
     spread: Dp = 0.dp,
     blur: Dp = 0.dp,
@@ -109,7 +110,7 @@ fun Modifier.innerShadow(
         } else {
             rect.bottom
         }
-        paint.color = Color.Black
+        paint.color = Black
         it.drawRoundRect(
             left = left + spread.toPx() / 2,
             top = top + spread.toPx() / 2,
@@ -125,7 +126,7 @@ fun Modifier.innerShadow(
 }
 
 fun Modifier.customShadow(
-    color: Color = Color.Black,
+    color: Color = Black,
     borderRadius: Dp = 0.dp,
     blurRadius: Dp = 0.dp,
     spread: Dp = 0f.dp,

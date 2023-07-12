@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +26,8 @@ import com.project.mypokedex.ui.components.RotationalImage
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
+import com.project.mypokedex.ui.theme.Black
+import com.project.mypokedex.ui.theme.BorderBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlue
@@ -45,7 +46,7 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
             .padding(all = 10.dp)
             .border((0.3).dp, BorderBlackShadow, externalShape)
             .customShadow(
-                color = Color.Black.copy(alpha = 0.7f),
+                color = Black.copy(alpha = 0.7f),
                 blurRadius = 5.dp,
                 borderRadius = externalCorner
             ),
@@ -56,7 +57,7 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
             modifier = Modifier
                 .padding(all = 10.dp)
                 .innerShadow(
-                    color = Color.Black,
+                    color = Black,
                     cornersRadius = internalCorner,
                     blur = 5.dp
                 ),
@@ -85,7 +86,7 @@ fun PokemonDetails(pokemon: Pokemon?) {
                 text = pokemon.formattedID(),
                 fontSize = 14.sp,
                 fontWeight = FontWeight(500),
-                color = Color.DarkGray,
+                color = BorderBlack,
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -95,7 +96,7 @@ fun PokemonDetails(pokemon: Pokemon?) {
                 text = pokemon.formattedName(),
                 targetTextSizeHeight = 14.sp,
                 fontWeight = FontWeight(400),
-                color = Color.DarkGray,
+                color = BorderBlack,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 2.dp, bottom = 4.dp),
