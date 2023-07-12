@@ -54,10 +54,9 @@ import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.Green
 import com.project.mypokedex.ui.theme.HomeScreenCard
-import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
@@ -115,7 +114,7 @@ fun Screen(state: ListScreenUIState) {
                     .height(150.dp)
                     .padding(horizontal = 20.dp),
                 shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, BorderBlack),
+                border = BorderStroke(1.dp, MainBlack),
                 shadowElevation = 5.dp
             ) {
                 Image(
@@ -164,7 +163,7 @@ fun DirectionalButtons(state: ListScreenUIState) {
                     bottomStart = 5.dp,
                     bottomEnd = 5.dp
                 ),
-                border = BorderStroke(1.dp, BorderBlack),
+                border = BorderStroke(1.dp, MainBlack),
                 colors = ButtonDefaults.buttonColors(MainBlack)
             ) {
             }
@@ -187,7 +186,7 @@ fun DirectionalButtons(state: ListScreenUIState) {
                     bottomStart = 25.dp,
                     bottomEnd = 5.dp
                 ),
-                border = BorderStroke(1.dp, BorderBlack),
+                border = BorderStroke(1.dp, MainBlack),
                 colors = ButtonDefaults.buttonColors(MainBlack)
             ) {
             }
@@ -204,7 +203,7 @@ fun DirectionalButtons(state: ListScreenUIState) {
                     bottomStart = 5.dp,
                     bottomEnd = 25.dp
                 ),
-                border = BorderStroke(1.dp, BorderBlack),
+                border = BorderStroke(1.dp, MainBlack),
                 colors = ButtonDefaults.buttonColors(MainBlack)
             ) {
             }
@@ -227,7 +226,7 @@ fun DirectionalButtons(state: ListScreenUIState) {
                     bottomStart = 25.dp,
                     bottomEnd = 25.dp
                 ),
-                border = BorderStroke(1.dp, BorderBlack),
+                border = BorderStroke(1.dp, MainBlack),
                 colors = ButtonDefaults.buttonColors(MainBlack)
             ) {
             }
@@ -264,7 +263,7 @@ fun PokemonListCard(pokemon: Pokemon) {
                     text = pokemon.formattedID(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight(500),
-                    color = BorderBlack,
+                    color = MainBlack,
                     modifier = Modifier
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -274,7 +273,7 @@ fun PokemonListCard(pokemon: Pokemon) {
                     text = pokemon.formattedName(),
                     fontSize = 14.sp,
                     fontWeight = FontWeight(400),
-                    color = BorderBlack,
+                    color = MainBlack,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = PokemonGB,
@@ -304,7 +303,7 @@ fun SearchInputText(state: ListScreenUIState) {
             .width(220.dp)
             .height(46.dp)
             .background(Green, RoundedCornerShape(25))
-            .border(1.dp, BorderBlack, RoundedCornerShape(25)),
+            .border(1.dp, MainBlack, RoundedCornerShape(25)),
         value = state.searchText,
         onValueChange = {
             state.onSearchChange(it)
@@ -314,7 +313,7 @@ fun SearchInputText(state: ListScreenUIState) {
             Image(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(BorderBlack)
+                colorFilter = ColorFilter.tint(MainBlack)
             )
         },
         placeholder = {
@@ -330,10 +329,10 @@ fun SearchInputText(state: ListScreenUIState) {
             unfocusedContainerColor = Green,
             disabledContainerColor = Green,
             errorContainerColor = Green,
-            focusedTextColor = BorderBlack,
-            disabledTextColor = BorderBlack,
-            errorTextColor = BorderBlack,
-            unfocusedTextColor = BorderBlack
+            focusedTextColor = MainBlack,
+            disabledTextColor = MainBlack,
+            errorTextColor = MainBlack,
+            unfocusedTextColor = MainBlack
         ),
         textStyle = PokemonGB.copy(fontSize = 12.sp),
         singleLine = true,

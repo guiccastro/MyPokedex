@@ -27,7 +27,7 @@ import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlue
@@ -86,7 +86,7 @@ fun PokemonDetails(pokemon: Pokemon?) {
                 text = pokemon.formattedID(),
                 fontSize = 14.sp,
                 fontWeight = FontWeight(500),
-                color = BorderBlack,
+                color = MainBlack,
                 modifier = Modifier
                     .fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -96,7 +96,7 @@ fun PokemonDetails(pokemon: Pokemon?) {
                 text = pokemon.formattedName(),
                 targetTextSizeHeight = 14.sp,
                 fontWeight = FontWeight(400),
-                color = BorderBlack,
+                color = MainBlack,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 2.dp, bottom = 4.dp),

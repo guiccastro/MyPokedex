@@ -20,7 +20,7 @@ import com.project.mypokedex.ui.components.bottomBorder
 import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,7 +28,7 @@ import com.project.mypokedex.ui.theme.PokemonGB
 fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
     TopAppBar(
         modifier = Modifier
-            .bottomBorder(1.dp, BorderBlack)
+            .bottomBorder(1.dp, MainBlack)
             .customShadow(
                 color = Black.copy(alpha = 0.7f),
                 blurRadius = 5.dp,
@@ -38,7 +38,7 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
             Text(
                 text = stringResource(state.title),
                 style = PokemonGB,
-                color = BorderBlack,
+                color = MainBlack,
                 fontSize = 14.sp
             )
         },
@@ -47,7 +47,7 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_return),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(BorderBlack),
+                    colorFilter = ColorFilter.tint(MainBlack),
                     modifier = Modifier
                         .padding(end = 10.dp)
                         .clickable(

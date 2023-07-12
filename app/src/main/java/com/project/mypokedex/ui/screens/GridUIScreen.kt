@@ -59,7 +59,7 @@ import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.Green
 import com.project.mypokedex.ui.theme.HomeScreenCard
@@ -103,7 +103,7 @@ fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
             Surface(
                 modifier = Modifier
                     .padding(all = 10.dp)
-                    .border((0.5).dp, BorderBlack, internalShape)
+                    .border((0.5).dp, MainBlack, internalShape)
                     .innerShadow(
                         color = Black,
                         cornersRadius = internalCorner,
@@ -158,7 +158,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                 text = pokemon.formattedID(),
                 fontSize = 8.sp,
                 fontWeight = FontWeight(400),
-                color = BorderBlack,
+                color = MainBlack,
                 textAlign = TextAlign.Center,
                 style = PokemonGB
             )
@@ -166,7 +166,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                 text = pokemon.formattedName(),
                 fontSize = 10.sp,
                 fontWeight = FontWeight(800),
-                color = BorderBlack,
+                color = MainBlack,
                 textAlign = TextAlign.Center,
                 style = PokemonGB,
                 maxLines = 1,
@@ -205,7 +205,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .padding(40.dp),
-                            color = BorderBlack
+                            color = MainBlack
                         )
                     }
 
@@ -215,7 +215,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                                 .padding(40.dp),
                             painter = painterResource(id = R.drawable.ic_error),
                             contentDescription = null,
-                            colorFilter = ColorFilter.tint(BorderBlack)
+                            colorFilter = ColorFilter.tint(MainBlack)
                         )
                     }
 
@@ -238,7 +238,7 @@ fun SearchInputText(state: GridScreenUIState) {
             .padding(start = 20.dp, end = 20.dp, top = 10.dp)
             .fillMaxWidth()
             .background(Green, shape)
-            .border(1.dp, BorderBlack, shape),
+            .border(1.dp, MainBlack, shape),
         value = state.searchText,
         onValueChange = {
             state.onSearchChange(it)
@@ -248,7 +248,7 @@ fun SearchInputText(state: GridScreenUIState) {
             Image(
                 imageVector = Icons.Default.Search,
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(BorderBlack)
+                colorFilter = ColorFilter.tint(MainBlack)
             )
         },
         placeholder = {
@@ -264,14 +264,14 @@ fun SearchInputText(state: GridScreenUIState) {
             unfocusedContainerColor = Green,
             disabledContainerColor = Green,
             errorContainerColor = Green,
-            focusedTextColor = BorderBlack,
-            disabledTextColor = BorderBlack,
-            errorTextColor = BorderBlack,
-            unfocusedTextColor = BorderBlack,
-            focusedIndicatorColor = BorderBlack,
-            focusedLeadingIconColor = BorderBlack,
-            cursorColor = BorderBlack,
-            selectionColors = TextSelectionColors(BorderBlack, BorderBlackShadow)
+            focusedTextColor = MainBlack,
+            disabledTextColor = MainBlack,
+            errorTextColor = MainBlack,
+            unfocusedTextColor = MainBlack,
+            focusedIndicatorColor = MainBlack,
+            focusedLeadingIconColor = MainBlack,
+            cursorColor = MainBlack,
+            selectionColors = TextSelectionColors(MainBlack, BorderBlackShadow)
         ),
         textStyle = PokemonGB.copy(fontSize = 12.sp),
         singleLine = true,

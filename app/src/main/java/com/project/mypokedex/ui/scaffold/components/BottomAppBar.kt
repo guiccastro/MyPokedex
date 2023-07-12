@@ -27,7 +27,7 @@ import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.BottomAppBarSelectedItem
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
@@ -50,7 +50,7 @@ fun BottomBar(
     ) {
         NavigationBar(
             modifier = Modifier
-                .topBorder(1.dp, BorderBlack)
+                .topBorder(1.dp, MainBlack)
                 .customShadow(
                     color = Black.copy(alpha = 0.7f),
                     blurRadius = 5.dp,

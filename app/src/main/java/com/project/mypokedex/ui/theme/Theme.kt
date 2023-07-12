@@ -44,7 +44,7 @@ fun MyPokedexTheme(
         typography = Typography
     ) {
         CompositionLocalProvider(
-            LocalIndication provides rememberRipple(color = BorderBlack),
+            LocalIndication provides rememberRipple(color = MainBlack),
             content = content,
         )
     }

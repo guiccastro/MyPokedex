@@ -43,7 +43,7 @@ import com.project.mypokedex.sampledata.charmander
 import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MyPokedexTheme
@@ -88,7 +88,7 @@ fun PokemonImage(state: GameScreenUIState) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(80.dp),
-                    color = BorderBlack
+                    color = MainBlack
                 )
             }
 
@@ -98,13 +98,13 @@ fun PokemonImage(state: GameScreenUIState) {
                         .padding(40.dp),
                     painter = painterResource(id = R.drawable.ic_error),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(BorderBlack)
+                    colorFilter = ColorFilter.tint(MainBlack)
                 )
             }
 
             else -> {
                 SubcomposeAsyncImageContent(
-                    colorFilter = if (!state.answered) ColorFilter.tint(BorderBlack) else null
+                    colorFilter = if (!state.answered) ColorFilter.tint(MainBlack) else null
                 )
             }
         }
@@ -126,7 +126,7 @@ fun OptionsButtons(state: GameScreenUIState) {
             Button(
                 onClick = { state.onOptionClick(option) },
                 shape = RoundedCornerShape(6.dp),
-                border = BorderStroke(2.dp, BorderBlack),
+                border = BorderStroke(2.dp, MainBlack),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = backgroundColor,
                     disabledContainerColor = backgroundColor.copy(alpha = 0.5F)
@@ -140,7 +140,7 @@ fun OptionsButtons(state: GameScreenUIState) {
                     fontWeight = FontWeight(800),
                     textStyle = PokemonGB,
                     targetTextSizeHeight = 16.sp,
-                    color = BorderBlack
+                    color = MainBlack
                 )
             }
         }
@@ -149,7 +149,7 @@ fun OptionsButtons(state: GameScreenUIState) {
         Button(
             onClick = { state.onClickNext() },
             shape = RoundedCornerShape(6.dp),
-            border = BorderStroke(2.dp, BorderBlack),
+            border = BorderStroke(2.dp, MainBlack),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MainBlue,
             ),
@@ -162,7 +162,7 @@ fun OptionsButtons(state: GameScreenUIState) {
                 fontWeight = FontWeight(800),
                 textStyle = PokemonGB,
                 targetTextSizeHeight = 16.sp,
-                color = BorderBlack
+                color = MainBlack
             )
         }
     }

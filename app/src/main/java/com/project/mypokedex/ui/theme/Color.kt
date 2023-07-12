@@ -2,20 +2,22 @@ package com.project.mypokedex.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+/** Basic Colors **/
+val White = Color(0xFFFFFFFF)
+val Black = Color(0xFF000000)
+val Transparent = Color(0x00FFFFFF)
+
+/** Main Colors **/
 val MainRed = Color(0xFFf14948)
 val HeavyRed = Color(0xFFdd3524)
+val MainBlack = Color(0xFF3c3635)
+
 val MainBlue = Color(0xFF52b2cf)
-val BorderBlack = Color(0xFF3c3635)
 val BorderBlackShadow = Color(0x773C3635)
 val LightGray = Color(0xFFe7e7e5)
 val Yellow = Color(0xFFfdef5e)
 val Green = Color(0xFF48b699)
-val MainBlack = Color(0xFF494141)
 val MainGray = Color(0xFF565e5f)
-
-val White = Color(0xFFFFFFFF)
-val Black = Color(0xFF000000)
-val Transparent = Color(0x00FFFFFF)
 
 /** Home Screen **/
 val HomeScreenBackground = MainRed
@@ -49,3 +51,16 @@ val DarkColor = Color(0xFF61606d)
 val FairyColor = Color(0xFFef94e5)
 val UnknownColor = Color(0xFF000000)
 val ShadowColor = Color(0xFF636363)
+
+/** Top App Bar **/
+val TopAppBarBackground = MainRed
+
+/** Bottom App Bar **/
+val BottomAppBarBackground = MainRed
+
+/** Animated Enter Screen **/
+val PokeballRed = HeavyRed
+val PokeballWhite = White
+val PokeballDetails = MainBlack
+val AnimatedEnterProgressIndicator = MainBlack
+val AnimatedEnterProgressText = MainBlack

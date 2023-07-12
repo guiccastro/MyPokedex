@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.PokemonType
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @Composable
@@ -30,7 +30,7 @@ fun PokemonTypeToUI(
                 vertical = (fontSize.value / 2).dp
             ),
         text = pokemonType.toString().uppercase(),
-        color = BorderBlack,
+        color = MainBlack,
         fontSize = fontSize,
         fontWeight = FontWeight(1000),
         style = PokemonGB

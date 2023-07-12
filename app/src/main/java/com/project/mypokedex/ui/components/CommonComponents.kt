@@ -45,7 +45,7 @@ import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.model.RotationalImageSide
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.BorderBlack
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.HomeScreenBackground
 
 @Composable
@@ -259,7 +259,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .padding(40.dp),
-                        color = BorderBlack
+                        color = MainBlack
                     )
                 }
 
@@ -269,7 +269,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                             .padding(40.dp),
                         painter = painterResource(id = R.drawable.ic_error),
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(BorderBlack)
+                        colorFilter = ColorFilter.tint(MainBlack)
                     )
                 }
 
@@ -297,7 +297,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .padding(40.dp),
-                        color = BorderBlack
+                        color = MainBlack
                     )
                 }
 
@@ -307,7 +307,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                             .padding(40.dp),
                         painter = painterResource(id = R.drawable.ic_error),
                         contentDescription = null,
-                        colorFilter = ColorFilter.tint(BorderBlack)
+                        colorFilter = ColorFilter.tint(MainBlack)
                     )
                 }
 

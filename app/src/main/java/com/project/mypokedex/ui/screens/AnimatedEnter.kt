@@ -30,11 +30,14 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.project.mypokedex.model.AnimatedEnterOrientation
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
-import com.project.mypokedex.ui.theme.BorderBlack
-import com.project.mypokedex.ui.theme.HeavyRed
-import com.project.mypokedex.ui.theme.MainRed
+import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
+import com.project.mypokedex.ui.theme.AnimatedEnterProgressText
+import com.project.mypokedex.ui.theme.BottomAppBarBackground
 import com.project.mypokedex.ui.theme.MyPokedexTheme
-import com.project.mypokedex.ui.theme.White
+import com.project.mypokedex.ui.theme.PokeballDetails
+import com.project.mypokedex.ui.theme.PokeballRed
+import com.project.mypokedex.ui.theme.PokeballWhite
+import com.project.mypokedex.ui.theme.TopAppBarBackground
 
 @Composable
 fun AnimatedEnter(state: AnimatedEnterUIState) {
@@ -54,13 +57,13 @@ fun DownloadInformation(state: AnimatedEnterUIState) {
                 modifier = Modifier
                     .size(100.dp)
                     .align(Alignment.Center),
-                color = BorderBlack,
+                color = AnimatedEnterProgressIndicator,
                 strokeWidth = 5.dp
             )
 
             Text(
                 text = state.formattedDownloadProgress,
-                color = BorderBlack,
+                color = AnimatedEnterProgressText,
                 fontSize = 16.sp,
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -82,11 +85,11 @@ fun AnimatedScreen(state: AnimatedEnterUIState) {
         targetState = state.isDownloading
     }
     if (!animVisibleState.targetState && !animVisibleState.currentState) {
-        rememberSystemUiController().setSystemBarsColor(MainRed)
-        rememberSystemUiController().setNavigationBarColor(MainRed)
+        rememberSystemUiController().setSystemBarsColor(TopAppBarBackground)
+        rememberSystemUiController().setNavigationBarColor(BottomAppBarBackground)
     } else {
-        rememberSystemUiController().setSystemBarsColor(HeavyRed)
-        rememberSystemUiController().setNavigationBarColor(White)
+        rememberSystemUiController().setSystemBarsColor(PokeballRed)
+        rememberSystemUiController().setNavigationBarColor(PokeballWhite)
     }
 
     AnimatedVisibility(
@@ -118,8 +121,8 @@ fun HalfScreen(orientation: AnimatedEnterOrientation) {
     }
 
     val backgroundColor = when (orientation) {
-        AnimatedEnterOrientation.Top -> HeavyRed
-        AnimatedEnterOrientation.Bottom -> White
+        AnimatedEnterOrientation.Top -> PokeballRed
+        AnimatedEnterOrientation.Bottom -> PokeballWhite
     }
 
     val alignment = when (orientation) {
@@ -144,15 +147,15 @@ fun HalfScreen(orientation: AnimatedEnterOrientation) {
                 .fillMaxWidth()
                 .height(10.dp)
                 .align(alignment)
-                .background(BorderBlack, RectangleShape)
+                .background(PokeballDetails, RectangleShape)
         )
 
         Box(
             modifier = Modifier
                 .size(200.dp)
                 .offset(y = circleOffset)
-                .background(White, CircleShape)
-                .border(20.dp, BorderBlack, CircleShape)
+                .background(PokeballWhite, CircleShape)
+                .border(20.dp, PokeballDetails, CircleShape)
                 .align(alignment)
         )
     }
