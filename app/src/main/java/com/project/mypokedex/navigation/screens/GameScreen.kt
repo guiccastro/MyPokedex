@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.project.mypokedex.R
 import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
@@ -19,7 +20,7 @@ object GameScreen : Screen {
     private const val gameRoute = "GameScreen"
 
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
-        override fun getTitle(): String = "Game Screen"
+        override fun getTitle(): Int = R.string.game_screen_title
 
         override fun hasReturn(): Boolean = false
 

@@ -22,7 +22,7 @@ object GridScreen : Screen {
     private const val gridRoute = "GridScreen"
 
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
-        override fun getTitle(): String = "Grid Screen"
+        override fun getTitle(): Int = R.string.grid_screen_title
 
         override fun hasReturn(): Boolean = false
 

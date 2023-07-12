@@ -267,7 +267,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                         modifier = Modifier
                             .padding(40.dp),
                         painter = painterResource(id = R.drawable.ic_error),
-                        contentDescription = "Error",
+                        contentDescription = null,
                         colorFilter = ColorFilter.tint(BorderBlack)
                     )
                 }
@@ -305,7 +305,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                         modifier = Modifier
                             .padding(40.dp),
                         painter = painterResource(id = R.drawable.ic_error),
-                        contentDescription = "Error",
+                        contentDescription = null,
                         colorFilter = ColorFilter.tint(BorderBlack)
                     )
                 }

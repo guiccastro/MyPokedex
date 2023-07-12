@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -212,7 +213,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                             modifier = Modifier
                                 .padding(40.dp),
                             painter = painterResource(id = R.drawable.ic_error),
-                            contentDescription = "Error",
+                            contentDescription = null,
                             colorFilter = ColorFilter.tint(BorderBlack)
                         )
                     }
@@ -245,13 +246,13 @@ fun SearchInputText(state: GridScreenUIState) {
         leadingIcon = {
             Image(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search Icon",
+                contentDescription = null,
                 colorFilter = ColorFilter.tint(BorderBlack)
             )
         },
         placeholder = {
             Text(
-                text = "Search",
+                text = stringResource(R.string.grid_screen_search),
                 style = PokemonGB,
                 fontSize = 12.sp,
                 maxLines = 1

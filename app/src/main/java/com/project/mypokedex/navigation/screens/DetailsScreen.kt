@@ -8,6 +8,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.project.mypokedex.R
 import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
@@ -22,7 +23,7 @@ object DetailsScreen : Screen {
     const val pokemonIdArgument = "pokemonId"
 
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
-        override fun getTitle(): String = "Details"
+        override fun getTitle(): Int = R.string.details_screen_title
 
         override fun hasReturn(): Boolean = true
 

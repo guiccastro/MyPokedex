@@ -121,7 +121,7 @@ fun Screen(state: ListScreenUIState) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_screen_background),
-                    contentDescription = "Screen Background",
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxSize()
@@ -314,7 +314,7 @@ fun SearchInputText(state: ListScreenUIState) {
         leadingIcon = {
             Image(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search Icon",
+                contentDescription = null,
                 colorFilter = ColorFilter.tint(BorderBlack)
             )
         },

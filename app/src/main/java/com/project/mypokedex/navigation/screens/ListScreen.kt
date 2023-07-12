@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import com.project.mypokedex.R
 import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
@@ -19,7 +20,7 @@ object ListScreen : Screen {
     private const val listRoute = "ListScreen"
 
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
-        override fun getTitle(): String = "List Screen"
+        override fun getTitle(): Int = R.string.list_screen_title
 
         override fun hasReturn(): Boolean = false
 

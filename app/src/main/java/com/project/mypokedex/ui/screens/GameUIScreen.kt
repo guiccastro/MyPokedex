@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,7 +97,7 @@ fun PokemonImage(state: GameScreenUIState) {
                     modifier = Modifier
                         .padding(40.dp),
                     painter = painterResource(id = R.drawable.ic_error),
-                    contentDescription = "Error",
+                    contentDescription = null,
                     colorFilter = ColorFilter.tint(BorderBlack)
                 )
             }
@@ -157,7 +158,7 @@ fun OptionsButtons(state: GameScreenUIState) {
                 .alpha(if (state.answered) 1F else 0F)
         ) {
             ResponsiveText(
-                text = "NEXT",
+                text = stringResource(R.string.game_screen_next_button).uppercase(),
                 fontWeight = FontWeight(800),
                 textStyle = PokemonGB,
                 targetTextSizeHeight = 16.sp,

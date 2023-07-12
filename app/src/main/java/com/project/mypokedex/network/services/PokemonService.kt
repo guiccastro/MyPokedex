@@ -2,7 +2,6 @@ package com.project.mypokedex.network.services
 
 import com.project.mypokedex.network.responses.BasicKeysResponse
 import com.project.mypokedex.network.responses.PokemonResponse
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
