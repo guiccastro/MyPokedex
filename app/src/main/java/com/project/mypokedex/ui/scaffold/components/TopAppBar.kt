@@ -21,6 +21,7 @@ import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +62,7 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
                 Image(
                     painter = painterResource(id = item.icon),
                     contentDescription = null,
-                    colorFilter = ColorFilter.tint(item.iconColor),
+                    colorFilter = ColorFilter.tint(MainBlack),
                     modifier = Modifier
                         .padding(end = 10.dp)
                         .clickable(
@@ -76,10 +77,12 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
 @Preview
 @Composable
 fun TopBarPreview() {
-    TopBar(
-        TopAppBarUIState(
-            hasReturn = true,
-            actionItems = actionItemsSample
+    MyPokedexTheme {
+        TopBar(
+            TopAppBarUIState(
+                hasReturn = true,
+                actionItems = actionItemsSample
+            )
         )
-    )
+    }
 }

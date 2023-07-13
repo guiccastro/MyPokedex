@@ -27,8 +27,8 @@ import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.topBorder
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.BottomAppBarSelectedItem
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
@@ -68,14 +68,14 @@ fun BottomBar(
                             Image(
                                 imageVector = item.icon,
                                 contentDescription = stringResource(item.label),
-                                colorFilter = ColorFilter.tint(Black)
+                                colorFilter = ColorFilter.tint(MainBlack)
                             )
                         },
                         label = {
                             Text(
                                 text = stringResource(item.label),
                                 fontWeight = FontWeight(500),
-                                color = Black,
+                                color = MainBlack,
                                 textAlign = TextAlign.Center,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis

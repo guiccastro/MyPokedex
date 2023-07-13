@@ -1,7 +1,6 @@
 package com.project.mypokedex.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -19,7 +18,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -27,17 +25,14 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.project.mypokedex.model.AnimatedEnterOrientation
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressText
-import com.project.mypokedex.ui.theme.BottomAppBarBackground
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokeballDetails
 import com.project.mypokedex.ui.theme.PokeballRed
 import com.project.mypokedex.ui.theme.PokeballWhite
-import com.project.mypokedex.ui.theme.TopAppBarBackground
 
 @Composable
 fun AnimatedEnter(state: AnimatedEnterUIState) {
@@ -81,19 +76,8 @@ fun MainScreen(state: AnimatedEnterUIState) {
 
 @Composable
 fun AnimatedScreen(state: AnimatedEnterUIState) {
-    val animVisibleState = remember { MutableTransitionState(state.isDownloading) }.apply {
-        targetState = state.isDownloading
-    }
-    if (!animVisibleState.targetState && !animVisibleState.currentState) {
-        rememberSystemUiController().setSystemBarsColor(TopAppBarBackground)
-        rememberSystemUiController().setNavigationBarColor(BottomAppBarBackground)
-    } else {
-        rememberSystemUiController().setSystemBarsColor(PokeballRed)
-        rememberSystemUiController().setNavigationBarColor(PokeballWhite)
-    }
-
     AnimatedVisibility(
-        visibleState = animVisibleState,
+        visible = state.isDownloading,
         exit = slideOutVertically(
             animationSpec = tween(2000, delayMillis = 1000),
             targetOffsetY = { -it }
@@ -103,7 +87,7 @@ fun AnimatedScreen(state: AnimatedEnterUIState) {
     }
 
     AnimatedVisibility(
-        visibleState = animVisibleState,
+        visible = state.isDownloading,
         exit = slideOutVertically(
             animationSpec = tween(2000, delayMillis = 1000),
             targetOffsetY = { it }
@@ -142,6 +126,8 @@ fun HalfScreen(orientation: AnimatedEnterOrientation) {
             .background(backgroundColor)
             .clipToBounds()
     ) {
+
+        // Line Details
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,6 +136,7 @@ fun HalfScreen(orientation: AnimatedEnterOrientation) {
                 .background(PokeballDetails, RectangleShape)
         )
 
+        // Circle Details
         Box(
             modifier = Modifier
                 .size(200.dp)

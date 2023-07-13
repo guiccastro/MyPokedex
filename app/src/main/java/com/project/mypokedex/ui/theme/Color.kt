@@ -14,10 +14,7 @@ val MainBlack = Color(0xFF3c3635)
 
 val MainBlue = Color(0xFF52b2cf)
 val BorderBlackShadow = Color(0x773C3635)
-val LightGray = Color(0xFFe7e7e5)
-val Yellow = Color(0xFFfdef5e)
 val Green = Color(0xFF48b699)
-val MainGray = Color(0xFF565e5f)
 
 /** Home Screen **/
 val HomeScreenBackground = MainRed
@@ -26,6 +23,8 @@ val HomeScreenCard = Color(0xFFd6d5c9)
 /** Game Screen **/
 val CorrectAnswer = Color(0xFF12C70F)
 val WrongAnswer = Color(0xFFDD201E)
+
+/** Top App Bar **/
 
 /** Bottom App Bar **/
 val BottomAppBarSelectedItem = Color(0xFFC93D3C)
@@ -51,12 +50,6 @@ val DarkColor = Color(0xFF61606d)
 val FairyColor = Color(0xFFef94e5)
 val UnknownColor = Color(0xFF000000)
 val ShadowColor = Color(0xFF636363)
-
-/** Top App Bar **/
-val TopAppBarBackground = MainRed
-
-/** Bottom App Bar **/
-val BottomAppBarBackground = MainRed
 
 /** Animated Enter Screen **/
 val PokeballRed = HeavyRed
