@@ -1,8 +1,6 @@
 package com.project.mypokedex.ui.screens
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,14 +21,12 @@ import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.RotationalImage
-import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.BorderBlackShadow
 import com.project.mypokedex.ui.theme.CardColor
-import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainBlue
+import com.project.mypokedex.ui.theme.MainTextColor
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 
@@ -43,13 +39,7 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 10.dp)
-            .border((0.3).dp, BorderBlackShadow, externalShape)
-            .customShadow(
-                color = Black.copy(alpha = 0.7f),
-                blurRadius = 5.dp,
-                borderRadius = externalCorner
-            ),
+            .padding(all = 10.dp),
         color = CardColor,
         shape = externalShape
     ) {
@@ -64,65 +54,66 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
             color = MainBlue,
             shape = internalShape
         ) {
-            PokemonDetails(state.pokemon)
+            state.pokemon?.let { PokemonDetails(it) }
         }
     }
 }
 
 @Composable
-fun PokemonDetails(pokemon: Pokemon?) {
-    if (pokemon == null) {
-        return
-    }
-    Box(
+fun PokemonDetails(pokemon: Pokemon) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 10.dp)
+            .padding(all = 10.dp),
+        verticalArrangement = Arrangement.Center
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = pokemon.formattedID(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight(500),
-                color = MainBlack,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = PokemonGB
-            )
-            ResponsiveText(
-                text = pokemon.formattedName(),
-                targetTextSizeHeight = 14.sp,
-                fontWeight = FontWeight(400),
-                color = MainBlack,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 2.dp, bottom = 4.dp),
-                textAlign = TextAlign.Center,
-                textStyle = PokemonGB,
-                maxLines = 1
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                pokemon.types.forEach {
-                    PokemonTypeToUI(pokemonType = it, fontSize = 12.sp)
-                }
-            }
 
-            RotationalImage(
-                frontImage = pokemon.gif,
-                backImage = pokemon.backGif,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-                    .align(CenterHorizontally)
-            )
+        // Pokemon ID
+        Text(
+            text = pokemon.formattedID(),
+            fontSize = 14.sp,
+            fontWeight = FontWeight(500),
+            color = MainTextColor,
+            modifier = Modifier
+                .fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            style = PokemonGB
+        )
+
+        // Pokemon Name
+        ResponsiveText(
+            text = pokemon.formattedName(),
+            targetTextSizeHeight = 14.sp,
+            fontWeight = FontWeight(400),
+            color = MainTextColor,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 2.dp, bottom = 4.dp),
+            textAlign = TextAlign.Center,
+            textStyle = PokemonGB,
+            maxLines = 1
+        )
+
+        // Pokemon Types
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            pokemon.types.forEach {
+                PokemonTypeToUI(pokemonType = it, fontSize = 12.sp)
+            }
         }
+
+        // Pokemon Images
+        RotationalImage(
+            frontImage = pokemon.gif,
+            backImage = pokemon.backGif,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .align(CenterHorizontally)
+        )
     }
 }
 
