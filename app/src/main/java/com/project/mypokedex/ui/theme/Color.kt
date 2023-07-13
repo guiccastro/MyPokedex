@@ -12,6 +12,7 @@ val MainRed = Color(0xFFf14948)
 val HeavyRed = Color(0xFFdd3524)
 val MainBlack = Color(0xFF3c3635)
 val MainBlue = Color(0xFF52b2cf)
+val MainWhite = Color(0xFFd6d5c9)
 
 /** Secondary Colors **/
 val SecondaryGreen = Color(0xFF48b699)
@@ -24,7 +25,7 @@ val SearchTextBackground = SecondaryGreen
 val MainSelectionTextBackground = Color(0x773C3635)
 
 /** Common **/
-val CardColor = Color(0xFFd6d5c9)
+val CardColor = MainWhite
 val CardInternBackground = MainBlue
 
 val BorderBlackShadow = Color(0x773C3635)

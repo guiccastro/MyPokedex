@@ -43,9 +43,10 @@ import com.project.mypokedex.sampledata.charmander
 import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
-import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainBlue
+import com.project.mypokedex.ui.theme.MainTextColor
+import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.Transparent
@@ -121,7 +122,7 @@ fun OptionsButtons(state: GameScreenUIState) {
         horizontalAlignment = CenterHorizontally
     ) {
         state.options.forEachIndexed { index, option ->
-            val backgroundColor = state.buttonsUIState.getOrNull(index)?.first ?: CardColor
+            val backgroundColor = state.buttonsUIState.getOrNull(index)?.first ?: MainWhite
             val isEnabled = state.buttonsUIState.getOrNull(index)?.second ?: true
             Button(
                 onClick = { state.onOptionClick(option) },
@@ -140,7 +141,7 @@ fun OptionsButtons(state: GameScreenUIState) {
                     fontWeight = FontWeight(800),
                     textStyle = PokemonGB,
                     targetTextSizeHeight = 16.sp,
-                    color = MainBlack
+                    color = MainTextColor
                 )
             }
         }
@@ -162,7 +163,7 @@ fun OptionsButtons(state: GameScreenUIState) {
                 fontWeight = FontWeight(800),
                 textStyle = PokemonGB,
                 targetTextSizeHeight = 16.sp,
-                color = MainBlack
+                color = MainTextColor
             )
         }
     }
