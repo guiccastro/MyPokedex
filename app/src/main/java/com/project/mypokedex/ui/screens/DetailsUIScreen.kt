@@ -27,9 +27,9 @@ import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.BorderBlackShadow
-import com.project.mypokedex.ui.theme.HomeScreenCard
+import com.project.mypokedex.ui.theme.CardColor
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
@@ -50,7 +50,7 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                 blurRadius = 5.dp,
                 borderRadius = externalCorner
             ),
-        color = HomeScreenCard,
+        color = CardColor,
         shape = externalShape
     ) {
         Surface(

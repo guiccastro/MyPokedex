@@ -43,8 +43,8 @@ import com.project.mypokedex.sampledata.charmander
 import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
+import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.MainBlack
-import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
@@ -121,7 +121,7 @@ fun OptionsButtons(state: GameScreenUIState) {
         horizontalAlignment = CenterHorizontally
     ) {
         state.options.forEachIndexed { index, option ->
-            val backgroundColor = state.buttonsUIState.getOrNull(index)?.first ?: HomeScreenCard
+            val backgroundColor = state.buttonsUIState.getOrNull(index)?.first ?: CardColor
             val isEnabled = state.buttonsUIState.getOrNull(index)?.second ?: true
             Button(
                 onClick = { state.onOptionClick(option) },

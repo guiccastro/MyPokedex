@@ -54,11 +54,11 @@ import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
+import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.MainBlack
-import com.project.mypokedex.ui.theme.Green
-import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
+import com.project.mypokedex.ui.theme.SearchTextBackground
 import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
 
 @Composable
@@ -100,7 +100,7 @@ fun Screen(state: ListScreenUIState) {
             .height(240.dp)
             .padding(horizontal = 20.dp),
         shape = RoundedCornerShape(24.dp),
-        color = HomeScreenCard,
+        color = CardColor,
         shadowElevation = 10.dp
     ) {
         Column(
@@ -302,7 +302,7 @@ fun SearchInputText(state: ListScreenUIState) {
         modifier = Modifier
             .width(220.dp)
             .height(46.dp)
-            .background(Green, RoundedCornerShape(25))
+            .background(SearchTextBackground, RoundedCornerShape(25))
             .border(1.dp, MainBlack, RoundedCornerShape(25)),
         value = state.searchText,
         onValueChange = {
@@ -325,10 +325,10 @@ fun SearchInputText(state: ListScreenUIState) {
             )
         },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Green,
-            unfocusedContainerColor = Green,
-            disabledContainerColor = Green,
-            errorContainerColor = Green,
+            focusedContainerColor = SearchTextBackground,
+            unfocusedContainerColor = SearchTextBackground,
+            disabledContainerColor = SearchTextBackground,
+            errorContainerColor = SearchTextBackground,
             focusedTextColor = MainBlack,
             disabledTextColor = MainBlack,
             errorTextColor = MainBlack,

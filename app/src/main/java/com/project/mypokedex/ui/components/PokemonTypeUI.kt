@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.PokemonType
-import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainTextColor
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @Composable
@@ -21,7 +21,6 @@ fun PokemonTypeToUI(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 6.sp
 ) {
-    val cornerRoundWeight = 3 / 4
     Text(
         modifier = modifier
             .background(pokemonType.getColor(), CircleShape)
@@ -30,7 +29,7 @@ fun PokemonTypeToUI(
                 vertical = (fontSize.value / 2).dp
             ),
         text = pokemonType.toString().uppercase(),
-        color = MainBlack,
+        color = MainTextColor,
         fontSize = fontSize,
         fontWeight = FontWeight(1000),
         style = PokemonGB

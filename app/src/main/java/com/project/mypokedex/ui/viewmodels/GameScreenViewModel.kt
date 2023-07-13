@@ -7,8 +7,8 @@ import com.project.mypokedex.navigation.MainNavComponent.Companion.navController
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
+import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.CorrectAnswer
-import com.project.mypokedex.ui.theme.HomeScreenCard
 import com.project.mypokedex.ui.theme.WrongAnswer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,7 +75,7 @@ class GameScreenViewModel @Inject constructor(
                         if (it == pokemon) {
                             Pair(CorrectAnswer, true)
                         } else {
-                            Pair(HomeScreenCard, false)
+                            Pair(CardColor, false)
                         }
                     } else {
                         if (it == pokemon) {
@@ -84,12 +84,12 @@ class GameScreenViewModel @Inject constructor(
                             if (it == _uiState.value.pokemon) {
                                 Pair(CorrectAnswer, true)
                             } else {
-                                Pair(HomeScreenCard, false)
+                                Pair(CardColor, false)
                             }
                         }
                     }
                 } else {
-                    Pair(HomeScreenCard, true)
+                    Pair(CardColor, true)
                 }
             }
 

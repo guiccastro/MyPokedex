@@ -11,14 +11,26 @@ val Transparent = Color(0x00FFFFFF)
 val MainRed = Color(0xFFf14948)
 val HeavyRed = Color(0xFFdd3524)
 val MainBlack = Color(0xFF3c3635)
-
 val MainBlue = Color(0xFF52b2cf)
+
+/** Secondary Colors **/
+val SecondaryGreen = Color(0xFF48b699)
+
+/** Text Colors **/
+val MainTextColor = MainBlack
+
+/** Search Text Colors **/
+val SearchTextBackground = SecondaryGreen
+val MainSelectionTextBackground = Color(0x773C3635)
+
+/** Common **/
+val CardColor = Color(0xFFd6d5c9)
+val CardInternBackground = MainBlue
+
 val BorderBlackShadow = Color(0x773C3635)
-val Green = Color(0xFF48b699)
 
 /** Home Screen **/
 val HomeScreenBackground = MainRed
-val HomeScreenCard = Color(0xFFd6d5c9)
 
 /** Game Screen **/
 val CorrectAnswer = Color(0xFF12C70F)

@@ -5,7 +5,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,8 +23,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -59,13 +56,14 @@ import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.innerShadow
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import com.project.mypokedex.ui.theme.Black
+import com.project.mypokedex.ui.theme.CardColor
+import com.project.mypokedex.ui.theme.CardInternBackground
 import com.project.mypokedex.ui.theme.MainBlack
-import com.project.mypokedex.ui.theme.BorderBlackShadow
-import com.project.mypokedex.ui.theme.Green
-import com.project.mypokedex.ui.theme.HomeScreenCard
-import com.project.mypokedex.ui.theme.MainBlue
+import com.project.mypokedex.ui.theme.MainSelectionTextBackground
+import com.project.mypokedex.ui.theme.MainTextColor
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
+import com.project.mypokedex.ui.theme.SearchTextBackground
 import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.White
 import com.project.mypokedex.ui.viewmodels.GridScreenViewModel
@@ -97,19 +95,18 @@ fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp),
-            color = HomeScreenCard,
+            color = CardColor,
             shape = externalShape
         ) {
             Surface(
                 modifier = Modifier
                     .padding(all = 10.dp)
-                    .border((0.5).dp, MainBlack, internalShape)
                     .innerShadow(
                         color = Black,
                         cornersRadius = internalCorner,
                         blur = 5.dp
                     ),
-                color = MainBlue,
+                color = CardInternBackground,
                 shape = internalShape
             ) {
                 AnimatedVisibility(
@@ -136,98 +133,95 @@ fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
 
 @Composable
 fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
-    Card(
+    Column(
         modifier = Modifier
             .width(130.dp)
             .height(150.dp)
+            .padding(4.dp)
+            .background(Transparent, RoundedCornerShape(4.dp))
             .clickable {
                 onClick(pokemon)
             },
-        shape = RoundedCornerShape(4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Transparent
-        )
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
+        // Pokemon ID
+        Text(
+            text = pokemon.formattedID(),
+            fontSize = 8.sp,
+            fontWeight = FontWeight(400),
+            color = MainTextColor,
+            textAlign = TextAlign.Center,
+            style = PokemonGB
+        )
 
-        Column(
+        // Pokemon Name
+        Text(
+            text = pokemon.formattedName(),
+            fontSize = 10.sp,
+            fontWeight = FontWeight(800),
+            color = MainTextColor,
+            textAlign = TextAlign.Center,
+            style = PokemonGB,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        // Pokemon Types
+        Row(
             modifier = Modifier
-                .padding(4.dp),
-            verticalArrangement = Arrangement.SpaceEvenly
+                .fillMaxWidth()
+                .padding(vertical = 2.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(
-                text = pokemon.formattedID(),
-                fontSize = 8.sp,
-                fontWeight = FontWeight(400),
-                color = MainBlack,
-                textAlign = TextAlign.Center,
-                style = PokemonGB
-            )
-            Text(
-                text = pokemon.formattedName(),
-                fontSize = 10.sp,
-                fontWeight = FontWeight(800),
-                color = MainBlack,
-                textAlign = TextAlign.Center,
-                style = PokemonGB,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 2.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                pokemon.types.forEach {
-                    PokemonTypeToUI(pokemonType = it)
-                }
-            }
-
-            SubcomposeAsyncImage(
-                model = pokemon.getGifOrImage(),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.radialGradient(
-                            listOf(
-                                White.copy(alpha = 0.5F),
-                                Transparent
-                            )
-                        )
-                    ),
-                imageLoader = LocalContext.current.imageLoader,
-                filterQuality = FilterQuality.High
-            ) {
-                when (painter.state) {
-                    is AsyncImagePainter.State.Loading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .padding(40.dp),
-                            color = MainBlack
-                        )
-                    }
-
-                    is AsyncImagePainter.State.Error -> {
-                        Image(
-                            modifier = Modifier
-                                .padding(40.dp),
-                            painter = painterResource(id = R.drawable.ic_error),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(MainBlack)
-                        )
-                    }
-
-                    else -> {
-                        SubcomposeAsyncImageContent()
-
-                    }
-                }
+            pokemon.types.forEach {
+                PokemonTypeToUI(pokemonType = it)
             }
         }
 
+        // Pokemon Image
+        SubcomposeAsyncImage(
+            model = pokemon.getGifOrImage(),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.radialGradient(
+                        listOf(
+                            White.copy(alpha = 0.5F),
+                            Transparent
+                        )
+                    )
+                ),
+            imageLoader = LocalContext.current.imageLoader,
+            filterQuality = FilterQuality.High
+        ) {
+            when (painter.state) {
+                is AsyncImagePainter.State.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(40.dp),
+                        color = MainBlack
+                    )
+                }
+
+                is AsyncImagePainter.State.Error -> {
+                    Image(
+                        modifier = Modifier
+                            .padding(40.dp),
+                        painter = painterResource(id = R.drawable.ic_error),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(MainBlack)
+                    )
+                }
+
+                else -> {
+                    SubcomposeAsyncImageContent()
+
+                }
+            }
+        }
     }
+
 }
 
 @Composable
@@ -237,8 +231,7 @@ fun SearchInputText(state: GridScreenUIState) {
         modifier = Modifier
             .padding(start = 20.dp, end = 20.dp, top = 10.dp)
             .fillMaxWidth()
-            .background(Green, shape)
-            .border(1.dp, MainBlack, shape),
+            .background(SearchTextBackground, shape),
         value = state.searchText,
         onValueChange = {
             state.onSearchChange(it)
@@ -260,18 +253,18 @@ fun SearchInputText(state: GridScreenUIState) {
             )
         },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Green,
-            unfocusedContainerColor = Green,
-            disabledContainerColor = Green,
-            errorContainerColor = Green,
-            focusedTextColor = MainBlack,
-            disabledTextColor = MainBlack,
-            errorTextColor = MainBlack,
-            unfocusedTextColor = MainBlack,
+            focusedContainerColor = SearchTextBackground,
+            unfocusedContainerColor = SearchTextBackground,
+            disabledContainerColor = SearchTextBackground,
+            errorContainerColor = SearchTextBackground,
+            focusedTextColor = MainTextColor,
+            disabledTextColor = MainTextColor,
+            errorTextColor = MainTextColor,
+            unfocusedTextColor = MainTextColor,
             focusedIndicatorColor = MainBlack,
             focusedLeadingIconColor = MainBlack,
             cursorColor = MainBlack,
-            selectionColors = TextSelectionColors(MainBlack, BorderBlackShadow)
+            selectionColors = TextSelectionColors(MainBlack, MainSelectionTextBackground)
         ),
         textStyle = PokemonGB.copy(fontSize = 12.sp),
         singleLine = true,
