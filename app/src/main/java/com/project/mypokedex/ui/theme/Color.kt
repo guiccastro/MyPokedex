@@ -28,8 +28,6 @@ val MainSelectionTextBackground = Color(0x773C3635)
 val CardColor = MainWhite
 val CardInternBackground = MainBlue
 
-val BorderBlackShadow = Color(0x773C3635)
-
 /** Home Screen **/
 val HomeScreenBackground = MainRed
 
@@ -69,4 +67,3 @@ val PokeballRed = HeavyRed
 val PokeballWhite = White
 val PokeballDetails = MainBlack
 val AnimatedEnterProgressIndicator = MainBlack
-val AnimatedEnterProgressText = MainBlack

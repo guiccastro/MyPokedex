@@ -29,6 +29,7 @@ import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BottomAppBarSelectedItem
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainTextColor
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 
 @Composable
@@ -75,7 +76,7 @@ fun BottomBar(
                             Text(
                                 text = stringResource(item.label),
                                 fontWeight = FontWeight(500),
-                                color = MainBlack,
+                                color = MainTextColor,
                                 textAlign = TextAlign.Center,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
