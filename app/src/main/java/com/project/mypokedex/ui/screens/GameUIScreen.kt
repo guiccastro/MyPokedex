@@ -1,6 +1,5 @@
 package com.project.mypokedex.ui.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,9 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -30,10 +26,8 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
@@ -41,14 +35,12 @@ import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.sampledata.charmander
 import com.project.mypokedex.sampledata.listPokemons
-import com.project.mypokedex.ui.components.ResponsiveText
+import com.project.mypokedex.ui.components.GameButtons
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainBlue
-import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
-import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.White
 
@@ -124,48 +116,26 @@ fun OptionsButtons(state: GameScreenUIState) {
         state.options.forEachIndexed { index, option ->
             val backgroundColor = state.buttonsUIState.getOrNull(index)?.first ?: MainWhite
             val isEnabled = state.buttonsUIState.getOrNull(index)?.second ?: true
-            Button(
-                onClick = { state.onOptionClick(option) },
-                shape = RoundedCornerShape(6.dp),
-                border = BorderStroke(2.dp, MainBlack),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = backgroundColor,
-                    disabledContainerColor = backgroundColor.copy(alpha = 0.5F)
-                ),
-                enabled = isEnabled,
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                ResponsiveText(
-                    text = option.formattedName(),
-                    fontWeight = FontWeight(800),
-                    textStyle = PokemonGB,
-                    targetTextSizeHeight = 16.sp,
-                    color = BlackTextColor
-                )
-            }
+            GameButtons(
+                text = option.formattedName(),
+                onClick = {
+                    state.onOptionClick(option)
+                },
+                containerColor = backgroundColor,
+                enabled = isEnabled
+            )
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        Button(
-            onClick = { state.onClickNext() },
-            shape = RoundedCornerShape(6.dp),
-            border = BorderStroke(2.dp, MainBlack),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MainBlue,
-            ),
+        GameButtons(
+            text = stringResource(R.string.game_screen_next_button).uppercase(),
+            onClick = {
+                state.onClickNext()
+            },
+            containerColor = MainBlue,
             modifier = Modifier
-                .fillMaxWidth()
                 .alpha(if (state.answered) 1F else 0F)
-        ) {
-            ResponsiveText(
-                text = stringResource(R.string.game_screen_next_button).uppercase(),
-                fontWeight = FontWeight(800),
-                textStyle = PokemonGB,
-                targetTextSizeHeight = 16.sp,
-                color = BlackTextColor
-            )
-        }
+        )
     }
 }
 
