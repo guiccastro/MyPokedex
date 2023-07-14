@@ -57,12 +57,20 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
-                        if (side == RotationalImageSide.Front && degrees == 0F) {
-                            degrees = 180F
-                            side = RotationalImageSide.Back
+                        if (degrees == 0F || degrees == 180F) {
+                            if (side == RotationalImageSide.Front) {
+                                degrees = 180F
+                                side = RotationalImageSide.Back
+                            } else {
+                                degrees = 0F
+                                side = RotationalImageSide.Front
+                            }
                         } else {
-                            degrees = 0F
-                            side = RotationalImageSide.Front
+                            degrees = if (side == RotationalImageSide.Front) {
+                                0F
+                            } else {
+                                180F
+                            }
                         }
                     }
                 )
