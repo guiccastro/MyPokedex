@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.project.mypokedex.model.MainBottomAppBarComponent
 import com.project.mypokedex.model.MainTopAppBarComponent
-import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.scaffold.components.BottomBar
 import com.project.mypokedex.ui.scaffold.components.TopBar
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
@@ -21,8 +20,6 @@ fun MainScaffold(
     bottomAppBarState: BottomAppBarUIState = MainBottomAppBarComponent.bottomAppBarState(),
     content: @Composable () -> Unit
 ) {
-    Background()
-
     Scaffold(
         topBar = { TopBar(state = topAppBarState) },
         bottomBar = { BottomBar(state = bottomAppBarState) }

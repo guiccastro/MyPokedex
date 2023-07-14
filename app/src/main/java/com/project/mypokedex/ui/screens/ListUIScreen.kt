@@ -51,7 +51,6 @@ import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
-import com.project.mypokedex.ui.components.Background
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
 import com.project.mypokedex.ui.theme.CardColor
@@ -69,8 +68,6 @@ fun ListUIScreen(viewModel: ListScreenViewModel) {
 
 @Composable
 fun ListUIScreen(state: ListScreenUIState = ListScreenUIState()) {
-    Background()
-
     Column(
         modifier = Modifier
             .fillMaxHeight(),

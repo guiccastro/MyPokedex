@@ -4,7 +4,6 @@ import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -46,16 +45,6 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.RotationalImageSide
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.MainBlack
-import com.project.mypokedex.ui.theme.HomeScreenBackground
-
-@Composable
-fun Background() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(HomeScreenBackground)
-    )
-}
 
 fun Modifier.innerShadow(
     color: Color = Black,
