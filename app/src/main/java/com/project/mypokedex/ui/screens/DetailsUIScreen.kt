@@ -21,12 +21,12 @@ import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.RotationalImage
-import com.project.mypokedex.ui.components.innerShadow
+import com.project.mypokedex.ui.innerShadow
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.Black
+import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.MainBlue
-import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 

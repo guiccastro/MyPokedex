@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.sampledata.actionItemsSample
-import com.project.mypokedex.ui.components.bottomBorder
-import com.project.mypokedex.ui.components.customShadow
+import com.project.mypokedex.ui.bottomBorder
+import com.project.mypokedex.ui.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.MainBlack

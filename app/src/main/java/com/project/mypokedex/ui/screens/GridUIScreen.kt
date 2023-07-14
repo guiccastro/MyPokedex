@@ -53,7 +53,7 @@ import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.PokemonTypeToUI
-import com.project.mypokedex.ui.components.innerShadow
+import com.project.mypokedex.ui.innerShadow
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.CardColor
