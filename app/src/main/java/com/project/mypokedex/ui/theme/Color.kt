@@ -14,14 +14,11 @@ val MainBlack = Color(0xFF3c3635)
 val MainBlue = Color(0xFF52b2cf)
 val MainWhite = Color(0xFFd6d5c9)
 
-/** Secondary Colors **/
-val SecondaryGreen = Color(0xFF48b699)
-
 /** Text Colors **/
-val MainTextColor = MainBlack
+val BlackTextColor = MainBlack
 
 /** Search Text Colors **/
-val SearchTextBackground = SecondaryGreen
+val SearchTextBackground = Color(0xFF48b699)
 val MainSelectionTextBackground = Color(0x773C3635)
 
 /** Common **/

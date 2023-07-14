@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.AnimatedEnterOrientation
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
-import com.project.mypokedex.ui.theme.MainTextColor
+import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokeballDetails
 import com.project.mypokedex.ui.theme.PokeballRed
@@ -58,7 +58,7 @@ fun DownloadInformation(state: AnimatedEnterUIState) {
 
             Text(
                 text = state.formattedDownloadProgress,
-                color = MainTextColor,
+                color = BlackTextColor,
                 fontSize = 16.sp,
                 modifier = Modifier
                     .align(Alignment.Center)

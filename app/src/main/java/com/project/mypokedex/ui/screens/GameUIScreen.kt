@@ -45,7 +45,7 @@ import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainBlue
-import com.project.mypokedex.ui.theme.MainTextColor
+import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
@@ -141,7 +141,7 @@ fun OptionsButtons(state: GameScreenUIState) {
                     fontWeight = FontWeight(800),
                     textStyle = PokemonGB,
                     targetTextSizeHeight = 16.sp,
-                    color = MainTextColor
+                    color = BlackTextColor
                 )
             }
         }
@@ -163,7 +163,7 @@ fun OptionsButtons(state: GameScreenUIState) {
                 fontWeight = FontWeight(800),
                 textStyle = PokemonGB,
                 targetTextSizeHeight = 16.sp,
-                color = MainTextColor
+                color = BlackTextColor
             )
         }
     }

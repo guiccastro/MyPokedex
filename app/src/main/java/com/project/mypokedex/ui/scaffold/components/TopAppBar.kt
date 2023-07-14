@@ -21,7 +21,7 @@ import com.project.mypokedex.ui.components.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.MainBlack
-import com.project.mypokedex.ui.theme.MainTextColor
+import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 
@@ -40,7 +40,7 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
             Text(
                 text = stringResource(state.title),
                 style = PokemonGB,
-                color = MainTextColor,
+                color = BlackTextColor,
                 fontSize = 14.sp
             )
         },

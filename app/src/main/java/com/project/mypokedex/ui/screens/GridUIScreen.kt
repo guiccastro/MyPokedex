@@ -60,7 +60,7 @@ import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.CardInternBackground
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainSelectionTextBackground
-import com.project.mypokedex.ui.theme.MainTextColor
+import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.SearchTextBackground
@@ -149,7 +149,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
             text = pokemon.formattedID(),
             fontSize = 8.sp,
             fontWeight = FontWeight(400),
-            color = MainTextColor,
+            color = BlackTextColor,
             textAlign = TextAlign.Center,
             style = PokemonGB
         )
@@ -159,7 +159,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
             text = pokemon.formattedName(),
             fontSize = 10.sp,
             fontWeight = FontWeight(800),
-            color = MainTextColor,
+            color = BlackTextColor,
             textAlign = TextAlign.Center,
             style = PokemonGB,
             maxLines = 1,
@@ -257,10 +257,10 @@ fun SearchInputText(state: GridScreenUIState) {
             unfocusedContainerColor = SearchTextBackground,
             disabledContainerColor = SearchTextBackground,
             errorContainerColor = SearchTextBackground,
-            focusedTextColor = MainTextColor,
-            disabledTextColor = MainTextColor,
-            errorTextColor = MainTextColor,
-            unfocusedTextColor = MainTextColor,
+            focusedTextColor = BlackTextColor,
+            disabledTextColor = BlackTextColor,
+            errorTextColor = BlackTextColor,
+            unfocusedTextColor = BlackTextColor,
             focusedIndicatorColor = MainBlack,
             focusedLeadingIconColor = MainBlack,
             cursorColor = MainBlack,
