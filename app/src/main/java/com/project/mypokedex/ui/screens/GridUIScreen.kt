@@ -174,6 +174,7 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
             url = pokemon.getGifOrImage(),
             modifier = Modifier
                 .fillMaxSize(),
+            clickable = null
         )
     }
 

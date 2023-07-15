@@ -1,8 +1,6 @@
 package com.project.mypokedex.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +19,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.imageLoader
 import com.project.mypokedex.R
+import com.project.mypokedex.ui.backgroundOrNull
+import com.project.mypokedex.ui.clickableOrNull
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.White
@@ -29,9 +29,9 @@ import com.project.mypokedex.ui.theme.White
 fun PokemonImage(
     url: String?,
     modifier: Modifier = Modifier,
-    clickable: Boolean = false,
+    clickable: Boolean? = false,
     onClick: () -> Unit = {},
-    background: Brush = Brush.radialGradient(listOf(White.copy(alpha = 0.5F), Transparent)),
+    background: Brush? = Brush.radialGradient(listOf(White.copy(alpha = 0.5F), Transparent)),
     imageColorFilter: ColorFilter? = null
 ) {
     SubcomposeAsyncImage(
@@ -39,12 +39,8 @@ fun PokemonImage(
         contentDescription = null,
         modifier = Modifier
             .aspectRatio(1F)
-            .background(background)
-            .clickable(
-                enabled = clickable
-            ) {
-                onClick()
-            }
+            .backgroundOrNull(background)
+            .clickableOrNull(clickable, onClick)
             .then(modifier),
         imageLoader = LocalContext.current.imageLoader,
         filterQuality = FilterQuality.High

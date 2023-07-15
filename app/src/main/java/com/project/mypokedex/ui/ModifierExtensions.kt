@@ -3,12 +3,15 @@ package com.project.mypokedex.ui
 import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
@@ -164,3 +167,27 @@ fun Modifier.topBorder(strokeWidth: Dp, color: Color) = composed(
         }
     }
 )
+
+fun Modifier.clickableOrNull(clickable: Boolean?, onClick: () -> Unit): Modifier {
+    return if (clickable != null) {
+        this.then(
+            Modifier.clickable(
+                enabled = clickable
+            ) {
+                onClick()
+            }
+        )
+    } else {
+        this
+    }
+}
+
+fun Modifier.backgroundOrNull(brush: Brush?): Modifier {
+    return if (brush != null) {
+        this.then(
+            Modifier.background(brush)
+        )
+    } else {
+        this
+    }
+}
