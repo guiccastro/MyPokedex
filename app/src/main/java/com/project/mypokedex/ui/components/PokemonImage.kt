@@ -29,7 +29,7 @@ import com.project.mypokedex.ui.theme.White
 fun PokemonImage(
     url: String?,
     modifier: Modifier = Modifier,
-    clickable: Boolean? = false,
+    clickable: Boolean? = null,
     onClick: () -> Unit = {},
     background: Brush? = Brush.radialGradient(listOf(White.copy(alpha = 0.5F), Transparent)),
     imageColorFilter: ColorFilter? = null

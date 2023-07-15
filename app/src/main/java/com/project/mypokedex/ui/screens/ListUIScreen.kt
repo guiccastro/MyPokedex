@@ -35,9 +35,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,11 +44,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
+import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
 import com.project.mypokedex.ui.theme.CardColor
@@ -235,15 +232,13 @@ fun DirectionalButtons(state: ListScreenUIState) {
 fun PokemonListCard(pokemon: Pokemon) {
     Row(modifier = Modifier.padding(horizontal = 6.dp)) {
         Box(modifier = Modifier.size(150.dp)) {
-            AsyncImage(
-                model = pokemon.gif,
-                contentDescription = null,
+            PokemonImage(
+                url = pokemon.getGifOrImage(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .padding(4.dp),
-                imageLoader = LocalContext.current.imageLoader,
-                filterQuality = FilterQuality.High
+                clickable = null
             )
         }
 
