@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
+import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.PokemonImage
@@ -238,7 +239,8 @@ fun PokemonListCard(pokemon: Pokemon) {
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .padding(4.dp),
-                clickable = null
+                clickable = null,
+                backgroundType = BackgroundType.None
             )
         }
 

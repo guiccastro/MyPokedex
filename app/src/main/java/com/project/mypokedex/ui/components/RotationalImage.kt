@@ -15,10 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.RotationalImageSide
 
 @Composable
-fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
+fun RotationalImage(
+    frontImage: String,
+    backImage: String,
+    modifier: Modifier,
+    backgroundType: BackgroundType = BackgroundType.None
+) {
     val rotationSensitivity = 0.5F
     var degrees by remember { mutableFloatStateOf(0F) }
     var side by remember { mutableStateOf(RotationalImageSide.Front) }
@@ -71,7 +77,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                 .aspectRatio(1F)
                 .fillMaxSize()
                 .alpha(if (side == RotationalImageSide.Front) 1F else 0F),
-            background = null,
+            backgroundType = backgroundType,
             clickable = null
         )
 
@@ -84,7 +90,7 @@ fun RotationalImage(frontImage: String, backImage: String, modifier: Modifier) {
                     rotationY = 180F
                 }
                 .alpha(if (side == RotationalImageSide.Back) 1F else 0F),
-            background = null,
+            backgroundType = backgroundType,
             clickable = null
         )
     }

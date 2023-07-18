@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
+import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.listPokemons
@@ -174,7 +175,12 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
             url = pokemon.getGifOrImage(),
             modifier = Modifier
                 .fillMaxSize(),
-            clickable = null
+            clickable = null,
+            backgroundType = BackgroundType.ImageBackground(
+                id = R.drawable.ic_pokeball,
+                color1 = pokemon.types.getOrNull(0)?.getColor(),
+                color2 = pokemon.types.getOrNull(1)?.getColor()
+            )
         )
     }
 

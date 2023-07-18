@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.PokemonTypeToUI
@@ -29,6 +30,8 @@ import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
+import com.project.mypokedex.ui.theme.Transparent
+import com.project.mypokedex.ui.theme.White
 
 @Composable
 fun DetailsUIScreen(state: DetailsScreenUIState) {
@@ -112,7 +115,8 @@ fun PokemonDetails(pokemon: Pokemon) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
-                .align(CenterHorizontally)
+                .align(CenterHorizontally),
+            backgroundType = BackgroundType.RadialBackground(White.copy(alpha = 0.5F), Transparent)
         )
     }
 }

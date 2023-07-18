@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.project.mypokedex.R
+import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.sampledata.charmander
 import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.GameButtons
@@ -29,6 +30,8 @@ import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
+import com.project.mypokedex.ui.theme.Transparent
+import com.project.mypokedex.ui.theme.White
 
 @Composable
 fun GameUIScreen(state: GameScreenUIState) {
@@ -47,7 +50,8 @@ fun GameUIScreen(state: GameScreenUIState) {
             imageColorFilter = if (!state.answered) ColorFilter.tint(MainBlack) else null,
             modifier = Modifier
                 .fillMaxSize(0.5F)
-                .weight(1F)
+                .weight(1F),
+            backgroundType = BackgroundType.RadialBackground(White.copy(alpha = 0.5F), Transparent)
         )
         Spacer(modifier = Modifier.height(40.dp))
         OptionsButtons(state = state)

@@ -8,7 +8,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
@@ -19,11 +18,11 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.imageLoader
 import com.project.mypokedex.R
-import com.project.mypokedex.ui.backgroundOrNull
+import com.project.mypokedex.model.BackgroundType
+import com.project.mypokedex.ui.verifyBackgroundTypeImage
 import com.project.mypokedex.ui.clickableOrNull
 import com.project.mypokedex.ui.theme.MainBlack
-import com.project.mypokedex.ui.theme.Transparent
-import com.project.mypokedex.ui.theme.White
+import com.project.mypokedex.ui.verifyBackgroundTypeRadial
 
 @Composable
 fun PokemonImage(
@@ -31,7 +30,7 @@ fun PokemonImage(
     modifier: Modifier = Modifier,
     clickable: Boolean? = null,
     onClick: () -> Unit = {},
-    background: Brush? = Brush.radialGradient(listOf(White.copy(alpha = 0.5F), Transparent)),
+    backgroundType: BackgroundType,
     imageColorFilter: ColorFilter? = null
 ) {
     SubcomposeAsyncImage(
@@ -39,9 +38,9 @@ fun PokemonImage(
         contentDescription = null,
         modifier = Modifier
             .aspectRatio(1F)
-            .backgroundOrNull(background)
             .clickableOrNull(clickable, onClick)
-            .then(modifier),
+            .then(modifier)
+            .verifyBackgroundTypeRadial(backgroundType),
         imageLoader = LocalContext.current.imageLoader,
         filterQuality = FilterQuality.High
     ) {
@@ -78,12 +77,26 @@ fun PokemonImage(
             }
 
             else -> {
+                if (backgroundType != BackgroundType.None && backgroundType !is BackgroundType.RadialBackground) {
+                    BoxWithConstraints(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_pokeball),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxSize(0.8F)
+                                .align(Alignment.Center)
+                                .verifyBackgroundTypeImage(backgroundType)
+                        )
+                    }
+                }
+
                 SubcomposeAsyncImageContent(
                     colorFilter = imageColorFilter
                 )
             }
         }
     }
-
-
 }

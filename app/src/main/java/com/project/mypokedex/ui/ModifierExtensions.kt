@@ -8,17 +8,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.ui.theme.Black
 
 fun Modifier.innerShadow(
@@ -182,11 +186,69 @@ fun Modifier.clickableOrNull(clickable: Boolean?, onClick: () -> Unit): Modifier
     }
 }
 
-fun Modifier.backgroundOrNull(brush: Brush?): Modifier {
-    return if (brush != null) {
+fun Modifier.verifyBackgroundTypeRadial(backgroundType: BackgroundType): Modifier {
+    return if (backgroundType is BackgroundType.RadialBackground) {
         this.then(
-            Modifier.background(brush)
+            Modifier.background(
+                Brush.radialGradient(
+                    listOf(
+                        backgroundType.color1,
+                        backgroundType.color2
+                    )
+                )
+            )
         )
+    } else {
+        this
+    }
+}
+
+fun Modifier.verifyBackgroundTypeImage(backgroundType: BackgroundType): Modifier {
+    return if (backgroundType is BackgroundType.ImageBackground) {
+        if (backgroundType.color1 == null) {
+            this.then(
+                Modifier
+                    .graphicsLayer(alpha = 0.99f)
+                    .drawWithCache {
+                        onDrawWithContent {
+                            drawContent()
+                        }
+                    }
+            )
+        } else if (backgroundType.color2 == null) {
+            this.then(
+                Modifier
+                    .graphicsLayer(alpha = 0.99f)
+                    .drawWithCache {
+                        onDrawWithContent {
+                            drawContent()
+                            drawRect(
+                                color = backgroundType.color1,
+                                blendMode = BlendMode.SrcIn
+                            )
+                        }
+                    }
+            )
+        } else {
+            this.then(
+                Modifier
+                    .graphicsLayer(alpha = 0.99f)
+                    .drawWithCache {
+                        onDrawWithContent {
+                            drawContent()
+                            drawRect(
+                                Brush.horizontalGradient(
+                                    listOf(
+                                        backgroundType.color1,
+                                        backgroundType.color2
+                                    )
+                                ),
+                                blendMode = BlendMode.SrcIn
+                            )
+                        }
+                    }
+            )
+        }
     } else {
         this
     }
