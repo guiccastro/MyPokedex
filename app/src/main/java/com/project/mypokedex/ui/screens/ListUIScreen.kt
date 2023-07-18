@@ -56,6 +56,7 @@ import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.SearchTextBackground
+import com.project.mypokedex.ui.theme.White
 import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
 
 @Composable
@@ -240,7 +241,10 @@ fun PokemonListCard(pokemon: Pokemon) {
                     .fillMaxHeight()
                     .padding(4.dp),
                 clickable = null,
-                backgroundType = BackgroundType.None
+                backgroundType = BackgroundType.ImageBackground(
+                    id = R.drawable.ic_pokeball,
+                    color1 = White.copy(alpha = 0.5f)
+                )
             )
         }
 
