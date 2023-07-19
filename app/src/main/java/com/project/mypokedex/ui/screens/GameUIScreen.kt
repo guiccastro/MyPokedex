@@ -23,7 +23,7 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.sampledata.charmander
 import com.project.mypokedex.sampledata.listPokemons
-import com.project.mypokedex.ui.components.GameButtons
+import com.project.mypokedex.ui.components.AppButton
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
 import com.project.mypokedex.ui.theme.MainBlack
@@ -70,7 +70,7 @@ fun OptionsButtons(state: GameScreenUIState) {
         state.options.forEachIndexed { index, option ->
             val backgroundColor = state.buttonsUIState.getOrNull(index)?.first ?: MainWhite
             val isEnabled = state.buttonsUIState.getOrNull(index)?.second ?: true
-            GameButtons(
+            AppButton(
                 text = option.formattedName(),
                 onClick = {
                     state.onOptionClick(option)
@@ -81,7 +81,7 @@ fun OptionsButtons(state: GameScreenUIState) {
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        GameButtons(
+        AppButton(
             text = stringResource(R.string.game_screen_next_button).uppercase(),
             onClick = {
                 state.onClickNext()

@@ -1,15 +1,16 @@
 package com.project.mypokedex.ui.scaffold.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,11 +18,12 @@ import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.sampledata.actionItemsSample
 import com.project.mypokedex.ui.bottomBorder
+import com.project.mypokedex.ui.components.AppIcon
 import com.project.mypokedex.ui.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.Black
-import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.BlackTextColor
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 
@@ -37,53 +39,59 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
                 widthOffset = 10.dp
             ),
         title = {
-            Text(
-                text = stringResource(state.title),
-                style = PokemonGB,
-                color = BlackTextColor,
-                fontSize = 14.sp
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+            ) {
+                Text(
+                    text = stringResource(state.title),
+                    style = PokemonGB,
+                    color = BlackTextColor,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                )
+            }
         },
         navigationIcon = {
             if (state.hasReturn) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_return),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MainBlack),
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .clickable(
-                            onClick = state.onClickReturn
-                        )
+                AppIcon(
+                    id = R.drawable.ic_return,
+                    clickable = true,
+                    onClick = state.onClickReturn,
+                    boxPadding = PaddingValues(horizontal = 10.dp)
                 )
             }
         },
         actions = {
             state.actionItems.forEach { item ->
-                Image(
-                    painter = painterResource(id = item.icon),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MainBlack),
-                    modifier = Modifier
-                        .padding(end = 10.dp)
-                        .clickable(
-                            onClick = item.onClick
-                        )
+                AppIcon(
+                    id = item.icon,
+                    clickable = true,
+                    onClick = item.onClick,
+                    boxPadding = PaddingValues(horizontal = 10.dp)
                 )
             }
         }
     )
 }
 
-@Preview
+@Preview(showSystemUi = true)
 @Composable
 fun TopBarPreview() {
     MyPokedexTheme {
-        TopBar(
-            TopAppBarUIState(
-                hasReturn = true,
-                actionItems = actionItemsSample
-            )
-        )
+        Scaffold(
+            topBar = {
+                TopBar(
+                    TopAppBarUIState(
+                        hasReturn = true,
+                        actionItems = actionItemsSample
+                    )
+                )
+            }
+        ) {
+            Box(modifier = Modifier.padding(it))
+        }
+
     }
 }

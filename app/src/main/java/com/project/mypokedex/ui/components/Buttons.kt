@@ -17,7 +17,7 @@ import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @Composable
-fun GameButtons(
+fun AppButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

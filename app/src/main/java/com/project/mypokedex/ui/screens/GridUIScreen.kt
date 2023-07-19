@@ -3,7 +3,6 @@ package com.project.mypokedex.ui.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,8 +20,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,7 +27,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -44,6 +40,7 @@ import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.listPokemons
+import com.project.mypokedex.ui.components.AppIcon
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.innerShadow
@@ -200,10 +197,8 @@ fun SearchInputText(state: GridScreenUIState) {
         },
         shape = shape,
         leadingIcon = {
-            Image(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(MainBlack)
+            AppIcon(
+                id = R.drawable.ic_search
             )
         },
         placeholder = {

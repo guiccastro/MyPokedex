@@ -1,10 +1,7 @@
 package com.project.mypokedex.model
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.List
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.project.mypokedex.R
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.navigation.screens.GameScreen
@@ -13,24 +10,24 @@ import com.project.mypokedex.navigation.screens.ListScreen
 
 enum class BottomAppBarItem(
     @StringRes val label: Int,
-    val icon: ImageVector,
+    @DrawableRes val icon: Int,
     val screen: Screen
 ) {
     GridScreenBottomAppBarItem(
         label = R.string.grid_screen_label,
-        icon = Icons.Default.List,
+        icon = R.drawable.ic_grid,
         screen = GridScreen
     ),
 
     ListScreenBottomAppBarItem(
         label = R.string.list_screen_label,
-        icon = Icons.Default.AccountBox,
+        icon = R.drawable.ic_list,
         screen = ListScreen
     ),
 
     GameScreenBottomAppBarItem(
         label = R.string.game_screen_label,
-        icon = Icons.Default.AccountBox,
+        icon = R.drawable.ic_game,
         screen = GameScreen
     );
 

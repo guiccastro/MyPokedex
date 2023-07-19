@@ -22,8 +22,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
@@ -34,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +45,7 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
+import com.project.mypokedex.ui.components.AppIcon
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
@@ -308,10 +306,8 @@ fun SearchInputText(state: ListScreenUIState) {
         },
         shape = RoundedCornerShape(25),
         leadingIcon = {
-            Image(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(MainBlack)
+            AppIcon(
+                id = R.drawable.ic_search
             )
         },
         placeholder = {
