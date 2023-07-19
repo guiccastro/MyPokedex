@@ -40,15 +40,12 @@ import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.listPokemons
+import com.project.mypokedex.ui.CardScreen
 import com.project.mypokedex.ui.components.AppIcon
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
-import com.project.mypokedex.ui.innerShadow
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
-import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BlackTextColor
-import com.project.mypokedex.ui.theme.CardColor
-import com.project.mypokedex.ui.theme.CardInternBackground
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainSelectionTextBackground
 import com.project.mypokedex.ui.theme.MyPokedexTheme
@@ -76,45 +73,24 @@ fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
             )
         }
 
-        val externalCorner = 8.dp
-        val internalCorner = 6.dp
-        val externalShape = RoundedCornerShape(externalCorner)
-        val internalShape = RoundedCornerShape(internalCorner)
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp),
-            color = CardColor,
-            shape = externalShape
+        CardScreen(
+            cardPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp)
         ) {
-            Surface(
-                modifier = Modifier
-                    .padding(all = 10.dp)
-                    .innerShadow(
-                        color = Black,
-                        cornersRadius = internalCorner,
-                        blur = 5.dp
-                    ),
-                color = CardInternBackground,
-                shape = internalShape
+            AnimatedVisibility(
+                visible = state.showList,
+                enter = expandVertically(),
+                exit = shrinkVertically()
             ) {
-                AnimatedVisibility(
-                    visible = state.showList,
-                    enter = expandVertically(),
-                    exit = shrinkVertically()
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalArrangement = Arrangement.spacedBy(20.dp),
+                    contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
                 ) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalArrangement = Arrangement.spacedBy(20.dp),
-                        contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
-                    ) {
-                        items(state.pokemonList) { pokemon ->
-                            PokemonGridCard(pokemon = pokemon, onClick = onClick)
-                        }
+                    items(state.pokemonList) { pokemon ->
+                        PokemonGridCard(pokemon = pokemon, onClick = onClick)
                     }
                 }
-
             }
         }
     }

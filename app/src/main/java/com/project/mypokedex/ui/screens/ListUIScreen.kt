@@ -8,6 +8,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,11 +46,11 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
+import com.project.mypokedex.ui.CardScreen
 import com.project.mypokedex.ui.components.AppIcon
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
-import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
@@ -88,47 +89,33 @@ fun ListUIScreen(state: ListScreenUIState = ListScreenUIState()) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Screen(state: ListScreenUIState) {
-    Surface(
-        modifier = Modifier
+    CardScreen(
+        cardModifier = Modifier
             .fillMaxWidth()
-            .height(240.dp)
-            .padding(horizontal = 20.dp),
-        shape = RoundedCornerShape(24.dp),
-        color = CardColor,
-        shadowElevation = 10.dp
+            .height(240.dp),
+        screenModifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp),
+        cardCorner = 24.dp,
+        screenCorner = 16.dp,
+        cardBorderSize = PaddingValues(vertical = 40.dp, horizontal = 20.dp),
+        cardPadding = PaddingValues(horizontal = 20.dp)
     ) {
-        Column(
+        Image(
+            painter = painterResource(id = R.drawable.ic_screen_background),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .padding(horizontal = 20.dp),
-                shape = RoundedCornerShape(16.dp),
-                border = BorderStroke(1.dp, MainBlack),
-                shadowElevation = 5.dp
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_screen_background),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
+                .fillMaxSize()
+        )
 
-                HorizontalPager(
-                    state = rememberPagerState { state.pokemonList.size },
-                    pageSpacing = 10.dp
-                ) {
-                    PokemonListCard(pokemon = state.pokemonList[it])
-                }
-            }
+        HorizontalPager(
+            state = rememberPagerState { state.pokemonList.size },
+            pageSpacing = 10.dp
+        ) {
+            PokemonListCard(pokemon = state.pokemonList[it])
         }
     }
-
 }
 
 @Composable
