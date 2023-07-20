@@ -51,8 +51,7 @@ fun PokemonDetails(pokemon: Pokemon) {
             fontSize = 14.sp,
             fontWeight = FontWeight(500),
             color = BlackTextColor,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier,
             textAlign = TextAlign.Center,
             style = PokemonGB
         )
@@ -60,12 +59,11 @@ fun PokemonDetails(pokemon: Pokemon) {
         // Pokemon Name
         ResponsiveText(
             text = pokemon.formattedName(),
-            targetTextSizeHeight = 14.sp,
-            fontWeight = FontWeight(400),
+            targetTextSizeHeight = 16.sp,
+            fontWeight = FontWeight(1000),
             color = BlackTextColor,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 2.dp, bottom = 4.dp),
+                .padding(vertical = 4.dp),
             textAlign = TextAlign.Center,
             textStyle = PokemonGB,
             maxLines = 1
@@ -75,16 +73,19 @@ fun PokemonDetails(pokemon: Pokemon) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             pokemon.types.forEach {
-                PokemonTypeToUI(pokemonType = it)
+                PokemonTypeToUI(
+                    pokemonType = it,
+                    size = 34.dp
+                )
             }
         }
 
         // Pokemon Images
         RotationalImage(
-            frontImage = pokemon.gif,
+            frontImage = pokemon.getGifOrImage(),
             backImage = pokemon.backGif,
             modifier = Modifier
                 .fillMaxWidth()

@@ -28,20 +28,24 @@ fun RotationalImage(
     val rotationSensitivity = 0.5F
     var degrees by remember { mutableFloatStateOf(0F) }
     var side by remember { mutableStateOf(RotationalImageSide.Front) }
+
+    val canRotate = frontImage.isNotBlank() && backImage.isNotBlank()
     Box(
         modifier = Modifier
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
-                        degrees += dragAmount.x * rotationSensitivity
-                        if (degrees < -275F) {
-                            degrees = 90F
+                        if (canRotate) {
+                            degrees += dragAmount.x * rotationSensitivity
+                            if (degrees < -275F) {
+                                degrees = 90F
+                            }
+                            if (degrees > 275F) {
+                                degrees = -90F
+                            }
+                            side =
+                                if (degrees < 90F && degrees > -90) RotationalImageSide.Front else RotationalImageSide.Back
                         }
-                        if (degrees > 275F) {
-                            degrees = -90F
-                        }
-                        side =
-                            if (degrees < 90F && degrees > -90) RotationalImageSide.Front else RotationalImageSide.Back
                         change.consume()
                     }
                 )
@@ -49,19 +53,21 @@ fun RotationalImage(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onTap = {
-                        if (degrees == 0F || degrees == 180F) {
-                            if (side == RotationalImageSide.Front) {
-                                degrees = 180F
-                                side = RotationalImageSide.Back
+                        if (canRotate) {
+                            if (degrees == 0F || degrees == 180F) {
+                                if (side == RotationalImageSide.Front) {
+                                    degrees = 180F
+                                    side = RotationalImageSide.Back
+                                } else {
+                                    degrees = 0F
+                                    side = RotationalImageSide.Front
+                                }
                             } else {
-                                degrees = 0F
-                                side = RotationalImageSide.Front
-                            }
-                        } else {
-                            degrees = if (side == RotationalImageSide.Front) {
-                                0F
-                            } else {
-                                180F
+                                degrees = if (side == RotationalImageSide.Front) {
+                                    0F
+                                } else {
+                                    180F
+                                }
                             }
                         }
                     }
