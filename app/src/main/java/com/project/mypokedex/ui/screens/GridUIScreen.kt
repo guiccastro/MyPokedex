@@ -134,9 +134,8 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
         // Pokemon Types
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 2.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+                .padding(vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             pokemon.types.forEach {
                 PokemonTypeToUI(pokemonType = it)

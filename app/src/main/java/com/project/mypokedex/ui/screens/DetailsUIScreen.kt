@@ -78,7 +78,7 @@ fun PokemonDetails(pokemon: Pokemon) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             pokemon.types.forEach {
-                PokemonTypeToUI(pokemonType = it, fontSize = 12.sp)
+                PokemonTypeToUI(pokemonType = it)
             }
         }
 

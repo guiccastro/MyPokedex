@@ -271,7 +271,7 @@ fun PokemonListCard(pokemon: Pokemon) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 items(pokemon.types) {
-                    PokemonTypeToUI(pokemonType = it, fontSize = 12.sp)
+                    PokemonTypeToUI(pokemonType = it)
                 }
             }
         }

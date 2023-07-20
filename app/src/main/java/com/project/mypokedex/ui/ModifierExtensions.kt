@@ -236,12 +236,17 @@ fun Modifier.verifyBackgroundTypeImage(backgroundType: BackgroundType): Modifier
                     .drawWithCache {
                         onDrawWithContent {
                             drawContent()
+                            val gradientPercent = 0.2F
+                            val centerX = this.size.width * 0.5F
+                            val gradientSize = (centerX * gradientPercent)
                             drawRect(
                                 Brush.horizontalGradient(
                                     listOf(
                                         backgroundType.color1,
                                         backgroundType.color2
-                                    )
+                                    ),
+                                    startX = centerX - gradientSize,
+                                    endX = centerX + gradientSize
                                 ),
                                 blendMode = BlendMode.SrcIn
                             )

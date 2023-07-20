@@ -1,6 +1,8 @@
 package com.project.mypokedex.model
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
+import com.project.mypokedex.R
 import com.project.mypokedex.ui.theme.BugColor
 import com.project.mypokedex.ui.theme.DarkColor
 import com.project.mypokedex.ui.theme.DragonColor
@@ -66,6 +68,32 @@ enum class PokemonType(val id: Int) {
             Fairy -> FairyColor
             Unknown -> UnknownColor
             Shadow -> ShadowColor
+        }
+    }
+
+    @DrawableRes
+    fun getIcon(): Int {
+        return when (this) {
+            Normal -> R.drawable.ic_normal
+            Fighting -> R.drawable.ic_fighting
+            Flying -> R.drawable.ic_flying
+            Poison -> R.drawable.ic_poison
+            Ground -> R.drawable.ic_ground
+            Rock -> R.drawable.ic_rock
+            Bug -> R.drawable.ic_bug
+            Ghost -> R.drawable.ic_ghost
+            Steel -> R.drawable.ic_steel
+            Fire -> R.drawable.ic_fire
+            Water -> R.drawable.ic_water
+            Grass -> R.drawable.ic_grass
+            Electric -> R.drawable.ic_electric
+            Psychic -> R.drawable.ic_psychic
+            Ice -> R.drawable.ic_ice
+            Dragon -> R.drawable.ic_dragon
+            Dark -> R.drawable.ic_dark
+            Fairy -> R.drawable.ic_fairy
+            Unknown -> R.drawable.ic_close
+            Shadow -> R.drawable.ic_close
         }
     }
 

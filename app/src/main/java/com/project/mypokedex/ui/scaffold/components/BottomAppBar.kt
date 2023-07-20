@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.MainBottomAppBarComponent.onClickBottomAppBarItem
-import com.project.mypokedex.navigation.screens.DetailsScreen
+import com.project.mypokedex.navigation.screens.GridScreen
 import com.project.mypokedex.ui.components.AppIcon
 import com.project.mypokedex.ui.customShadow
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
@@ -100,7 +100,7 @@ fun BottomAppBarPreview() {
         Surface {
             Scaffold(
                 bottomBar = {
-                    BottomBar(state = BottomAppBarUIState(bottomAppBarComponent = DetailsScreen.bottomAppBarComponent))
+                    BottomBar(state = BottomAppBarUIState(bottomAppBarComponent = GridScreen.bottomAppBarComponent))
                 }
             ) {
                 Surface(modifier = Modifier.padding(it)) {
