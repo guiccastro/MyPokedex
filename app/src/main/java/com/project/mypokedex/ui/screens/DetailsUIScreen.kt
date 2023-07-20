@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +21,7 @@ import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.CardScreen
+import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.RotationalImage
@@ -32,7 +35,18 @@ import com.project.mypokedex.ui.theme.White
 @Composable
 fun DetailsUIScreen(state: DetailsScreenUIState) {
     CardScreen {
-        state.pokemon?.let { PokemonDetails(it) }
+        Column {
+            state.pokemon?.let { PokemonDetails(it) }
+
+            LazyRow {
+                items(state.evolutionChain) {
+                    PokemonImage(
+                        url = it.getGifOrImage(),
+                        backgroundType = BackgroundType.None
+                    )
+                }
+            }
+        }
     }
 }
 

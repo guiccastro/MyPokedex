@@ -48,5 +48,13 @@ class DetailsScreenViewModel @Inject constructor(
                 )
             }
         }
+
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    evolutionChain = repository.getEvolutionChainByPokemon(pokemon.id)
+                )
+            }
+        }
     }
 }

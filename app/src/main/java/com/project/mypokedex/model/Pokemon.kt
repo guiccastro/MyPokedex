@@ -12,6 +12,8 @@ class Pokemon(
     val gif: String,
     val backGif: String
 ) {
+    var evolutionChain: List<Int> = emptyList()
+
     override fun toString(): String {
         return "$id|$name|$types|$image|$gif"
     }

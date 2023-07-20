@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.project.mypokedex.database.PokemonDatabase
 import com.project.mypokedex.database.dao.PokemonDao
+import com.project.mypokedex.network.services.EvolutionChainService
 import com.project.mypokedex.network.services.PokemonService
+import com.project.mypokedex.network.services.PokemonSpeciesService
 import com.project.mypokedex.repository.PokemonRepository
 import dagger.Module
 import dagger.Provides
@@ -37,7 +39,19 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideRepository(dao: PokemonDao, client: PokemonService, @ApplicationContext context: Context): PokemonRepository {
-        return PokemonRepository(dao, client, context)
+    fun provideRepository(
+        dao: PokemonDao,
+        pokemonClient: PokemonService,
+        evolutionChainClient: EvolutionChainService,
+        pokemonSpeciesClient: PokemonSpeciesService,
+        @ApplicationContext context: Context
+    ): PokemonRepository {
+        return PokemonRepository(
+            dao,
+            pokemonClient,
+            evolutionChainClient,
+            pokemonSpeciesClient,
+            context
+        )
     }
 }

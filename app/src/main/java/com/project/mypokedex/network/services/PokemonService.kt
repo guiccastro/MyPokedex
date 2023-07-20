@@ -7,10 +7,10 @@ import retrofit2.http.Path
 
 interface PokemonService {
 
-    @GET("/api/v2/pokemon/{id}")
+    @GET("pokemon/{id}")
     suspend fun getPokemon(@Path("id") id: Int): PokemonResponse
 
-    @GET("/api/v2/pokemon?limit=100000&offset=0")
+    @GET("pokemon?limit=100000&offset=0")
     suspend fun getBasicKeys(): BasicKeysResponse
 
 }

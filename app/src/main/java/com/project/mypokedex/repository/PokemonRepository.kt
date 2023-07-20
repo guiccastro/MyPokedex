@@ -8,8 +8,11 @@ import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 import com.project.mypokedex.network.responses.BasicKeysResponse
+import com.project.mypokedex.network.responses.EvolutionChainResponse
 import com.project.mypokedex.network.responses.PokemonResponse
+import com.project.mypokedex.network.services.EvolutionChainService
 import com.project.mypokedex.network.services.PokemonService
+import com.project.mypokedex.network.services.PokemonSpeciesService
 import com.project.mypokedex.saveBasicKeysPreferences
 import com.project.mypokedex.saveTotalPokemonsPreferences
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +28,9 @@ import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
     private val dao: PokemonDao,
-    private val client: PokemonService,
+    private val pokemonClient: PokemonService,
+    private val evolutionChainClient: EvolutionChainService,
+    private val pokemonSpeciesClient: PokemonSpeciesService,
     private val context: Context
 ) {
     companion object {
@@ -52,6 +57,29 @@ class PokemonRepository @Inject constructor(
 
             verifyDaoData()
         }
+    }
+
+    suspend fun getEvolutionChainByPokemon(pokemonId: Int): List<Pokemon> {
+        val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemonId)
+        val evolutionChainID =
+            pokemonSpecies.evolutionChain.url.split("/").dropLast(1).last().toInt()
+        val evolutionChain = evolutionChainClient.getEvolutionChain(evolutionChainID)
+
+        return getPokemonIdFromChain(evolutionChain.chain).mapNotNull { getPokemon(it) }
+    }
+
+    private fun getPokemonIdFromChain(evolutionChain: EvolutionChainResponse): List<Int> {
+        val list = ArrayList<Int>()
+
+        list.add(
+            evolutionChain.species.url.split("/").dropLast(1).last().toInt()
+        )
+
+        evolutionChain.evolvesToList.forEach {
+            list.addAll(getPokemonIdFromChain(it))
+        }
+
+        return list
     }
 
     private fun setBasicKeys(keyList: List<Pair<String, Int>>) {
@@ -95,7 +123,7 @@ class PokemonRepository @Inject constructor(
 
         try {
             Log.i(TAG, "getBasicKeys: Requesting Basic Keys")
-            val basicKeys = client.getBasicKeys()
+            val basicKeys = pokemonClient.getBasicKeys()
             Log.i(TAG, "onResponse: Basic Keys")
 
             parseAndSaveBasicKeysResponse(basicKeys)
@@ -138,7 +166,7 @@ class PokemonRepository @Inject constructor(
                 async {
                     try {
                         Log.i(TAG, "requestPokemon: $id")
-                        val pokemon = client.getPokemon(id)
+                        val pokemon = pokemonClient.getPokemon(id)
                         Log.i(TAG, "onResponse: Pokemon - $id")
 
                         parseAndSavePokemonResponse(pokemon)

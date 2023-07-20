@@ -6,12 +6,12 @@ import com.project.mypokedex.model.PokemonType
 class DatabaseConverters {
 
     @TypeConverter
-    fun pokemonTypeToInt(types: List<PokemonType>): String {
+    fun pokemonTypeToString(types: List<PokemonType>): String {
         return types.map { it.id }.joinToString("|")
     }
 
     @TypeConverter
-    fun intToPokemonType(ids: String): List<PokemonType> {
+    fun stringToPokemonType(ids: String): List<PokemonType> {
         val list = ArrayList<PokemonType>()
         ids.split("|").forEach {
             PokemonType.fromId(it.toIntOrNull() ?: 0)?.let { type ->
@@ -19,5 +19,17 @@ class DatabaseConverters {
             }
         }
         return list
+    }
+
+    @TypeConverter
+    fun pokemonEvolutionChainToString(evolutionChain: List<Int>): String {
+        return evolutionChain.map { it }.joinToString("|")
+    }
+
+    @TypeConverter
+    fun stringToPokemonEvolutionChain(ids: String): List<Int> {
+        return ids.split("|").map {
+            it.toIntOrNull() ?: 0
+        }
     }
 }

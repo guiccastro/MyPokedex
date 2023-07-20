@@ -1,6 +1,8 @@
 package com.project.mypokedex.di.modules
 
+import com.project.mypokedex.network.services.EvolutionChainService
 import com.project.mypokedex.network.services.PokemonService
+import com.project.mypokedex.network.services.PokemonSpeciesService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,7 +10,6 @@ import dagger.hilt.components.SingletonComponent
 import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
-import io.github.resilience4j.retrofit.CircuitBreakerCallAdapter
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,7 +18,7 @@ import java.time.Duration
 import javax.inject.Singleton
 
 
-private const val POKE_API_URL = "https://pokeapi.co"
+private const val POKE_API_URL = "https://pokeapi.co/api/v2/"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -77,5 +78,17 @@ class RestApiModule {
     @Singleton
     fun providePokemonClient(retrofit: Retrofit): PokemonService {
         return retrofit.create(PokemonService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideEvolutionChainClient(retrofit: Retrofit): EvolutionChainService {
+        return retrofit.create(EvolutionChainService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePokemonSpeciesClient(retrofit: Retrofit): PokemonSpeciesService {
+        return retrofit.create(PokemonSpeciesService::class.java)
     }
 }
