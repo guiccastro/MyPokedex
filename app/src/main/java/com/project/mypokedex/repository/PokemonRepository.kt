@@ -5,6 +5,7 @@ import android.util.Log
 import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.getBasicKeysPreferences
 import com.project.mypokedex.getTotalPokemonsPreferences
+import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 import com.project.mypokedex.network.responses.BasicKeysResponse
@@ -59,13 +60,17 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    suspend fun getEvolutionChainByPokemon(pokemonId: Int): List<Pokemon> {
+    suspend fun setEvolutionChainByPokemon(pokemonId: Int): EvolutionChain {
         val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemonId)
         val evolutionChainID =
             pokemonSpecies.evolutionChain.url.split("/").dropLast(1).last().toInt()
-        val evolutionChain = evolutionChainClient.getEvolutionChain(evolutionChainID)
+        val evolutionChainResponse = evolutionChainClient.getEvolutionChain(evolutionChainID).chain
 
-        return getPokemonIdFromChain(evolutionChain.chain).mapNotNull { getPokemon(it) }
+        return EvolutionChain(getPokemonIdFromChain(evolutionChainResponse).mapNotNull {
+            getPokemon(
+                it
+            )
+        })
     }
 
     private fun getPokemonIdFromChain(evolutionChain: EvolutionChainResponse): List<Int> {

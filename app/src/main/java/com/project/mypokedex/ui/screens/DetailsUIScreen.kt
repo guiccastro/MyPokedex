@@ -36,15 +36,21 @@ import com.project.mypokedex.ui.theme.White
 fun DetailsUIScreen(state: DetailsScreenUIState) {
     CardScreen {
         Column {
-            state.pokemon?.let { PokemonDetails(it) }
-
-            LazyRow {
-                items(state.evolutionChain) {
-                    PokemonImage(
-                        url = it.getGifOrImage(),
-                        backgroundType = BackgroundType.None
-                    )
+            state.pokemon?.let { pokemon ->
+                PokemonDetails(pokemon)
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    items(state.evolutionChain.chain) {
+                        PokemonImage(
+                            url = it.getGifOrImage(),
+                            backgroundType = BackgroundType.None
+                        )
+                    }
                 }
+
             }
         }
     }

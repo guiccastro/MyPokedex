@@ -20,16 +20,4 @@ class DatabaseConverters {
         }
         return list
     }
-
-    @TypeConverter
-    fun pokemonEvolutionChainToString(evolutionChain: List<Int>): String {
-        return evolutionChain.map { it }.joinToString("|")
-    }
-
-    @TypeConverter
-    fun stringToPokemonEvolutionChain(ids: String): List<Int> {
-        return ids.split("|").map {
-            it.toIntOrNull() ?: 0
-        }
-    }
 }

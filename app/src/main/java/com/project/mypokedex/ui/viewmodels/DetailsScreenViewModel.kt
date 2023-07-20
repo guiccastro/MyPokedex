@@ -34,13 +34,14 @@ class DetailsScreenViewModel @Inject constructor(
                 .filterNotNull()
                 .collect { id ->
                     repository.getPokemon(id)?.let {
-                        updateUiState(it)
+                        setPokemon(it)
+                        setEvolutionChain(it)
                     }
                 }
         }
     }
 
-    private fun updateUiState(pokemon: Pokemon) {
+    private fun setPokemon(pokemon: Pokemon) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -48,11 +49,13 @@ class DetailsScreenViewModel @Inject constructor(
                 )
             }
         }
+    }
 
+    private fun setEvolutionChain(pokemon: Pokemon) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    evolutionChain = repository.getEvolutionChainByPokemon(pokemon.id)
+                    evolutionChain = repository.setEvolutionChainByPokemon(pokemon.id)
                 )
             }
         }
