@@ -44,14 +44,19 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
         Column {
             state.pokemon?.let { pokemon ->
                 PokemonDetails(pokemon)
-                state.evolutionChain?.let { EvolutionChain(evolutionChain = it) }
+                state.evolutionChain?.let {
+                    EvolutionChain(
+                        evolutionChain = it,
+                        onPokemonClick = state.onEvolutionChainPokemonClick
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun EvolutionChain(evolutionChain: EvolutionChain) {
+fun EvolutionChain(evolutionChain: EvolutionChain, onPokemonClick: (Pokemon) -> Unit) {
     val columnsList = evolutionChain.getColumnsList()
     Surface(
         modifier = Modifier
@@ -87,7 +92,11 @@ fun EvolutionChain(evolutionChain: EvolutionChain) {
                                 url = pokemon.getGifOrImage(),
                                 backgroundType = BackgroundType.None,
                                 modifier = Modifier
-                                    .weight(1F)
+                                    .weight(1F),
+                                clickable = true,
+                                onClick = {
+                                    onPokemonClick(pokemon)
+                                }
                             )
                         }
                     }

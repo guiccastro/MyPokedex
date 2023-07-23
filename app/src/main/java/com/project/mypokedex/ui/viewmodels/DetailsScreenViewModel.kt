@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.navigation.MainNavComponent
+import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.screens.DetailsScreen.pokemonIdArgument
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
@@ -28,6 +30,18 @@ class DetailsScreenViewModel @Inject constructor(
     val uiState get() = _uiState.asStateFlow()
 
     init {
+        _uiState.update {
+            it.copy(
+                onEvolutionChainPokemonClick = { pokemon ->
+                    MainNavComponent.navController.apply {
+                        DetailsScreen.apply {
+                            navigateToItself(pokemonId = pokemon.id)
+                        }
+                    }
+                }
+            )
+        }
+
         CoroutineScope(IO).launch {
             savedStateHandle
                 .getStateFlow<Int?>(pokemonIdArgument, null)
