@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class PokemonRepository @Inject constructor(
@@ -63,17 +64,27 @@ class PokemonRepository @Inject constructor(
     }
 
     suspend fun getEvolutionChainByPokemon(pokemon: Pokemon): EvolutionChain {
-        val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemon.id)
-        val evolutionChainID =
-            pokemonSpecies.evolutionChain.url.getIDFromURL()
-        val evolutionChainResponse = evolutionChainClient.getEvolutionChain(evolutionChainID).chain
+        try {
+            val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemon.id)
+            val evolutionChainID =
+                pokemonSpecies.evolutionChain.url.getIDFromURL()
+            val evolutionChainResponse = evolutionChainClient.getEvolutionChain(evolutionChainID).chain
 
-        return EvolutionChain(
-            chain = createEvolutionChain(evolutionChainResponse) ?: EvolutionChainItem(
-                pokemon,
-                emptyList()
+            return EvolutionChain(
+                chain = createEvolutionChain(evolutionChainResponse) ?: EvolutionChainItem(
+                    pokemon,
+                    emptyList()
+                )
             )
-        )
+        } catch (e: HttpException) {
+            return EvolutionChain(
+                chain = EvolutionChainItem(
+                    pokemon,
+                    emptyList()
+                )
+            )
+        }
+
     }
 
     private fun createEvolutionChain(chainResponse: EvolutionChainResponse): EvolutionChainItem? {
