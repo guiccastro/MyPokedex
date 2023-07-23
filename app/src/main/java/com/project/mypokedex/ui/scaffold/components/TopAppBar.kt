@@ -56,7 +56,7 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
         navigationIcon = {
             if (state.hasReturn) {
                 AppIcon(
-                    id = R.drawable.ic_return,
+                    id = R.drawable.ic_arrow_back,
                     clickable = true,
                     onClick = state.onClickReturn,
                     boxPadding = PaddingValues(horizontal = 10.dp)
