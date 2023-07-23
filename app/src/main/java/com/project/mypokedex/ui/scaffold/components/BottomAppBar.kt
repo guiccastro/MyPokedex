@@ -23,7 +23,8 @@ import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.MainBottomAppBarComponent.onClickBottomAppBarItem
 import com.project.mypokedex.navigation.screens.GridScreen
 import com.project.mypokedex.ui.components.AppIcon
-import com.project.mypokedex.ui.customShadow
+import com.project.mypokedex.ui.extensions.customShadow
+import com.project.mypokedex.ui.extensions.topBorder
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BlackTextColor
@@ -31,7 +32,6 @@ import com.project.mypokedex.ui.theme.BottomAppBarSelectedItem
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
-import com.project.mypokedex.ui.topBorder
 
 @Composable
 fun BottomBar(

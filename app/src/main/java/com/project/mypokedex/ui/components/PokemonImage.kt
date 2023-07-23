@@ -19,10 +19,10 @@ import coil.compose.SubcomposeAsyncImageContent
 import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
-import com.project.mypokedex.ui.clickableOrNull
+import com.project.mypokedex.ui.extensions.clickableOrNull
+import com.project.mypokedex.ui.extensions.verifyBackgroundTypeImage
+import com.project.mypokedex.ui.extensions.verifyBackgroundTypeRadial
 import com.project.mypokedex.ui.theme.MainBlack
-import com.project.mypokedex.ui.verifyBackgroundTypeImage
-import com.project.mypokedex.ui.verifyBackgroundTypeRadial
 
 @Composable
 fun PokemonImage(

@@ -46,8 +46,8 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
-import com.project.mypokedex.ui.CardScreen
 import com.project.mypokedex.ui.components.AppIcon
+import com.project.mypokedex.ui.components.CardScreen
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.stateholders.ListScreenUIState

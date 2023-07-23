@@ -6,6 +6,7 @@ import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.getBasicKeysPreferences
 import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.EvolutionChain
+import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonType
 import com.project.mypokedex.network.responses.BasicKeysResponse
@@ -16,6 +17,7 @@ import com.project.mypokedex.network.services.PokemonService
 import com.project.mypokedex.network.services.PokemonSpeciesService
 import com.project.mypokedex.saveBasicKeysPreferences
 import com.project.mypokedex.saveTotalPokemonsPreferences
+import com.project.mypokedex.ui.extensions.getIDFromURL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -60,31 +62,27 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    suspend fun setEvolutionChainByPokemon(pokemonId: Int): EvolutionChain {
-        val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemonId)
+    suspend fun getEvolutionChainByPokemon(pokemon: Pokemon): EvolutionChain {
+        val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemon.id)
         val evolutionChainID =
-            pokemonSpecies.evolutionChain.url.split("/").dropLast(1).last().toInt()
+            pokemonSpecies.evolutionChain.url.getIDFromURL()
         val evolutionChainResponse = evolutionChainClient.getEvolutionChain(evolutionChainID).chain
 
-        return EvolutionChain(getPokemonIdFromChain(evolutionChainResponse).mapNotNull {
-            getPokemon(
-                it
+        return EvolutionChain(
+            chain = createEvolutionChain(evolutionChainResponse) ?: EvolutionChainItem(
+                pokemon,
+                emptyList()
             )
-        })
+        )
     }
 
-    private fun getPokemonIdFromChain(evolutionChain: EvolutionChainResponse): List<Int> {
-        val list = ArrayList<Int>()
-
-        list.add(
-            evolutionChain.species.url.split("/").dropLast(1).last().toInt()
-        )
-
-        evolutionChain.evolvesToList.forEach {
-            list.addAll(getPokemonIdFromChain(it))
+    private fun createEvolutionChain(chainResponse: EvolutionChainResponse): EvolutionChainItem? {
+        return getPokemon(chainResponse.species.url.getIDFromURL())?.let { pokemon ->
+            EvolutionChainItem(
+                pokemon = pokemon,
+                evolvesTo = chainResponse.evolvesToList.mapNotNull { createEvolutionChain(it) }
+            )
         }
-
-        return list
     }
 
     private fun setBasicKeys(keyList: List<Pair<String, Int>>) {
@@ -147,7 +145,7 @@ class PokemonRepository @Inject constructor(
         val keyList = ArrayList<Pair<String, Int>>()
         basicKeys.results.forEach { keyResponse ->
             val name = keyResponse.name
-            val id = keyResponse.url.split("/").dropLast(1).last().toInt()
+            val id = keyResponse.url.getIDFromURL()
             keyList.add(Pair(name, id))
         }
 
@@ -201,7 +199,7 @@ class PokemonRepository @Inject constructor(
         val name = info.name
         val types = info.types.mapNotNull {
             PokemonType.fromId(
-                it.type.url.split("/").dropLast(1).last().toInt()
+                it.type.url.getIDFromURL()
             )
         }
         val image = info.sprites.frontDefault ?: ""

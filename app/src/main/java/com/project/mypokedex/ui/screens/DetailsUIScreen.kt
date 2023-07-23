@@ -1,15 +1,18 @@
 package com.project.mypokedex.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -18,9 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.model.BackgroundType
+import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
-import com.project.mypokedex.ui.CardScreen
+import com.project.mypokedex.ui.components.CardScreen
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.ResponsiveText
@@ -38,19 +42,51 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
         Column {
             state.pokemon?.let { pokemon ->
                 PokemonDetails(pokemon)
-                LazyRow(
+                state.evolutionChain?.let { EvolutionChain(evolutionChain = it) }
+            }
+        }
+    }
+}
+
+@Composable
+fun EvolutionChain(evolutionChain: EvolutionChain) {
+    val columnsList = evolutionChain.getColumnsList()
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(20.dp),
+        color = Transparent
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            columnsList.forEach { column ->
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = CenterHorizontally,
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                        .weight(1F)
                 ) {
-                    items(state.evolutionChain.chain) {
+                    column.forEach { pokemon ->
                         PokemonImage(
-                            url = it.getGifOrImage(),
-                            backgroundType = BackgroundType.None
+                            url = pokemon.getGifOrImage(),
+                            backgroundType = BackgroundType.None,
+                            modifier = Modifier
+                                .weight(1F)
                         )
                     }
                 }
 
+                if (columnsList.last() != column) {
+                    Image(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(horizontal = 6.dp)
+                    )
+                }
             }
         }
     }

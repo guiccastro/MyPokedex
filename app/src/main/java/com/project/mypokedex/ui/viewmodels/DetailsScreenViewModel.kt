@@ -55,7 +55,7 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    evolutionChain = repository.setEvolutionChainByPokemon(pokemon.id)
+                    evolutionChain = repository.getEvolutionChainByPokemon(pokemon)
                 )
             }
         }

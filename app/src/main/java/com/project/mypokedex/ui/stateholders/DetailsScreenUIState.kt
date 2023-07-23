@@ -5,5 +5,5 @@ import com.project.mypokedex.model.Pokemon
 
 data class DetailsScreenUIState(
     val pokemon: Pokemon? = null,
-    val evolutionChain: EvolutionChain = EvolutionChain(emptyList())
+    val evolutionChain: EvolutionChain? = null
 )

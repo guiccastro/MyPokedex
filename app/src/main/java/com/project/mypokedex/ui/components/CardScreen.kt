@@ -1,4 +1,4 @@
-package com.project.mypokedex.ui
+package com.project.mypokedex.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.project.mypokedex.ui.extensions.innerShadow
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.CardInternBackground
