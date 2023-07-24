@@ -3,8 +3,10 @@ package com.project.mypokedex.ui.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.navOptions
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.navigation.MainNavComponent
+import com.project.mypokedex.navigation.MainNavComponent.Companion.getSingleTopWithPopUpTo
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.screens.DetailsScreen.pokemonIdArgument
 import com.project.mypokedex.repository.PokemonRepository
@@ -34,8 +36,14 @@ class DetailsScreenViewModel @Inject constructor(
             it.copy(
                 onEvolutionChainPokemonClick = { pokemon ->
                     MainNavComponent.navController.apply {
+                        val lastId =
+                            this.currentBackStackEntry?.arguments?.getInt(pokemonIdArgument)
                         DetailsScreen.apply {
-                            navigateToItself(pokemonId = pokemon.id)
+                            val navOptions =
+                                if (pokemon.id == lastId) getSingleTopWithPopUpTo(getRoute()) else navOptions {
+                                    popBackStack()
+                                }
+                            navigateToItself(pokemonId = pokemon.id, navOptions = navOptions)
                         }
                     }
                 }
