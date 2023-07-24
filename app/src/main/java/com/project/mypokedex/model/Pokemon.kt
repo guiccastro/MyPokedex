@@ -1,6 +1,7 @@
 package com.project.mypokedex.model
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
@@ -11,8 +12,11 @@ class Pokemon(
     val image: String,
     val gif: String,
     val backGif: String,
-    val species: Int
+    val speciesId: Int
 ) {
+    @Ignore
+    var species: PokemonSpecies? = null
+
     override fun toString(): String {
         return "$id|$name|$types|$image|$gif"
     }

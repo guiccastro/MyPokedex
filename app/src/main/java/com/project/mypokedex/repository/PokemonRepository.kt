@@ -64,9 +64,11 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
+    private suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
         return try {
+            Log.i(TAG, "getPokemonSpecies: $id")
             val pokemonSpeciesResponse = pokemonSpeciesClient.getPokemonSpecies(id)
+            Log.i(TAG, "onResponse: PokemonSpecies - $id")
 
             PokemonSpecies(
                 varieties = pokemonSpeciesResponse.varieties.mapNotNull {
@@ -74,6 +76,7 @@ class PokemonRepository @Inject constructor(
                 }
             )
         } catch (e: Exception) {
+            Log.i(TAG, "onFailure: PokemonSpecies - $id - $e")
             PokemonSpecies(emptyList())
         }
     }
@@ -279,5 +282,13 @@ class PokemonRepository @Inject constructor(
         }
 
         return selectedPokemons
+    }
+
+    suspend fun getSpecies(pokemon: Pokemon): PokemonSpecies {
+        return pokemon.species ?: run {
+            val species = getPokemonSpecies(pokemon.speciesId)
+            pokemon.species = species
+            species
+        }
     }
 }

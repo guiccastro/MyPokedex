@@ -1,6 +1,5 @@
 package com.project.mypokedex.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -89,9 +88,9 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 val varieties =
-                    repository.getPokemonSpecies(pokemon.species).varieties.toMutableList()
-                varieties.remove(pokemon)
-                Log.println(Log.ASSERT, "varieties", varieties.toString())
+                    repository.getSpecies(pokemon).varieties.mapNotNull { pokemonVarieties ->
+                        if (pokemonVarieties == pokemon) null else pokemonVarieties
+                    }
                 it.copy(
                     varieties = varieties
                 )
