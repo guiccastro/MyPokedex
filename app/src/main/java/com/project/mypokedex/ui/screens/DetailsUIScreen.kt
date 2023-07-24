@@ -81,7 +81,7 @@ fun LazyListScope.varieties(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Varieties",
+                    text = stringResource(id = R.string.details_screen_varieties_title),
                     style = PokemonGB,
                     color = BlackTextColor,
                     fontSize = 14.sp,
@@ -108,17 +108,36 @@ fun LazyListScope.varieties(
                     .padding(vertical = 8.dp)
             ) {
                 varieties.forEach { pokemon ->
-                    PokemonImage(
-                        url = pokemon.getGifOrImage(),
-                        backgroundType = BackgroundType.None,
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1F),
-                        clickable = true,
-                        onClick = {
-                            onPokemonClick(pokemon)
-                        }
-                    )
+                        horizontalAlignment = CenterHorizontally
+                    ) {
+                        PokemonImage(
+                            url = pokemon.getGifOrImage(),
+                            backgroundType = BackgroundType.None,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1F),
+                            clickable = true,
+                            onClick = {
+                                onPokemonClick(pokemon)
+                            }
+                        )
+                        Text(
+                            text = pokemon.formattedName(),
+                            style = PokemonGB,
+                            color = BlackTextColor,
+                            fontSize = 7.sp,
+                            fontWeight = FontWeight(1000),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+
                 }
             }
         }
@@ -164,17 +183,36 @@ fun LazyListScope.evolutionChain(
                 .padding(vertical = 8.dp)
         ) {
             rowEvolution.forEach { pokemon ->
-                PokemonImage(
-                    url = pokemon.getGifOrImage(),
-                    backgroundType = BackgroundType.None,
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1F),
-                    clickable = true,
-                    onClick = {
-                        onPokemonClick(pokemon)
-                    }
-                )
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    PokemonImage(
+                        url = pokemon.getGifOrImage(),
+                        backgroundType = BackgroundType.None,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1F),
+                        clickable = true,
+                        onClick = {
+                            onPokemonClick(pokemon)
+                        }
+                    )
+                    Text(
+                        text = pokemon.formattedName(),
+                        style = PokemonGB,
+                        color = BlackTextColor,
+                        fontSize = 7.sp,
+                        fontWeight = FontWeight(1000),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+
 
                 if (rowEvolution.last() != pokemon) {
                     Image(
