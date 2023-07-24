@@ -6,7 +6,8 @@ data class PokemonResponse(
     val id: Int,
     val name: String,
     val types: List<TypeListResponse>,
-    val sprites: SpritesResponse
+    val sprites: SpritesResponse,
+    val species: BasicResponse
 )
 
 data class SpritesResponse(
@@ -33,10 +34,5 @@ data class AnimatedResponse(
 
 data class TypeListResponse(
     val slot: Int,
-    val type: TypeResponse
-)
-
-data class TypeResponse(
-    val name: String,
-    val url: String
+    val type: BasicResponse
 )

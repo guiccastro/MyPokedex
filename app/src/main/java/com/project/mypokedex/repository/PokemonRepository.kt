@@ -8,6 +8,7 @@ import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.PokemonSpecies
 import com.project.mypokedex.model.PokemonType
 import com.project.mypokedex.network.responses.BasicKeysResponse
 import com.project.mypokedex.network.responses.EvolutionChainResponse
@@ -63,12 +64,27 @@ class PokemonRepository @Inject constructor(
         }
     }
 
+    suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
+        return try {
+            val pokemonSpeciesResponse = pokemonSpeciesClient.getPokemonSpecies(id)
+
+            PokemonSpecies(
+                varieties = pokemonSpeciesResponse.varieties.mapNotNull {
+                    getPokemon(it.pokemon.url.getIDFromURL())
+                }
+            )
+        } catch (e: Exception) {
+            PokemonSpecies(emptyList())
+        }
+    }
+
     suspend fun getEvolutionChainByPokemon(pokemon: Pokemon): EvolutionChain {
         try {
             val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemon.id)
             val evolutionChainID =
                 pokemonSpecies.evolutionChain.url.getIDFromURL()
-            val evolutionChainResponse = evolutionChainClient.getEvolutionChain(evolutionChainID).chain
+            val evolutionChainResponse =
+                evolutionChainClient.getEvolutionChain(evolutionChainID).chain
 
             return EvolutionChain(
                 chain = createEvolutionChain(evolutionChainResponse) ?: EvolutionChainItem(
@@ -216,8 +232,9 @@ class PokemonRepository @Inject constructor(
         val image = info.sprites.frontDefault ?: ""
         val gif = info.sprites.versions?.generationV?.blackWhite?.animated?.frontDefault ?: ""
         val backGif = info.sprites.versions?.generationV?.blackWhite?.animated?.backDefault ?: ""
+        val species = info.species.url.getIDFromURL()
 
-        val newPokemon = Pokemon(id, name, types, image, gif, backGif)
+        val newPokemon = Pokemon(id, name, types, image, gif, backGif, species)
         Log.i(TAG, "parseAndSave: $newPokemon")
         pokemonList.value = (pokemonList.value + newPokemon)
 

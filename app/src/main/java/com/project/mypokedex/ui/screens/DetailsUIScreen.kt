@@ -59,8 +59,67 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
 
                 evolutionChain(
                     evolutionChain = state.evolutionChain,
-                    onPokemonClick = state.onEvolutionChainPokemonClick
+                    onPokemonClick = state.onPokemonClick
                 )
+
+                varieties(
+                    varieties = state.varieties,
+                    onPokemonClick = state.onPokemonClick
+                )
+            }
+        }
+    }
+}
+
+fun LazyListScope.varieties(
+    varieties: List<Pokemon>,
+    onPokemonClick: (Pokemon) -> Unit
+) {
+    if (varieties.isNotEmpty()) {
+        item {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Varieties",
+                    style = PokemonGB,
+                    color = BlackTextColor,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(1000),
+                    modifier = Modifier
+                        .padding(bottom = 6.dp, end = 4.dp)
+                )
+
+                Divider(
+                    modifier = Modifier,
+                    thickness = 1.dp,
+                    color = MainBlack
+                )
+            }
+        }
+
+        item {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 100.dp)
+                    .padding(vertical = 8.dp)
+            ) {
+                varieties.forEach { pokemon ->
+                    PokemonImage(
+                        url = pokemon.getGifOrImage(),
+                        backgroundType = BackgroundType.None,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1F),
+                        clickable = true,
+                        onClick = {
+                            onPokemonClick(pokemon)
+                        }
+                    )
+                }
             }
         }
     }

@@ -10,7 +10,8 @@ class Pokemon(
     val types: List<PokemonType>,
     val image: String,
     val gif: String,
-    val backGif: String
+    val backGif: String,
+    val species: Int
 ) {
     override fun toString(): String {
         return "$id|$name|$types|$image|$gif"

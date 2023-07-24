@@ -1,5 +1,6 @@
 package com.project.mypokedex.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,7 +35,7 @@ class DetailsScreenViewModel @Inject constructor(
     init {
         _uiState.update {
             it.copy(
-                onEvolutionChainPokemonClick = { pokemon ->
+                onPokemonClick = { pokemon ->
                     MainNavComponent.navController.apply {
                         val lastId =
                             this.currentBackStackEntry?.arguments?.getInt(pokemonIdArgument)
@@ -58,6 +59,7 @@ class DetailsScreenViewModel @Inject constructor(
                     repository.getPokemon(id)?.let {
                         setPokemon(it)
                         setEvolutionChain(it)
+                        getSpecies(it)
                     }
                 }
         }
@@ -78,6 +80,20 @@ class DetailsScreenViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     evolutionChain = repository.getEvolutionChainByPokemon(pokemon)
+                )
+            }
+        }
+    }
+
+    private fun getSpecies(pokemon: Pokemon) {
+        viewModelScope.launch {
+            _uiState.update {
+                val varieties =
+                    repository.getPokemonSpecies(pokemon.species).varieties.toMutableList()
+                varieties.remove(pokemon)
+                Log.println(Log.ASSERT, "varieties", varieties.toString())
+                it.copy(
+                    varieties = varieties
                 )
             }
         }

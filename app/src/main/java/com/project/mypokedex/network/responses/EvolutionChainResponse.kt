@@ -8,10 +8,5 @@ data class EvolutionChainBase(
 
 data class EvolutionChainResponse(
     @field:Json(name = "evolves_to") val evolvesToList: List<EvolutionChainResponse>,
-    val species: EvolutionChainSpeciesResponse
-)
-
-data class EvolutionChainSpeciesResponse(
-    val name: String,
-    val url: String
+    val species: BasicResponse
 )

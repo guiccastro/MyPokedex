@@ -6,5 +6,6 @@ import com.project.mypokedex.model.Pokemon
 data class DetailsScreenUIState(
     val pokemon: Pokemon? = null,
     val evolutionChain: EvolutionChain? = null,
-    val onEvolutionChainPokemonClick: (Pokemon) -> Unit = {}
+    val varieties: List<Pokemon> = emptyList(),
+    val onPokemonClick: (Pokemon) -> Unit = {},
 )
