@@ -1,44 +1,30 @@
 package com.project.mypokedex.model
 
-import kotlin.math.max
-
 class EvolutionChain(
     val chain: EvolutionChainItem
 ) {
-    fun getColumnsList(): List<List<Pokemon>> {
-        val columnsList = ArrayList<List<Pokemon>>()
-        repeat(chain.numberOfColumns()) { index ->
-            getColumByIndex(index).let { column ->
-                columnsList.add(column)
-            }
-        }
-        return columnsList
+
+    fun getAllPaths(): List<List<Pokemon>> {
+        val allPaths = ArrayList<List<Pokemon>>()
+        findPathsDFS(chain, ArrayList(), allPaths)
+        return allPaths
     }
 
-    private fun EvolutionChainItem.numberOfColumns(): Int {
-        var countEvolvesTo = 0
-        evolvesTo.forEach { evolutionChainItem ->
-            countEvolvesTo = max(countEvolvesTo, evolutionChainItem.numberOfColumns())
-        }
-        return countEvolvesTo + 1
-    }
+    private fun findPathsDFS(
+        currentItem: EvolutionChainItem,
+        currentPath: ArrayList<Pokemon>,
+        allPaths: ArrayList<List<Pokemon>>
+    ) {
+        currentPath.add(currentItem.pokemon)
 
-    private fun getColumByIndex(index: Int): List<Pokemon> {
-        return chain.getColumByIndex(index, 0)
-    }
-
-    private fun EvolutionChainItem.getColumByIndex(
-        targetIndex: Int,
-        currentIndex: Int
-    ): List<Pokemon> {
-        return if (targetIndex == currentIndex) {
-            return listOf(pokemon)
+        if (currentItem.evolvesTo.isEmpty()) {
+            allPaths.add(currentPath.toList())
         } else {
-            val list = ArrayList<Pokemon>()
-            evolvesTo.forEach { evolutionChainItem ->
-                list.addAll(evolutionChainItem.getColumByIndex(targetIndex, currentIndex + 1))
+            currentItem.evolvesTo.forEach { item ->
+                findPathsDFS(item, currentPath, allPaths)
             }
-            list
         }
+
+        currentPath.removeAt(currentPath.size - 1)
     }
 }

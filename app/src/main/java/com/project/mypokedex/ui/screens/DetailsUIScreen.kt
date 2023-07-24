@@ -4,9 +4,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +39,7 @@ import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.components.RotationalImage
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.BlackTextColor
+import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.Transparent
@@ -41,31 +48,35 @@ import com.project.mypokedex.ui.theme.White
 @Composable
 fun DetailsUIScreen(state: DetailsScreenUIState) {
     CardScreen {
-        Column {
+        LazyColumn(
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+        ) {
             state.pokemon?.let { pokemon ->
-                PokemonDetails(pokemon)
-                state.evolutionChain?.let {
-                    EvolutionChain(
-                        evolutionChain = it,
-                        onPokemonClick = state.onEvolutionChainPokemonClick
-                    )
+                item {
+                    PokemonDetails(pokemon)
                 }
+
+                evolutionChain(
+                    evolutionChain = state.evolutionChain,
+                    onPokemonClick = state.onEvolutionChainPokemonClick
+                )
             }
         }
     }
 }
 
-@Composable
-fun EvolutionChain(evolutionChain: EvolutionChain, onPokemonClick: (Pokemon) -> Unit) {
-    val columnsList = evolutionChain.getColumnsList()
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(20.dp),
-        color = Transparent
-    ) {
-        Column {
+
+fun LazyListScope.evolutionChain(
+    evolutionChain: EvolutionChain?,
+    onPokemonClick: (Pokemon) -> Unit
+) {
+    if (evolutionChain == null) return
+
+    item {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 text = stringResource(id = R.string.details_screen_evolution_chain_title),
                 style = PokemonGB,
@@ -73,45 +84,56 @@ fun EvolutionChain(evolutionChain: EvolutionChain, onPokemonClick: (Pokemon) -> 
                 fontSize = 14.sp,
                 fontWeight = FontWeight(1000),
                 modifier = Modifier
-                    .padding(bottom = 6.dp)
+                    .padding(bottom = 6.dp, end = 4.dp)
             )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                columnsList.forEach { column ->
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = CenterHorizontally,
-                        modifier = Modifier
-                            .weight(1F)
-                    ) {
-                        column.forEach { pokemon ->
-                            PokemonImage(
-                                url = pokemon.getGifOrImage(),
-                                backgroundType = BackgroundType.None,
-                                modifier = Modifier
-                                    .weight(1F),
-                                clickable = true,
-                                onClick = {
-                                    onPokemonClick(pokemon)
-                                }
-                            )
-                        }
-                    }
+            Divider(
+                modifier = Modifier,
+                thickness = 1.dp,
+                color = MainBlack
+            )
+        }
+    }
 
-                    if (columnsList.last() != column) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_arrow_forward),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(horizontal = 6.dp)
-                        )
+    items(evolutionChain.getAllPaths()) { rowEvolution ->
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 100.dp)
+                .padding(vertical = 8.dp)
+        ) {
+            rowEvolution.forEach { pokemon ->
+                PokemonImage(
+                    url = pokemon.getGifOrImage(),
+                    backgroundType = BackgroundType.None,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1F),
+                    clickable = true,
+                    onClick = {
+                        onPokemonClick(pokemon)
                     }
+                )
+
+                if (rowEvolution.last() != pokemon) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_arrow_forward),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(horizontal = 6.dp)
+                    )
                 }
             }
         }
+    }
+
+    item {
+        Spacer(
+            modifier = Modifier
+                .height(20.dp)
+        )
     }
 }
 
@@ -120,7 +142,7 @@ fun PokemonDetails(pokemon: Pokemon) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 10.dp),
+            .padding(vertical = 10.dp),
         verticalArrangement = Arrangement.Center
     ) {
 
