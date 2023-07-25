@@ -9,12 +9,11 @@ class Pokemon(
     @PrimaryKey val id: Int,
     val name: String,
     val types: List<PokemonType>,
-    val speciesId: Int
+    val speciesId: Int,
+    val sprites: Sprites
 ) {
     @Ignore
     var species: PokemonSpecies? = null
-
-    var sprites: Sprites? = null
 
     override fun toString(): String {
         return "$id|$name"
@@ -29,10 +28,12 @@ class Pokemon(
     }
 
     fun getGifOrImage(): String {
-        return getGif()?.front_default ?: sprites?.front_default ?: ""
+        return getGif().front_default.orEmpty()
+            .ifBlank { sprites.other.official_artwork.front_default }.orEmpty()
+            .ifBlank { sprites.front_default }.orEmpty()
     }
 
-    fun getGif(): SpriteAnimated? {
-        return sprites?.versions?.generation_v?.black_white?.animated
+    fun getGif(): SpriteAnimated {
+        return sprites.versions.generation_v.black_white.animated
     }
 }

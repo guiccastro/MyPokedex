@@ -233,10 +233,9 @@ class PokemonRepository @Inject constructor(
             )
         }
         val species = info.species.url.getIDFromURL()
+        val sprites = info.sprites
 
-        val newPokemon = Pokemon(id, name, types, species).apply {
-            sprites = info.sprites
-        }
+        val newPokemon = Pokemon(id, name, types, species, sprites)
         Log.i(TAG, "parseAndSave: $newPokemon")
         pokemonList.value = (pokemonList.value + newPokemon)
 
