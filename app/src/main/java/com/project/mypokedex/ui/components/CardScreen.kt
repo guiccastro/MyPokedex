@@ -1,6 +1,7 @@
 package com.project.mypokedex.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -25,6 +26,7 @@ fun CardScreen(
 ) {
     Surface(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(cardPadding)
             .then(cardModifier),
         color = CardColor,
