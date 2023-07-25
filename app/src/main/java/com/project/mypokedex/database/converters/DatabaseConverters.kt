@@ -1,7 +1,9 @@
 package com.project.mypokedex.database.converters
 
 import androidx.room.TypeConverter
+import com.google.gson.Gson
 import com.project.mypokedex.model.PokemonType
+import com.project.mypokedex.model.Sprites
 
 class DatabaseConverters {
 
@@ -19,5 +21,15 @@ class DatabaseConverters {
             }
         }
         return list
+    }
+
+    @TypeConverter
+    fun spritesToString(sprites: Sprites): String {
+        return Gson().toJson(sprites)
+    }
+
+    @TypeConverter
+    fun stringToSprites(str: String): Sprites {
+        return Gson().fromJson(str, Sprites::class.java)
     }
 }

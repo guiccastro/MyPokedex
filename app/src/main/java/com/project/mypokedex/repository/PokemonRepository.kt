@@ -232,12 +232,11 @@ class PokemonRepository @Inject constructor(
                 it.type.url.getIDFromURL()
             )
         }
-        val image = info.sprites.frontDefault ?: ""
-        val gif = info.sprites.versions?.generationV?.blackWhite?.animated?.frontDefault ?: ""
-        val backGif = info.sprites.versions?.generationV?.blackWhite?.animated?.backDefault ?: ""
         val species = info.species.url.getIDFromURL()
 
-        val newPokemon = Pokemon(id, name, types, image, gif, backGif, species)
+        val newPokemon = Pokemon(id, name, types, species).apply {
+            sprites = info.sprites
+        }
         Log.i(TAG, "parseAndSave: $newPokemon")
         pokemonList.value = (pokemonList.value + newPokemon)
 

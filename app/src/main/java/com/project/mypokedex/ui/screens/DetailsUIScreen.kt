@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -134,7 +135,8 @@ fun LazyListScope.varieties(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
 
@@ -284,7 +286,7 @@ fun PokemonDetails(pokemon: Pokemon) {
         // Pokemon Images
         RotationalImage(
             frontImage = pokemon.getGifOrImage(),
-            backImage = pokemon.backGif,
+            backImage = pokemon.getGif()?.back_default ?: "",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
