@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.project.mypokedex.ui.extensions.innerShadow
+import com.project.mypokedex.extensions.innerShadow
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.CardInternBackground

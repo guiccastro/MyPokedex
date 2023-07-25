@@ -1,4 +1,4 @@
-package com.project.mypokedex.ui.extensions
+package com.project.mypokedex.extensions
 
 import android.graphics.BlurMaskFilter
 import android.graphics.PorterDuff

@@ -1,5 +1,6 @@
 package com.project.mypokedex.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,34 +72,39 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
     }
 }
 
+@Composable
+fun SectionTitle(@StringRes title: Int) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ResponsiveText(
+            text = stringResource(id = title),
+            textStyle = PokemonGB,
+            color = BlackTextColor,
+            targetTextSizeHeight = 14.sp,
+            fontWeight = FontWeight(1000),
+            modifier = Modifier
+                .padding(bottom = 6.dp, end = 4.dp)
+        )
+
+        Divider(
+            modifier = Modifier,
+            thickness = 1.dp,
+            color = MainBlack
+        )
+    }
+}
+
 fun LazyListScope.varieties(
-    varieties: List<Pokemon>,
+    varieties: List<List<Pokemon>>,
     onPokemonClick: (Pokemon) -> Unit
 ) {
     if (varieties.isNotEmpty()) {
         item {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(id = R.string.details_screen_varieties_title),
-                    style = PokemonGB,
-                    color = BlackTextColor,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(1000),
-                    modifier = Modifier
-                        .padding(bottom = 6.dp, end = 4.dp)
-                )
-
-                Divider(
-                    modifier = Modifier,
-                    thickness = 1.dp,
-                    color = MainBlack
-                )
-            }
+            SectionTitle(R.string.details_screen_varieties_title)
         }
 
-        item {
+        items(varieties) { row ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
@@ -108,10 +113,11 @@ fun LazyListScope.varieties(
                     .heightIn(max = 100.dp)
                     .padding(vertical = 8.dp)
             ) {
-                varieties.forEach { pokemon ->
+                row.forEach { pokemon ->
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 4.dp)
                             .weight(1F),
                         horizontalAlignment = CenterHorizontally
                     ) {
@@ -126,17 +132,17 @@ fun LazyListScope.varieties(
                                 onPokemonClick(pokemon)
                             }
                         )
-                        Text(
+                        ResponsiveText(
                             text = pokemon.formattedName(),
-                            style = PokemonGB,
+                            textStyle = PokemonGB,
                             color = BlackTextColor,
-                            fontSize = 7.sp,
+                            targetTextSizeHeight = 7.sp,
                             fontWeight = FontWeight(1000),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 4.dp),
                             textAlign = TextAlign.Center,
-                            overflow = TextOverflow.Ellipsis
+                            maxLines = 1
                         )
                     }
 
@@ -154,25 +160,7 @@ fun LazyListScope.evolutionChain(
     if (evolutionChain == null) return
 
     item {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(id = R.string.details_screen_evolution_chain_title),
-                style = PokemonGB,
-                color = BlackTextColor,
-                fontSize = 14.sp,
-                fontWeight = FontWeight(1000),
-                modifier = Modifier
-                    .padding(bottom = 6.dp, end = 4.dp)
-            )
-
-            Divider(
-                modifier = Modifier,
-                thickness = 1.dp,
-                color = MainBlack
-            )
-        }
+        SectionTitle(title = R.string.details_screen_evolution_chain_title)
     }
 
     items(evolutionChain.getAllPaths()) { rowEvolution ->
@@ -202,16 +190,17 @@ fun LazyListScope.evolutionChain(
                             onPokemonClick(pokemon)
                         }
                     )
-                    Text(
+                    ResponsiveText(
                         text = pokemon.formattedName(),
-                        style = PokemonGB,
+                        textStyle = PokemonGB,
                         color = BlackTextColor,
-                        fontSize = 7.sp,
+                        targetTextSizeHeight = 7.sp,
                         fontWeight = FontWeight(1000),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 4.dp),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        maxLines = 1
                     )
                 }
 
@@ -286,7 +275,7 @@ fun PokemonDetails(pokemon: Pokemon) {
         // Pokemon Images
         RotationalImage(
             frontImage = pokemon.getGifOrImage(),
-            backImage = pokemon.getGif()?.back_default ?: "",
+            backImage = pokemon.getGif().back_default.orEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)

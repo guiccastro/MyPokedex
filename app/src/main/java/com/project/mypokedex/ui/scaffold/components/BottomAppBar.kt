@@ -20,11 +20,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.mypokedex.extensions.customShadow
+import com.project.mypokedex.extensions.topBorder
 import com.project.mypokedex.model.MainBottomAppBarComponent.onClickBottomAppBarItem
 import com.project.mypokedex.navigation.screens.GridScreen
 import com.project.mypokedex.ui.components.AppIcon
-import com.project.mypokedex.ui.extensions.customShadow
-import com.project.mypokedex.ui.extensions.topBorder
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BlackTextColor

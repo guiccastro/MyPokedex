@@ -16,10 +16,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
+import com.project.mypokedex.extensions.bottomBorder
+import com.project.mypokedex.extensions.customShadow
 import com.project.mypokedex.sampledata.actionItemsSample
 import com.project.mypokedex.ui.components.AppIcon
-import com.project.mypokedex.ui.extensions.bottomBorder
-import com.project.mypokedex.ui.extensions.customShadow
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.BlackTextColor

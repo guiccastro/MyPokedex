@@ -3,6 +3,7 @@ package com.project.mypokedex.repository
 import android.content.Context
 import android.util.Log
 import com.project.mypokedex.database.dao.PokemonDao
+import com.project.mypokedex.extensions.getIDFromURL
 import com.project.mypokedex.getBasicKeysPreferences
 import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.EvolutionChain
@@ -18,7 +19,6 @@ import com.project.mypokedex.network.services.PokemonService
 import com.project.mypokedex.network.services.PokemonSpeciesService
 import com.project.mypokedex.saveBasicKeysPreferences
 import com.project.mypokedex.saveTotalPokemonsPreferences
-import com.project.mypokedex.ui.extensions.getIDFromURL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main

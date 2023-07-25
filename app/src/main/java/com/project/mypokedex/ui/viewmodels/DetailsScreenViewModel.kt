@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
+import com.project.mypokedex.extensions.toGrid
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.navigation.MainNavComponent
 import com.project.mypokedex.navigation.MainNavComponent.Companion.getSingleTopWithPopUpTo
@@ -90,7 +91,7 @@ class DetailsScreenViewModel @Inject constructor(
                 val varieties =
                     repository.getSpecies(pokemon).varieties.mapNotNull { pokemonVarieties ->
                         if (pokemonVarieties == pokemon) null else pokemonVarieties
-                    }
+                    }.toGrid(3)
                 it.copy(
                     varieties = varieties
                 )
