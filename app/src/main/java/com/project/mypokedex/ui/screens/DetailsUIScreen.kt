@@ -2,6 +2,8 @@ package com.project.mypokedex.ui.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +34,8 @@ import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.SpriteOption
+import com.project.mypokedex.model.SpriteUtil
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.CardScreen
 import com.project.mypokedex.ui.components.PokemonImage
@@ -41,6 +45,7 @@ import com.project.mypokedex.ui.components.RotationalImage
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainRed
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.Transparent
@@ -55,8 +60,13 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
         ) {
             state.pokemon?.let { pokemon ->
                 item {
-                    PokemonDetails(pokemon)
+                    PokemonDetails(pokemon, state.pokemonImage)
                 }
+
+                spriteOrigin(
+                    currentSpriteGroup = state.currentSpriteOrigin,
+                    onClick = state.onSpriteOriginClick
+                )
 
                 evolutionChain(
                     evolutionChain = state.evolutionChain,
@@ -68,6 +78,38 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                     onPokemonClick = state.onPokemonClick
                 )
             }
+        }
+    }
+}
+
+fun LazyListScope.spriteOrigin(
+    currentSpriteGroup: SpriteUtil?,
+    onClick: (SpriteUtil) -> Unit
+) {
+    if (currentSpriteGroup == null) return
+    items(currentSpriteGroup.getSpritesOrigin()) {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    onClick(it)
+                }
+        ) {
+            Text(
+                text = (it as SpriteOption).getName(),
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                style = PokemonGB,
+                modifier = Modifier
+                    .weight(1F)
+                    .fillMaxWidth()
+            )
+
+            Text(
+                text = if (it == currentSpriteGroup || it.hasOnlySpriteOptions()) "Selecionar" else ">",
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                style = PokemonGB,
+            )
         }
     }
 }
@@ -226,7 +268,7 @@ fun LazyListScope.evolutionChain(
 }
 
 @Composable
-fun PokemonDetails(pokemon: Pokemon) {
+fun PokemonDetails(pokemon: Pokemon, pokemonImage: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -274,8 +316,8 @@ fun PokemonDetails(pokemon: Pokemon) {
 
         // Pokemon Images
         RotationalImage(
-            frontImage = pokemon.getGifOrImage(),
-            backImage = pokemon.getGif().back_default.orEmpty(),
+            frontImage = pokemonImage,
+            backImage = "",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
