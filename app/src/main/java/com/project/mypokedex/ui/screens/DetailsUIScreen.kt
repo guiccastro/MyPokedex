@@ -67,7 +67,9 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                     selectableSpriteOptions = state.selectableSpriteOptions,
                     spriteGroupOptions = state.spriteGroupOptions,
                     onSelectableSpriteOptionClick = state.onSelectableSpriteOptionClick,
-                    onSpriteGroupOptionClick = state.onSpriteGroupOptionClick
+                    onSpriteGroupOptionClick = state.onSpriteGroupOptionClick,
+                    hasReturn = state.hasReturnSprite,
+                    onReturnSpritesClick = state.onReturnSpritesClick
                 )
 
                 evolutionChain(
@@ -88,7 +90,9 @@ fun LazyListScope.spriteOrigin(
     selectableSpriteOptions: List<Sprite>,
     spriteGroupOptions: List<Sprite>,
     onSelectableSpriteOptionClick: (Sprite) -> Unit,
-    onSpriteGroupOptionClick: (Sprite) -> Unit
+    onSpriteGroupOptionClick: (Sprite) -> Unit,
+    hasReturn: Boolean,
+    onReturnSpritesClick: () -> Unit
 ) {
 
     item {
@@ -96,16 +100,21 @@ fun LazyListScope.spriteOrigin(
     }
 
     item {
-        Image(
-            painter = painterResource(id = R.drawable.ic_arrow_back),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(start = 10.dp)
-                .padding(vertical = 2.dp)
-                .height(30.dp)
-                .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                .padding(horizontal = 16.dp)
-        )
+        if (hasReturn) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_arrow_back),
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .padding(vertical = 2.dp)
+                    .height(30.dp)
+                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                    .clickable {
+                        onReturnSpritesClick()
+                    }
+                    .padding(horizontal = 16.dp)
+            )
+        }
     }
 
     item {

@@ -14,4 +14,6 @@ data class DetailsScreenUIState(
     val onSelectableSpriteOptionClick: (Sprite) -> Unit = {},
     val onSpriteGroupOptionClick: (Sprite) -> Unit = {},
     val pokemonImage: String = "",
+    val hasReturnSprite: Boolean = false,
+    val onReturnSpritesClick: () -> Unit = {}
 )

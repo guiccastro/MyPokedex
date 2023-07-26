@@ -1,6 +1,5 @@
 package com.project.mypokedex.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -65,6 +64,8 @@ class DetailsScreenViewModel @Inject constructor(
         MutableStateFlow(DetailsScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
+    private val spritesStack = ArrayList<Sprite>()
+
     init {
         _uiState.update {
             it.copy(
@@ -86,6 +87,9 @@ class DetailsScreenViewModel @Inject constructor(
                 },
                 onSpriteGroupOptionClick = { sprite ->
                     onSpriteGroupOptionClick(sprite)
+                },
+                onReturnSpritesClick = {
+                    onReturnSpritesClick()
                 }
             )
         }
@@ -99,7 +103,7 @@ class DetailsScreenViewModel @Inject constructor(
                         setPokemon(it)
                         setEvolutionChain(it)
                         setSpecies(it)
-                        updateSpriteOptionsList(it.sprites)
+                        onSpriteGroupOptionClick(it.sprites)
                     }
                 }
         }
@@ -109,7 +113,8 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    pokemon = pokemon
+                    pokemon = pokemon,
+                    pokemonImage = pokemon.getGifOrImage()
                 )
             }
         }
@@ -139,11 +144,17 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
+    private fun onReturnSpritesClick() {
+        spritesStack.removeLast()
+        updateSpriteOptionsList(spritesStack.last())
+    }
+
     private fun onSelectableSpriteOptionClick(sprite: Sprite) {
         selectNewPokemonImage(sprite)
     }
 
     private fun onSpriteGroupOptionClick(sprite: Sprite) {
+        spritesStack.add(sprite)
         updateSpriteOptionsList(sprite)
     }
 
@@ -156,9 +167,19 @@ class DetailsScreenViewModel @Inject constructor(
     }
 
     private fun updateSpriteOptionsList(sprite: Sprite) {
-        Log.println(Log.ASSERT, "Current Sprite", sprite.getName())
+        updateReturnSpritesButton(sprite)
         updateSelectableSpriteOptionsList(sprite)
         updateSpriteGroupOptionsList(sprite)
+    }
+
+    private fun updateReturnSpritesButton(sprite: Sprite) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    hasReturnSprite = sprite !is Sprites
+                )
+            }
+        }
     }
 
     private fun updateSelectableSpriteOptionsList(sprite: Sprite) {
