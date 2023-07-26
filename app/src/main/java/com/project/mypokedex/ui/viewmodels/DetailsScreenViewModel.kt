@@ -1,5 +1,6 @@
 package com.project.mypokedex.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -80,8 +81,11 @@ class DetailsScreenViewModel @Inject constructor(
                         }
                     }
                 },
-                onSpriteOptionClick = { sprite ->
-                    setSprites(sprite)
+                onSelectableSpriteOptionClick = { sprite ->
+                    onSelectableSpriteOptionClick(sprite)
+                },
+                onSpriteGroupOptionClick = { sprite ->
+                    onSpriteGroupOptionClick(sprite)
                 }
             )
         }
@@ -95,7 +99,7 @@ class DetailsScreenViewModel @Inject constructor(
                         setPokemon(it)
                         setEvolutionChain(it)
                         setSpecies(it)
-                        setSprites(it.sprites)
+                        updateSpriteOptionsList(it.sprites)
                     }
                 }
         }
@@ -135,12 +139,12 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
-    private fun setSprites(sprite: Sprite) {
-        if (_uiState.value.selectableSpriteOptions.contains(sprite)) {
-            selectNewPokemonImage(sprite)
-        } else {
-            updateSpriteOptionsList(sprite)
-        }
+    private fun onSelectableSpriteOptionClick(sprite: Sprite) {
+        selectNewPokemonImage(sprite)
+    }
+
+    private fun onSpriteGroupOptionClick(sprite: Sprite) {
+        updateSpriteOptionsList(sprite)
     }
 
     private fun selectNewPokemonImage(sprite: Sprite) {
@@ -152,10 +156,25 @@ class DetailsScreenViewModel @Inject constructor(
     }
 
     private fun updateSpriteOptionsList(sprite: Sprite) {
+        Log.println(Log.ASSERT, "Current Sprite", sprite.getName())
+        updateSelectableSpriteOptionsList(sprite)
+        updateSpriteGroupOptionsList(sprite)
+    }
+
+    private fun updateSelectableSpriteOptionsList(sprite: Sprite) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectableSpriteOptions = sprite.getSelectableSpriteOptions(),
+                    selectableSpriteOptions = sprite.getSelectableSpriteOptions()
+                )
+            }
+        }
+    }
+
+    private fun updateSpriteGroupOptionsList(sprite: Sprite) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
                     spriteGroupOptions = sprite.getSpriteGroupOptions()
                 )
             }

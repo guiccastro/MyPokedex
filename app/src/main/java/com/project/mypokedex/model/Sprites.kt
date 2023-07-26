@@ -4,10 +4,33 @@ import com.squareup.moshi.Json
 
 interface Sprite {
     fun getName(): String
-    fun isSelectable(): Boolean
-    fun getSelectableSpriteOptions(): List<Sprite>
-    fun getSpriteGroupOptions(): List<Sprite>
+
+    fun getSelectableSpriteOptions(): List<Sprite> {
+        val list = ArrayList<Sprite>()
+        if (this is SelectableSprite) {
+            list.add(this)
+        }
+        list.addAll(getAllOptions().filterIsInstance<SelectableSprite>())
+        list.removeAll(getSpriteGroupOptions().toSet())
+        return list
+    }
+
+    fun getSpriteGroupOptions(): List<Sprite> {
+        val list = ArrayList<Sprite>()
+        list.addAll(getAllOptions().filterIsInstance<GroupSprite>())
+        return list
+    }
+
+    fun getAllOptions(): List<Any?>
 }
+
+interface SelectableSprite : Sprite {
+    fun getAllSprites(): List<String> {
+        return getAllOptions().filterIsInstance<String?>().filterNotNull()
+    }
+}
+
+interface GroupSprite : Sprite
 
 data class Sprites(
     val back_default: String? = null,
@@ -20,20 +43,20 @@ data class Sprites(
     val front_shiny_female: String? = null,
     val other: SpriteOther = SpriteOther(),
     val versions: SpriteVersions = SpriteVersions()
-) : Sprite {
+) : Sprite, SelectableSprite, GroupSprite {
 
     override fun getName(): String = "Default"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
-        )
-    }
-
-    override fun getSpriteGroupOptions(): List<Sprite> {
-        return listOf(
+            back_default,
+            back_female,
+            back_shiny,
+            back_shiny_female,
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female,
             other,
             versions
         )
@@ -44,39 +67,32 @@ data class SpriteOther(
     val dream_world: SpriteDreamWorld = SpriteDreamWorld(),
     val home: SpriteHome = SpriteHome(),
     @field:Json(name = "official-artwork") val official_artwork: SpriteOfficialArtwork = SpriteOfficialArtwork()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Others"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             dream_world,
             home,
             official_artwork
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteDreamWorld(
     val front_default: String? = null,
     val front_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Dream World"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteHome(
@@ -84,37 +100,33 @@ data class SpriteHome(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null,
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Home"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteOfficialArtwork(
     val front_default: String? = null,
     val front_shiny: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Official Artwork"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_shiny
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteVersions(
@@ -126,15 +138,11 @@ data class SpriteVersions(
     @field:Json(name = "generation-vi") val generation_vi: SpriteGenerationVI = SpriteGenerationVI(),
     @field:Json(name = "generation-vii") val generation_vii: SpriteGenerationVII = SpriteGenerationVII(),
     @field:Json(name = "generation-viii") val generation_viii: SpriteGenerationVIII = SpriteGenerationVIII(),
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Versions"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> = emptyList()
-
-    override fun getSpriteGroupOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             generation_i,
             generation_ii,
@@ -151,155 +159,123 @@ data class SpriteVersions(
 data class SpriteGenerationI(
     @field:Json(name = "red-blue") val red_blue: SpriteRedBlue = SpriteRedBlue(),
     val yellow: SpriteYellow = SpriteYellow()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation I"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             red_blue,
             yellow
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGenerationII(
     val crystal: SpriteCrystal = SpriteCrystal(),
     val gold: SpriteGold = SpriteGold(),
     val silver: SpriteSilver = SpriteSilver()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation II"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             crystal,
             gold,
             silver
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGenerationIII(
     val emerald: SpriteEmerald = SpriteEmerald(),
     @field:Json(name = "firered-leafgreen") val firered_leafgreen: SpriteFireRedLeafGreen = SpriteFireRedLeafGreen(),
     @field:Json(name = "ruby-sapphire") val ruby_sapphire: SpriteRubySapphire = SpriteRubySapphire()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation III"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             emerald,
             firered_leafgreen,
             ruby_sapphire
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGenerationIV(
     @field:Json(name = "diamond-pearl") val diamond_pearl: SpriteDiamondPearl = SpriteDiamondPearl(),
     @field:Json(name = "heartgold-soulsilver") val heartgold_soulsilver: SpriteHeartGoldSoulSilver = SpriteHeartGoldSoulSilver(),
     val platinum: SpritePlatinum = SpritePlatinum()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation IV"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             diamond_pearl,
             heartgold_soulsilver,
             platinum
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGenerationV(
     @field:Json(name = "black-white") val black_white: SpriteBlackWhite = SpriteBlackWhite()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation V"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             black_white
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGenerationVI(
     @field:Json(name = "omegaruby-alphasapphire") val omegaruby_alphasapphire: SpriteOmegaRubyAlphaSapphire = SpriteOmegaRubyAlphaSapphire(),
     @field:Json(name = "x-y") val x_y: SpriteXY = SpriteXY()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation VI"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             omegaruby_alphasapphire,
             x_y
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGenerationVII(
     val icons: SpriteIcons = SpriteIcons(),
     @field:Json(name = "ultra-sun-ultra-moon") val ultra_sun_ultra_moon: SpriteUltraSunUltraMoon = SpriteUltraSunUltraMoon()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation VII"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             icons,
             ultra_sun_ultra_moon
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGenerationVIII(
     val icons: SpriteIcons = SpriteIcons()
-) : Sprite {
+) : Sprite, GroupSprite {
 
     override fun getName(): String = "Generation VIII"
 
-    override fun isSelectable(): Boolean = false
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
             icons
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteRedBlue(
@@ -309,19 +285,20 @@ data class SpriteRedBlue(
     val front_default: String? = null,
     val front_gray: String? = null,
     val front_transparent: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Red Blue"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_gray,
+            back_transparent,
+            front_default,
+            front_gray,
+            front_transparent
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteYellow(
@@ -331,19 +308,20 @@ data class SpriteYellow(
     val front_default: String? = null,
     val front_gray: String? = null,
     val front_transparent: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Yellow"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_gray,
+            back_transparent,
+            front_default,
+            front_gray,
+            front_transparent
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteCrystal(
@@ -355,19 +333,22 @@ data class SpriteCrystal(
     val front_shiny: String? = null,
     val front_shiny_transparent: String? = null,
     val front_transparent: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Crystal"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_shiny,
+            back_shiny_transparent,
+            back_transparent,
+            front_default,
+            front_shiny,
+            front_shiny_transparent,
+            front_transparent
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteGold(
@@ -376,19 +357,19 @@ data class SpriteGold(
     val front_default: String? = null,
     val front_shiny: String? = null,
     val front_transparent: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Gold"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_shiny,
+            front_default,
+            front_shiny,
+            front_transparent
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteSilver(
@@ -397,37 +378,34 @@ data class SpriteSilver(
     val front_default: String? = null,
     val front_shiny: String? = null,
     val front_transparent: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Silver"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_shiny,
+            front_default,
+            front_shiny,
+            front_transparent
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteEmerald(
     val front_default: String? = null,
     val front_shiny: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Emerald"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_shiny
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteFireRedLeafGreen(
@@ -435,19 +413,18 @@ data class SpriteFireRedLeafGreen(
     val back_shiny: String? = null,
     val front_default: String? = null,
     val front_shiny: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Fire Red Leaf Green"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_shiny,
+            front_default,
+            front_shiny
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteRubySapphire(
@@ -455,19 +432,18 @@ data class SpriteRubySapphire(
     val back_shiny: String? = null,
     val front_default: String? = null,
     val front_shiny: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Ruby Sapphire"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_shiny,
+            front_default,
+            front_shiny
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteDiamondPearl(
@@ -479,19 +455,22 @@ data class SpriteDiamondPearl(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Diamond Pearl"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_female,
+            back_shiny,
+            back_shiny_female,
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteHeartGoldSoulSilver(
@@ -503,19 +482,22 @@ data class SpriteHeartGoldSoulSilver(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Heart Gold Soul Silver"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_female,
+            back_shiny,
+            back_shiny_female,
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpritePlatinum(
@@ -527,19 +509,22 @@ data class SpritePlatinum(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Platinum"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_female,
+            back_shiny,
+            back_shiny_female,
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteBlackWhite(
@@ -552,20 +537,23 @@ data class SpriteBlackWhite(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite, GroupSprite {
 
     override fun getName(): String = "Black White"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this,
-            animated
+            animated,
+            back_default,
+            back_female,
+            back_shiny,
+            back_shiny_female,
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteAnimated(
@@ -577,19 +565,22 @@ data class SpriteAnimated(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Animated"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            back_default,
+            back_female,
+            back_shiny,
+            back_shiny_female,
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteOmegaRubyAlphaSapphire(
@@ -597,19 +588,18 @@ data class SpriteOmegaRubyAlphaSapphire(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Omega Ruby Alpha Sapphire"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteXY(
@@ -617,37 +607,33 @@ data class SpriteXY(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "XY"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteIcons(
     val front_default: String? = null,
     val front_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Icons"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }
 
 data class SpriteUltraSunUltraMoon(
@@ -655,17 +641,16 @@ data class SpriteUltraSunUltraMoon(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : Sprite {
+) : Sprite, SelectableSprite {
 
     override fun getName(): String = "Ultra Sun Ultra Moon"
 
-    override fun isSelectable(): Boolean = true
-
-    override fun getSelectableSpriteOptions(): List<Sprite> {
+    override fun getAllOptions(): List<Any?> {
         return listOf(
-            this
+            front_default,
+            front_female,
+            front_shiny,
+            front_shiny_female
         )
     }
-
-    override fun getSpriteGroupOptions(): List<Sprite> = emptyList()
 }

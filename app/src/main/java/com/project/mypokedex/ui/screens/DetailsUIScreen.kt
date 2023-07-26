@@ -63,7 +63,8 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                 spriteOrigin(
                     selectableSpriteOptions = state.selectableSpriteOptions,
                     spriteGroupOptions = state.spriteGroupOptions,
-                    onClick = state.onSpriteOptionClick
+                    onSelectableSpriteOptionClick = state.onSelectableSpriteOptionClick,
+                    onSpriteGroupOptionClick = state.onSpriteGroupOptionClick
                 )
 
                 evolutionChain(
@@ -83,13 +84,14 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
 fun LazyListScope.spriteOrigin(
     selectableSpriteOptions: List<Sprite>,
     spriteGroupOptions: List<Sprite>,
-    onClick: (Sprite) -> Unit
+    onSelectableSpriteOptionClick: (Sprite) -> Unit,
+    onSpriteGroupOptionClick: (Sprite) -> Unit
 ) {
     items(selectableSpriteOptions) {
         Row(
             modifier = Modifier
                 .clickable {
-                    onClick(it)
+                    onSelectableSpriteOptionClick(it)
                 }
         ) {
             Text(
@@ -115,7 +117,7 @@ fun LazyListScope.spriteOrigin(
         Row(
             modifier = Modifier
                 .clickable {
-                    onClick(it)
+                    onSpriteGroupOptionClick(it)
                 }
         ) {
             Text(
