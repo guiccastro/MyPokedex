@@ -19,6 +19,8 @@
     <string name="details_screen_title">Game Screen</string>
     <string name="details_screen_evolution_chain_title">Evolution Chain</string>
     <string name="details_screen_varieties_title">Varieties</string>
+    <string name="details_screen_sprites_title">Sprites</string>
+    <string name="details_screen_sprites_select">Select</string>
 
 
 </resources>

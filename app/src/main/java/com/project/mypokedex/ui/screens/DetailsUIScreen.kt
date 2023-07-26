@@ -2,6 +2,7 @@ package com.project.mypokedex.ui.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.Sprite
+import com.project.mypokedex.model.Sprites
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.CardScreen
 import com.project.mypokedex.ui.components.PokemonImage
@@ -87,55 +90,93 @@ fun LazyListScope.spriteOrigin(
     onSelectableSpriteOptionClick: (Sprite) -> Unit,
     onSpriteGroupOptionClick: (Sprite) -> Unit
 ) {
-    items(selectableSpriteOptions) {
-        Row(
-            modifier = Modifier
-                .clickable {
-                    onSelectableSpriteOptionClick(it)
-                }
-        ) {
-            Text(
-                text = (it as Sprite).getName(),
-                color = BlackTextColor,
-                fontSize = 12.sp,
-                style = PokemonGB,
-                modifier = Modifier
-                    .weight(1F)
-                    .fillMaxWidth()
-            )
 
-            Text(
-                text = "Selecionar",
-                color = BlackTextColor,
-                fontSize = 12.sp,
-                style = PokemonGB,
-            )
+    item {
+        SectionTitle(title = R.string.details_screen_sprites_title)
+    }
+
+    item {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .padding(top = 6.dp)
+        ) {
+            selectableSpriteOptions.forEach {
+                Row(
+                    modifier = Modifier
+                        .height(34.dp)
+                        .clickable {
+                            onSelectableSpriteOptionClick(it)
+                        }
+                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp)),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ResponsiveText(
+                        text = it.getName(),
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 14.sp,
+                        textStyle = PokemonGB,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .weight(1F)
+                            .fillMaxWidth()
+                            .padding(start = 4.dp)
+                    )
+
+                    ResponsiveText(
+                        text = stringResource(id = R.string.details_screen_sprites_select),
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 14.sp,
+                        textStyle = PokemonGB,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.End,
+                        modifier = Modifier
+                            .padding(end = 4.dp)
+                    )
+                }
+            }
         }
     }
 
-    items(spriteGroupOptions) {
-        Row(
+    item {
+        Column(
             modifier = Modifier
-                .clickable {
-                    onSpriteGroupOptionClick(it)
-                }
+                .padding(horizontal = 10.dp)
+                .padding(bottom = 20.dp)
         ) {
-            Text(
-                text = (it as Sprite).getName(),
-                color = BlackTextColor,
-                fontSize = 12.sp,
-                style = PokemonGB,
-                modifier = Modifier
-                    .weight(1F)
-                    .fillMaxWidth()
-            )
+            spriteGroupOptions.forEach {
+                Row(
+                    modifier = Modifier
+                        .height(34.dp)
+                        .clickable {
+                            onSpriteGroupOptionClick(it)
+                        }
+                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp)),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ResponsiveText(
+                        text = it.getName(),
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 14.sp,
+                        textStyle = PokemonGB,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .weight(1F)
+                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp)
+                    )
 
-            Text(
-                text = ">",
-                color = BlackTextColor,
-                fontSize = 12.sp,
-                style = PokemonGB,
-            )
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_simple_arrow_forward),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(vertical = 10.dp)
+                            .padding(horizontal = 4.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -156,7 +197,6 @@ fun SectionTitle(@StringRes title: Int) {
         )
 
         Divider(
-            modifier = Modifier,
             thickness = 1.dp,
             color = MainBlack
         )
@@ -364,9 +404,11 @@ fun DetailsUIScreenPreview() {
                     evolutionChain = EvolutionChain(
                         chain = EvolutionChainItem(
                             pokemon = charizard,
-                            evolvesTo = emptyList()
+                            evolvesTo = emptyList(),
                         )
-                    )
+                    ),
+                    selectableSpriteOptions = listOf(Sprites()),
+                    spriteGroupOptions = listOf(Sprites())
                 )
             )
         }
