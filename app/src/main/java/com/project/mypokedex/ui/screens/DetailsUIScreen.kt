@@ -105,6 +105,7 @@ fun LazyListScope.spriteOrigin(
                 Row(
                     modifier = Modifier
                         .height(34.dp)
+                        .padding(vertical = 2.dp)
                         .clickable {
                             onSelectableSpriteOptionClick(it)
                         }
@@ -149,6 +150,7 @@ fun LazyListScope.spriteOrigin(
                 Row(
                     modifier = Modifier
                         .height(34.dp)
+                        .padding(vertical = 2.dp)
                         .clickable {
                             onSpriteGroupOptionClick(it)
                         }
