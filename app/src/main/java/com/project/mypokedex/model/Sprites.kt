@@ -4,94 +4,34 @@ import com.squareup.moshi.Json
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.javaType
 
-open class SpriteUtil {
+open class Sprite {
     @OptIn(ExperimentalStdlibApi::class)
-    fun getAvailableSprites(): List<String> {
-        return this.javaClass.kotlin.memberProperties.filter { it.returnType.javaType == String::class.java }
-            .map { it.name }
+    private fun getSpriteGroups(): List<Sprite> {
+        return this.javaClass.kotlin.memberProperties
+            .filter { it.returnType.javaType != String::class.java }
+            .map { it.invoke(this) as Sprite }
     }
 
-    fun getAllPaths(): List<List<String>> {
-        val allPaths = ArrayList<List<String>>()
-        findPathsDFS(this, ArrayList(), allPaths)
-        return allPaths
-    }
-
-    private fun findPathsDFS(
-        currentItem: SpriteUtil,
-        currentPath: ArrayList<String>,
-        allPaths: ArrayList<List<String>>
-    ) {
-        currentPath.add((currentItem as SpriteOption).getName())
-
-        if (currentItem.getSpritesOrigin().isEmpty()) {
-            allPaths.add(currentPath.toList())
-        } else {
-            currentItem.getSpritesOrigin().forEach { item ->
-                findPathsDFS(item, currentPath, allPaths)
-            }
-        }
-
-        currentPath.removeAt(currentPath.size - 1)
-    }
-
-    fun getAllLeaves(): List<String> {
-        val leaves = ArrayList<String>()
-        findPathsDFS(this, leaves)
-        return leaves
-    }
-
-    private fun findPathsDFS(
-        currentItem: SpriteUtil,
-        leaves: ArrayList<String>
-    ) {
-        if (currentItem.getSpritesOrigin().isEmpty()) {
-            leaves.add(currentItem.javaClass.simpleName)
-        } else {
-            currentItem.getSpritesOrigin().forEach { item ->
-                findPathsDFS(item, leaves)
-            }
-        }
-    }
-
-    fun getAllNodes(): List<SpriteUtil> {
-        val allNodes = mutableListOf<SpriteUtil>()
-        findNodesDFS(this, allNodes)
-        return allNodes
-    }
-
-    fun findNodesDFS(node: SpriteUtil, allNodes: MutableList<SpriteUtil>) {
-        allNodes.add(node)
-
-        node.getSpritesOrigin(false).forEach {
-            findNodesDFS(it, allNodes)
-        }
-    }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    fun hasSpriteOptions(): Boolean {
-        return this.javaClass.kotlin.memberProperties.any { it.returnType.javaType == String::class.java }
-    }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    fun hasOnlySpriteOptions(): Boolean {
-        return this.javaClass.kotlin.memberProperties.all { it.returnType.javaType == String::class.java }
-    }
-
-    @OptIn(ExperimentalStdlibApi::class)
-    fun getSpritesOrigin(inclusive: Boolean = true): List<SpriteUtil> {
-        val list = ArrayList<SpriteUtil>()
-        if (inclusive && hasSpriteOptions()) {
+    fun getSelectableSpriteOptions(): List<Sprite> {
+        val list = ArrayList<Sprite>()
+        if ((this as SpriteOption).isSelectable()) {
             list.add(this)
         }
-        list.addAll(this.javaClass.kotlin.memberProperties.filter { it.returnType.javaType != String::class.java }
-            .map { it.invoke(this) as SpriteUtil })
+        list.addAll(getSpriteGroups().filter { (it as SpriteOption).isSelectable() })
+        return list
+    }
+
+    fun getSpriteGroupOptions(): List<Sprite> {
+        val list = ArrayList<Sprite>()
+        list.addAll(getSpriteGroups().filter { !(it as SpriteOption).isSelectable() })
         return list
     }
 }
 
 interface SpriteOption {
     fun getName(): String
+
+    fun isSelectable(): Boolean
 }
 
 data class Sprites(
@@ -105,23 +45,26 @@ data class Sprites(
     val front_shiny_female: String? = null,
     val other: SpriteOther = SpriteOther(),
     val versions: SpriteVersions = SpriteVersions()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Default"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteOther(
     val dream_world: SpriteDreamWorld = SpriteDreamWorld(),
     val home: SpriteHome = SpriteHome(),
     @field:Json(name = "official-artwork") val official_artwork: SpriteOfficialArtwork = SpriteOfficialArtwork()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Others"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteDreamWorld(
     val front_default: String? = null,
     val front_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Dream World"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteHome(
@@ -129,15 +72,17 @@ data class SpriteHome(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null,
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Home"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteOfficialArtwork(
     val front_default: String? = null,
     val front_shiny: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Official Artwork"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteVersions(
@@ -149,65 +94,74 @@ data class SpriteVersions(
     @field:Json(name = "generation-vi") val generation_vi: SpriteGenerationVI = SpriteGenerationVI(),
     @field:Json(name = "generation-vii") val generation_vii: SpriteGenerationVII = SpriteGenerationVII(),
     @field:Json(name = "generation-viii") val generation_viii: SpriteGenerationVIII = SpriteGenerationVIII(),
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Versions"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationI(
     @field:Json(name = "red-blue") val red_blue: SpriteRedBlue = SpriteRedBlue(),
     val yellow: SpriteYellow = SpriteYellow()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation I"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationII(
     val crystal: SpriteCrystal = SpriteCrystal(),
     val gold: SpriteGold = SpriteGold(),
     val silver: SpriteSilver = SpriteSilver()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation II"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationIII(
     val emerald: SpriteEmerald = SpriteEmerald(),
     @field:Json(name = "firered-leafgreen") val firered_leafgreen: SpriteFireRedLeafGreen = SpriteFireRedLeafGreen(),
     @field:Json(name = "ruby-sapphire") val ruby_sapphire: SpriteRubySapphire = SpriteRubySapphire()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation III"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationIV(
     @field:Json(name = "diamond-pearl") val diamond_pearl: SpriteDiamondPearl = SpriteDiamondPearl(),
     @field:Json(name = "heartgold-soulsilver") val heartgold_soulsilver: SpriteHeartGoldSoulSilver = SpriteHeartGoldSoulSilver(),
     val platinum: SpritePlatinum = SpritePlatinum()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation IV"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationV(
     @field:Json(name = "black-white") val black_white: SpriteBlackWhite = SpriteBlackWhite()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation V"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationVI(
     @field:Json(name = "omegaruby-alphasapphire") val omegaruby_alphasapphire: SpriteOmegaRubyAlphaSapphire = SpriteOmegaRubyAlphaSapphire(),
     @field:Json(name = "x-y") val x_y: SpriteXY = SpriteXY()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation VI"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationVII(
     val icons: SpriteIcons = SpriteIcons(),
     @field:Json(name = "ultra-sun-ultra-moon") val ultra_sun_ultra_moon: SpriteUltraSunUltraMoon = SpriteUltraSunUltraMoon()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation VII"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteGenerationVIII(
     val icons: SpriteIcons = SpriteIcons()
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Generation VIII"
+    override fun isSelectable(): Boolean = false
 }
 
 data class SpriteRedBlue(
@@ -217,8 +171,9 @@ data class SpriteRedBlue(
     val front_default: String? = null,
     val front_gray: String? = null,
     val front_transparent: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Red Blue"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteYellow(
@@ -228,8 +183,9 @@ data class SpriteYellow(
     val front_default: String? = null,
     val front_gray: String? = null,
     val front_transparent: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Yellow"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteCrystal(
@@ -241,8 +197,9 @@ data class SpriteCrystal(
     val front_shiny: String? = null,
     val front_shiny_transparent: String? = null,
     val front_transparent: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Crystal"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteGold(
@@ -251,8 +208,9 @@ data class SpriteGold(
     val front_default: String? = null,
     val front_shiny: String? = null,
     val front_transparent: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Gold"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteSilver(
@@ -261,15 +219,17 @@ data class SpriteSilver(
     val front_default: String? = null,
     val front_shiny: String? = null,
     val front_transparent: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Silver"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteEmerald(
     val front_default: String? = null,
     val front_shiny: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Emerald"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteFireRedLeafGreen(
@@ -277,8 +237,9 @@ data class SpriteFireRedLeafGreen(
     val back_shiny: String? = null,
     val front_default: String? = null,
     val front_shiny: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Fire Red Leaf Green"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteRubySapphire(
@@ -286,8 +247,9 @@ data class SpriteRubySapphire(
     val back_shiny: String? = null,
     val front_default: String? = null,
     val front_shiny: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Ruby Sapphire"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteDiamondPearl(
@@ -299,8 +261,9 @@ data class SpriteDiamondPearl(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Diamond Pearl"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteHeartGoldSoulSilver(
@@ -312,8 +275,9 @@ data class SpriteHeartGoldSoulSilver(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Hear Gold Soul Silver"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpritePlatinum(
@@ -325,8 +289,9 @@ data class SpritePlatinum(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Platinum"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteBlackWhite(
@@ -339,8 +304,9 @@ data class SpriteBlackWhite(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Black White"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteAnimated(
@@ -352,8 +318,9 @@ data class SpriteAnimated(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Animated"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteOmegaRubyAlphaSapphire(
@@ -361,8 +328,9 @@ data class SpriteOmegaRubyAlphaSapphire(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Omega Ruby Alpha Sapphire"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteXY(
@@ -370,15 +338,17 @@ data class SpriteXY(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "XY"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteIcons(
     val front_default: String? = null,
     val front_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Icons"
+    override fun isSelectable(): Boolean = true
 }
 
 data class SpriteUltraSunUltraMoon(
@@ -386,6 +356,7 @@ data class SpriteUltraSunUltraMoon(
     val front_female: String? = null,
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
-) : SpriteUtil(), SpriteOption {
+) : Sprite(), SpriteOption {
     override fun getName(): String = "Ultra Sun Ultra Moon"
+    override fun isSelectable(): Boolean = true
 }

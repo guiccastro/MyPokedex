@@ -1,12 +1,12 @@
 package com.project.mypokedex.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
 import com.project.mypokedex.extensions.toGrid
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.Sprite
 import com.project.mypokedex.model.SpriteAnimated
 import com.project.mypokedex.model.SpriteBlackWhite
 import com.project.mypokedex.model.SpriteCrystal
@@ -34,7 +34,6 @@ import com.project.mypokedex.model.SpriteRedBlue
 import com.project.mypokedex.model.SpriteRubySapphire
 import com.project.mypokedex.model.SpriteSilver
 import com.project.mypokedex.model.SpriteUltraSunUltraMoon
-import com.project.mypokedex.model.SpriteUtil
 import com.project.mypokedex.model.SpriteVersions
 import com.project.mypokedex.model.SpriteXY
 import com.project.mypokedex.model.SpriteYellow
@@ -81,8 +80,8 @@ class DetailsScreenViewModel @Inject constructor(
                         }
                     }
                 },
-                onSpriteOriginClick = { sprite ->
-                    setSpriteOrigin(sprite)
+                onSpriteOptionClick = { sprite ->
+                    setSprites(sprite)
                 }
             )
         }
@@ -96,7 +95,7 @@ class DetailsScreenViewModel @Inject constructor(
                         setPokemon(it)
                         setEvolutionChain(it)
                         setSpecies(it)
-                        setSpriteOrigin(it.sprites)
+                        setSprites(it.sprites)
                     }
                 }
         }
@@ -136,43 +135,49 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
-    private fun setSpriteOrigin(spriteOrigin: SpriteUtil) {
-        if (spriteOrigin == _uiState.value.currentSpriteOrigin || spriteOrigin.hasOnlySpriteOptions()) {
-            _uiState.value.pokemon?.sprites?.let { sprites ->
-                Log.println(Log.ASSERT, "url", getSprite(sprites, spriteOrigin))
-
-                viewModelScope.launch {
-                    _uiState.value = _uiState.value.copy(
-                        pokemonImage = getSprite(sprites, spriteOrigin)
-                    )
-                }
-            }
+    private fun setSprites(sprite: Sprite) {
+        if (_uiState.value.selectableSpriteOptions.contains(sprite)) {
+            selectNewPokemonImage(sprite)
         } else {
-            viewModelScope.launch {
-                _uiState.update {
-                    it.copy(
-                        currentSpriteOrigin = spriteOrigin
-                    )
-                }
+            updateSpriteOptionsList(sprite)
+        }
+    }
+
+    private fun selectNewPokemonImage(sprite: Sprite) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                pokemonImage = getImageFromSprite(_uiState.value.pokemon?.sprites, sprite)
+            )
+        }
+    }
+
+    private fun updateSpriteOptionsList(sprite: Sprite) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    selectableSpriteOptions = sprite.getSelectableSpriteOptions(),
+                    spriteGroupOptions = sprite.getSpriteGroupOptions()
+                )
             }
         }
     }
 
-    private fun getSprite(currentSprite: Any, targetSprite: SpriteUtil): String {
+    private fun getImageFromSprite(currentSprite: Any?, targetSprite: Sprite): String {
+        if (currentSprite == null) return ""
         when (currentSprite) {
             is Sprites -> {
                 return if (currentSprite == targetSprite) {
                     currentSprite.front_default ?: ""
                 } else {
-                    getSprite(currentSprite.other, targetSprite)
-                        .ifBlank { getSprite(currentSprite.versions, targetSprite) }
+                    getImageFromSprite(currentSprite.other, targetSprite)
+                        .ifBlank { getImageFromSprite(currentSprite.versions, targetSprite) }
                 }
             }
 
             is SpriteOther -> {
-                return getSprite(currentSprite.dream_world, targetSprite)
-                    .ifBlank { getSprite(currentSprite.home, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.official_artwork, targetSprite) }
+                return getImageFromSprite(currentSprite.dream_world, targetSprite)
+                    .ifBlank { getImageFromSprite(currentSprite.home, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.official_artwork, targetSprite) }
             }
 
             is SpriteDreamWorld -> {
@@ -200,55 +205,65 @@ class DetailsScreenViewModel @Inject constructor(
             }
 
             is SpriteVersions -> {
-                return getSprite(currentSprite.generation_i, targetSprite)
-                    .ifBlank { getSprite(currentSprite.generation_ii, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.generation_iii, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.generation_vi, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.generation_v, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.generation_vi, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.generation_vii, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.generation_viii, targetSprite) }
+                return getImageFromSprite(currentSprite.generation_i, targetSprite)
+                    .ifBlank { getImageFromSprite(currentSprite.generation_ii, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.generation_iii, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.generation_vi, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.generation_v, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.generation_vi, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.generation_vii, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.generation_viii, targetSprite) }
             }
 
             is SpriteGenerationI -> {
-                return getSprite(currentSprite.red_blue, targetSprite)
-                    .ifBlank { getSprite(currentSprite.yellow, targetSprite) }
+                return getImageFromSprite(currentSprite.red_blue, targetSprite)
+                    .ifBlank { getImageFromSprite(currentSprite.yellow, targetSprite) }
             }
 
             is SpriteGenerationII -> {
-                return getSprite(currentSprite.crystal, targetSprite)
-                    .ifBlank { getSprite(currentSprite.gold, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.silver, targetSprite) }
+                return getImageFromSprite(currentSprite.crystal, targetSprite)
+                    .ifBlank { getImageFromSprite(currentSprite.gold, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.silver, targetSprite) }
             }
 
             is SpriteGenerationIII -> {
-                return getSprite(currentSprite.emerald, targetSprite)
-                    .ifBlank { getSprite(currentSprite.firered_leafgreen, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.ruby_sapphire, targetSprite) }
+                return getImageFromSprite(currentSprite.emerald, targetSprite)
+                    .ifBlank { getImageFromSprite(currentSprite.firered_leafgreen, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.ruby_sapphire, targetSprite) }
             }
 
             is SpriteGenerationIV -> {
-                return getSprite(currentSprite.diamond_pearl, targetSprite)
-                    .ifBlank { getSprite(currentSprite.heartgold_soulsilver, targetSprite) }
-                    .ifBlank { getSprite(currentSprite.platinum, targetSprite) }
+                return getImageFromSprite(currentSprite.diamond_pearl, targetSprite)
+                    .ifBlank {
+                        getImageFromSprite(
+                            currentSprite.heartgold_soulsilver,
+                            targetSprite
+                        )
+                    }
+                    .ifBlank { getImageFromSprite(currentSprite.platinum, targetSprite) }
             }
 
             is SpriteGenerationV -> {
-                return getSprite(currentSprite.black_white, targetSprite)
+                return getImageFromSprite(currentSprite.black_white, targetSprite)
             }
 
             is SpriteGenerationVI -> {
-                return getSprite(currentSprite.omegaruby_alphasapphire, targetSprite)
-                    .ifBlank { getSprite(currentSprite.x_y, targetSprite) }
+                return getImageFromSprite(currentSprite.omegaruby_alphasapphire, targetSprite)
+                    .ifBlank { getImageFromSprite(currentSprite.x_y, targetSprite) }
             }
 
             is SpriteGenerationVII -> {
-                return getSprite(currentSprite.icons, targetSprite)
-                    .ifBlank { getSprite(currentSprite.ultra_sun_ultra_moon, targetSprite) }
+                return getImageFromSprite(currentSprite.icons, targetSprite)
+                    .ifBlank {
+                        getImageFromSprite(
+                            currentSprite.ultra_sun_ultra_moon,
+                            targetSprite
+                        )
+                    }
             }
 
             is SpriteGenerationVIII -> {
-                return getSprite(currentSprite.icons, targetSprite)
+                return getImageFromSprite(currentSprite.icons, targetSprite)
             }
 
             is SpriteRedBlue -> {
@@ -321,7 +336,7 @@ class DetailsScreenViewModel @Inject constructor(
                 return if (currentSprite == targetSprite) {
                     currentSprite.front_default ?: ""
                 } else {
-                    getSprite(currentSprite.animated, targetSprite)
+                    getImageFromSprite(currentSprite.animated, targetSprite)
                 }
             }
 
