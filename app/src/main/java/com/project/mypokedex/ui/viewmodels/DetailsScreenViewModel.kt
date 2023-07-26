@@ -248,7 +248,7 @@ class DetailsScreenViewModel @Inject constructor(
                 return getImageFromSprite(currentSprite.generation_i, targetSprite)
                     .ifBlank { getImageFromSprite(currentSprite.generation_ii, targetSprite) }
                     .ifBlank { getImageFromSprite(currentSprite.generation_iii, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.generation_vi, targetSprite) }
+                    .ifBlank { getImageFromSprite(currentSprite.generation_iv, targetSprite) }
                     .ifBlank { getImageFromSprite(currentSprite.generation_v, targetSprite) }
                     .ifBlank { getImageFromSprite(currentSprite.generation_vi, targetSprite) }
                     .ifBlank { getImageFromSprite(currentSprite.generation_vii, targetSprite) }
