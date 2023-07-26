@@ -10,15 +10,19 @@ interface Sprite {
         if (this is SelectableSprite) {
             list.add(this)
         }
-        list.addAll(getAllOptions().filterIsInstance<SelectableSprite>())
+        list.addAll(getAllOptions().filterIsInstance<SelectableSprite>().filter { it.hasSprites() })
         list.removeAll(getSpriteGroupOptions().toSet())
         return list
     }
 
     fun getSpriteGroupOptions(): List<Sprite> {
         val list = ArrayList<Sprite>()
-        list.addAll(getAllOptions().filterIsInstance<GroupSprite>())
+        list.addAll(getAllOptions().filterIsInstance<GroupSprite>().filter { it.hasOptions() })
         return list
+    }
+
+    fun hasOptions(): Boolean {
+        return (getSelectableSpriteOptions().isNotEmpty() || getSpriteGroupOptions().isNotEmpty())
     }
 
     fun getAllOptions(): List<Any?>
@@ -27,6 +31,10 @@ interface Sprite {
 interface SelectableSprite : Sprite {
     fun getAllSprites(): List<String> {
         return getAllOptions().filterIsInstance<String?>().filterNotNull()
+    }
+
+    fun hasSprites(): Boolean {
+        return getAllSprites().isNotEmpty()
     }
 }
 
