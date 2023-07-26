@@ -34,7 +34,6 @@ import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.Sprite
-import com.project.mypokedex.model.SpriteOption
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.CardScreen
 import com.project.mypokedex.ui.components.PokemonImage
@@ -94,7 +93,7 @@ fun LazyListScope.spriteOrigin(
                 }
         ) {
             Text(
-                text = (it as SpriteOption).getName(),
+                text = (it as Sprite).getName(),
                 color = BlackTextColor,
                 fontSize = 12.sp,
                 style = PokemonGB,
@@ -120,7 +119,7 @@ fun LazyListScope.spriteOrigin(
                 }
         ) {
             Text(
-                text = (it as SpriteOption).getName(),
+                text = (it as Sprite).getName(),
                 color = BlackTextColor,
                 fontSize = 12.sp,
                 style = PokemonGB,

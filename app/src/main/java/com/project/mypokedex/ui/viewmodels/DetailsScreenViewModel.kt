@@ -28,7 +28,6 @@ import com.project.mypokedex.model.SpriteHome
 import com.project.mypokedex.model.SpriteIcons
 import com.project.mypokedex.model.SpriteOfficialArtwork
 import com.project.mypokedex.model.SpriteOmegaRubyAlphaSapphire
-import com.project.mypokedex.model.SpriteOption
 import com.project.mypokedex.model.SpriteOther
 import com.project.mypokedex.model.SpritePlatinum
 import com.project.mypokedex.model.SpriteRedBlue
@@ -156,7 +155,7 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    selectableSpriteOptions = (sprite as SpriteOption).getSelectableSpriteOptions(),
+                    selectableSpriteOptions = sprite.getSelectableSpriteOptions(),
                     spriteGroupOptions = sprite.getSpriteGroupOptions()
                 )
             }
