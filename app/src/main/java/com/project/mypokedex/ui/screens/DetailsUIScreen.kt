@@ -96,10 +96,22 @@ fun LazyListScope.spriteOrigin(
     }
 
     item {
+        Image(
+            painter = painterResource(id = R.drawable.ic_arrow_back),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(start = 10.dp)
+                .padding(vertical = 2.dp)
+                .height(30.dp)
+                .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                .padding(horizontal = 16.dp)
+        )
+    }
+
+    item {
         Column(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
-                .padding(top = 6.dp)
         ) {
             selectableSpriteOptions.forEach {
                 Row(
