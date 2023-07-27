@@ -3,6 +3,7 @@ package com.project.mypokedex.model
 import androidx.annotation.StringRes
 import com.project.mypokedex.R
 import com.project.mypokedex.extensions.getSpriteType
+import com.project.mypokedex.model.SpriteType.Companion.switchOrientation
 import com.squareup.moshi.Json
 
 interface Sprite {
@@ -30,18 +31,18 @@ interface Sprite {
 
     fun getAllOptions(): List<Any?>
 
-    fun getImageFromSprite(
+    fun getImagesFromSprite(
         targetSprite: Sprite,
         targetSpriteType: SpriteType
-    ): String {
+    ): Pair<String, String> {
         when (this) {
             is Sprites -> {
                 return if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    getSpriteOrientationPairByType(targetSpriteType)
                 } else {
-                    other.getImageFromSprite(targetSprite, targetSpriteType)
-                        .ifBlank {
-                            versions.getImageFromSprite(
+                    other.getImagesFromSprite(targetSprite, targetSpriteType)
+                        .ifFrontBlank {
+                            versions.getImagesFromSprite(
                                 targetSprite,
                                 targetSpriteType
                             )
@@ -50,15 +51,15 @@ interface Sprite {
             }
 
             is SpriteOther -> {
-                return dream_world.getImageFromSprite(targetSprite, targetSpriteType)
-                    .ifBlank {
-                        home.getImageFromSprite(
+                return dream_world.getImagesFromSprite(targetSprite, targetSpriteType)
+                    .ifFrontBlank {
+                        home.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        official_artwork.getImageFromSprite(
+                    .ifFrontBlank {
+                        official_artwork.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -66,72 +67,66 @@ interface Sprite {
             }
 
             is SpriteDreamWorld -> {
-                return if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
-                } else {
-                    ""
+                if (this::class == targetSprite::class) {
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteHome -> {
-                return if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
-                } else {
-                    ""
+                if (this::class == targetSprite::class) {
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteOfficialArtwork -> {
-                return if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
-                } else {
-                    ""
+                if (this::class == targetSprite::class) {
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteVersions -> {
-                return generation_i.getImageFromSprite(
+                return generation_i.getImagesFromSprite(
                     targetSprite,
                     targetSpriteType
                 )
-                    .ifBlank {
-                        generation_ii.getImageFromSprite(
+                    .ifFrontBlank {
+                        generation_ii.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        generation_iii.getImageFromSprite(
+                    .ifFrontBlank {
+                        generation_iii.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        generation_iv.getImageFromSprite(
+                    .ifFrontBlank {
+                        generation_iv.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        generation_v.getImageFromSprite(
+                    .ifFrontBlank {
+                        generation_v.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        generation_vi.getImageFromSprite(
+                    .ifFrontBlank {
+                        generation_vi.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        generation_vii.getImageFromSprite(
+                    .ifFrontBlank {
+                        generation_vii.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        generation_viii.getImageFromSprite(
+                    .ifFrontBlank {
+                        generation_viii.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -139,9 +134,9 @@ interface Sprite {
             }
 
             is SpriteGenerationI -> {
-                return red_blue.getImageFromSprite(targetSprite, targetSpriteType)
-                    .ifBlank {
-                        yellow.getImageFromSprite(
+                return red_blue.getImagesFromSprite(targetSprite, targetSpriteType)
+                    .ifFrontBlank {
+                        yellow.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -149,15 +144,15 @@ interface Sprite {
             }
 
             is SpriteGenerationII -> {
-                return crystal.getImageFromSprite(targetSprite, targetSpriteType)
-                    .ifBlank {
-                        gold.getImageFromSprite(
+                return crystal.getImagesFromSprite(targetSprite, targetSpriteType)
+                    .ifFrontBlank {
+                        gold.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        silver.getImageFromSprite(
+                    .ifFrontBlank {
+                        silver.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -165,15 +160,15 @@ interface Sprite {
             }
 
             is SpriteGenerationIII -> {
-                return emerald.getImageFromSprite(targetSprite, targetSpriteType)
-                    .ifBlank {
-                        firered_leafgreen.getImageFromSprite(
+                return emerald.getImagesFromSprite(targetSprite, targetSpriteType)
+                    .ifFrontBlank {
+                        firered_leafgreen.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        ruby_sapphire.getImageFromSprite(
+                    .ifFrontBlank {
+                        ruby_sapphire.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -181,18 +176,18 @@ interface Sprite {
             }
 
             is SpriteGenerationIV -> {
-                return diamond_pearl.getImageFromSprite(
+                return diamond_pearl.getImagesFromSprite(
                     targetSprite,
                     targetSpriteType
                 )
-                    .ifBlank {
-                        heartgold_soulsilver.getImageFromSprite(
+                    .ifFrontBlank {
+                        heartgold_soulsilver.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
                     }
-                    .ifBlank {
-                        platinum.getImageFromSprite(
+                    .ifFrontBlank {
+                        platinum.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -200,16 +195,16 @@ interface Sprite {
             }
 
             is SpriteGenerationV -> {
-                return black_white.getImageFromSprite(targetSprite, targetSpriteType)
+                return black_white.getImagesFromSprite(targetSprite, targetSpriteType)
             }
 
             is SpriteGenerationVI -> {
-                return omegaruby_alphasapphire.getImageFromSprite(
+                return omegaruby_alphasapphire.getImagesFromSprite(
                     targetSprite,
                     targetSpriteType
                 )
-                    .ifBlank {
-                        x_y.getImageFromSprite(
+                    .ifFrontBlank {
+                        x_y.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -217,9 +212,9 @@ interface Sprite {
             }
 
             is SpriteGenerationVII -> {
-                return icons.getImageFromSprite(targetSprite, targetSpriteType)
-                    .ifBlank {
-                        ultra_sun_ultra_moon.getImageFromSprite(
+                return icons.getImagesFromSprite(targetSprite, targetSpriteType)
+                    .ifFrontBlank {
+                        ultra_sun_ultra_moon.getImagesFromSprite(
                             targetSprite,
                             targetSpriteType
                         )
@@ -227,115 +222,119 @@ interface Sprite {
             }
 
             is SpriteGenerationVIII -> {
-                return icons.getImageFromSprite(targetSprite, targetSpriteType)
+                return icons.getImagesFromSprite(targetSprite, targetSpriteType)
             }
 
             is SpriteRedBlue -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteYellow -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteCrystal -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteGold -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteSilver -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteEmerald -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteFireRedLeafGreen -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteRubySapphire -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteDiamondPearl -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteHeartGoldSoulSilver -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpritePlatinum -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteBlackWhite -> {
                 return if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 } else {
-                    animated.getImageFromSprite(targetSprite, targetSpriteType)
+                    animated.getImagesFromSprite(targetSprite, targetSpriteType)
                 }
             }
 
             is SpriteAnimated -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteOmegaRubyAlphaSapphire -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteXY -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteIcons -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
 
             is SpriteUltraSunUltraMoon -> {
                 if (this::class == targetSprite::class) {
-                    return getSpriteByType(targetSpriteType)
+                    return getSpriteOrientationPairByType(targetSpriteType)
                 }
             }
         }
 
-        return ""
+        return Pair("", "")
+    }
+
+    fun Pair<String, String>.ifFrontBlank(defaultValue: () -> Pair<String, String>): Pair<String, String> {
+        return if (first.isBlank()) defaultValue() else this
     }
 }
 
@@ -351,6 +350,19 @@ interface SelectableSprite : Sprite {
     fun getSpriteByType(spriteType: SpriteType): String {
         val index = getAllSprites().map { it.getSpriteType() }.indexOfFirst { it == spriteType }
         return getAllSprites().getOrNull(index) ?: ""
+    }
+
+    fun getSpriteOrientationPairByType(spriteType: SpriteType): Pair<String, String> {
+        var spriteFrontType: SpriteType = spriteType
+        var spriteBackType: SpriteType = spriteType
+
+        if (spriteType.orientation == SpriteTypes.Front) {
+            spriteBackType = spriteType.switchOrientation()
+        } else {
+            spriteFrontType = spriteType.switchOrientation()
+        }
+
+        return Pair(getSpriteByType(spriteFrontType), getSpriteByType(spriteBackType))
     }
 
     fun hasSpriteByType(spriteType: SpriteType): Boolean {

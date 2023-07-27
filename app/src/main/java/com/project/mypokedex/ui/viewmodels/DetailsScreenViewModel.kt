@@ -151,12 +151,11 @@ class DetailsScreenViewModel @Inject constructor(
     ) {
         currentSelectableSprite = sprite
         viewModelScope.launch {
+            val images = pokemon?.sprites?.getImagesFromSprite(sprite, spriteType) ?: Pair("", "")
             _uiState.update {
                 it.copy(
-                    pokemonImage = pokemon?.sprites?.getImageFromSprite(
-                        sprite,
-                        spriteType
-                    ) ?: ""
+                    pokemonFrontImage = images.first,
+                    pokemonBackImage = images.second
                 )
             }
         }

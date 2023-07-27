@@ -32,7 +32,7 @@ fun RotationalImage(
     val canRotate = frontImage.isNotBlank() && backImage.isNotBlank()
     Box(
         modifier = Modifier
-            .pointerInput(Unit) {
+            .pointerInput(canRotate) {
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
                         if (canRotate) {
@@ -50,7 +50,7 @@ fun RotationalImage(
                     }
                 )
             }
-            .pointerInput(Unit) {
+            .pointerInput(canRotate) {
                 detectTapGestures(
                     onTap = {
                         if (canRotate) {

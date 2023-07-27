@@ -12,6 +12,12 @@ data class SpriteType(
     companion object {
         val defaultType = SpriteType(SpriteTypes.Front, SpriteTypes.Male, SpriteTypes.Normal)
 
+        fun SpriteType.switchOrientation(): SpriteType {
+            val newOrientation =
+                if (orientation == SpriteTypes.Front) SpriteTypes.Back else SpriteTypes.Front
+            return SpriteType(newOrientation, gender, variant)
+        }
+
         fun SpriteType.switchGender(): SpriteType {
             val newGender = if (gender == SpriteTypes.Male) SpriteTypes.Female else SpriteTypes.Male
             return SpriteType(orientation, newGender, variant)

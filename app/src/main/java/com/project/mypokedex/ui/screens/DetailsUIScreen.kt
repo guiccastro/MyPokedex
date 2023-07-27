@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -61,11 +62,16 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
     CardScreen {
         LazyColumn(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(horizontal = 10.dp)
         ) {
             state.pokemon?.let { pokemon ->
 
-                pokemonDetails(pokemon, state.pokemonImage)
+                basicDetails(
+                    pokemon = pokemon,
+                    frontImage = state.pokemonFrontImage,
+                    backImage = state.pokemonBackImage
+                )
 
                 spriteTypes(
                     spriteGenderOptions = state.spriteGenderOptions,
@@ -409,7 +415,7 @@ fun LazyListScope.evolutionChain(
     }
 }
 
-fun LazyListScope.pokemonDetails(pokemon: Pokemon, pokemonImage: String) {
+fun LazyListScope.basicDetails(pokemon: Pokemon, frontImage: String, backImage: String) {
     item {
         Column(
             modifier = Modifier
@@ -458,8 +464,8 @@ fun LazyListScope.pokemonDetails(pokemon: Pokemon, pokemonImage: String) {
 
             // Pokemon Images
             RotationalImage(
-                frontImage = pokemonImage,
-                backImage = "",
+                frontImage = frontImage,
+                backImage = backImage,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(20.dp)
