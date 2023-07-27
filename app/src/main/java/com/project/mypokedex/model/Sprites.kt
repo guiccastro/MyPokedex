@@ -1,22 +1,25 @@
 package com.project.mypokedex.model
 
+import androidx.annotation.StringRes
+import com.project.mypokedex.R
+import com.project.mypokedex.extensions.getSpriteType
 import com.squareup.moshi.Json
 
 interface Sprite {
-    fun getName(): String
+    fun getName(): Int
 
-    fun getSelectableSpriteOptions(): List<Sprite> {
-        val list = ArrayList<Sprite>()
+    fun getSelectableSpriteOptions(): List<SelectableSprite> {
+        val list = ArrayList<SelectableSprite>()
         if (this is SelectableSprite) {
             list.add(this)
         }
         list.addAll(getAllOptions().filterIsInstance<SelectableSprite>().filter { it.hasSprites() })
-        list.removeAll(getSpriteGroupOptions().toSet())
+        list.removeAll(getSpriteGroupOptions().filterIsInstance<SelectableSprite>().toSet())
         return list
     }
 
-    fun getSpriteGroupOptions(): List<Sprite> {
-        val list = ArrayList<Sprite>()
+    fun getSpriteGroupOptions(): List<GroupSprite> {
+        val list = ArrayList<GroupSprite>()
         list.addAll(getAllOptions().filterIsInstance<GroupSprite>().filter { it.hasOptions() })
         return list
     }
@@ -26,6 +29,314 @@ interface Sprite {
     }
 
     fun getAllOptions(): List<Any?>
+
+    fun getImageFromSprite(
+        targetSprite: Sprite,
+        targetSpriteType: SpriteType
+    ): String {
+        when (this) {
+            is Sprites -> {
+                return if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                } else {
+                    other.getImageFromSprite(targetSprite, targetSpriteType)
+                        .ifBlank {
+                            versions.getImageFromSprite(
+                                targetSprite,
+                                targetSpriteType
+                            )
+                        }
+                }
+            }
+
+            is SpriteOther -> {
+                return dream_world.getImageFromSprite(targetSprite, targetSpriteType)
+                    .ifBlank {
+                        home.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        official_artwork.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteDreamWorld -> {
+                return if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                } else {
+                    ""
+                }
+            }
+
+            is SpriteHome -> {
+                return if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                } else {
+                    ""
+                }
+            }
+
+            is SpriteOfficialArtwork -> {
+                return if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                } else {
+                    ""
+                }
+            }
+
+            is SpriteVersions -> {
+                return generation_i.getImageFromSprite(
+                    targetSprite,
+                    targetSpriteType
+                )
+                    .ifBlank {
+                        generation_ii.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        generation_iii.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        generation_iv.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        generation_v.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        generation_vi.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        generation_vii.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        generation_viii.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteGenerationI -> {
+                return red_blue.getImageFromSprite(targetSprite, targetSpriteType)
+                    .ifBlank {
+                        yellow.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteGenerationII -> {
+                return crystal.getImageFromSprite(targetSprite, targetSpriteType)
+                    .ifBlank {
+                        gold.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        silver.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteGenerationIII -> {
+                return emerald.getImageFromSprite(targetSprite, targetSpriteType)
+                    .ifBlank {
+                        firered_leafgreen.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        ruby_sapphire.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteGenerationIV -> {
+                return diamond_pearl.getImageFromSprite(
+                    targetSprite,
+                    targetSpriteType
+                )
+                    .ifBlank {
+                        heartgold_soulsilver.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+                    .ifBlank {
+                        platinum.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteGenerationV -> {
+                return black_white.getImageFromSprite(targetSprite, targetSpriteType)
+            }
+
+            is SpriteGenerationVI -> {
+                return omegaruby_alphasapphire.getImageFromSprite(
+                    targetSprite,
+                    targetSpriteType
+                )
+                    .ifBlank {
+                        x_y.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteGenerationVII -> {
+                return icons.getImageFromSprite(targetSprite, targetSpriteType)
+                    .ifBlank {
+                        ultra_sun_ultra_moon.getImageFromSprite(
+                            targetSprite,
+                            targetSpriteType
+                        )
+                    }
+            }
+
+            is SpriteGenerationVIII -> {
+                return icons.getImageFromSprite(targetSprite, targetSpriteType)
+            }
+
+            is SpriteRedBlue -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteYellow -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteCrystal -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteGold -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteSilver -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteEmerald -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteFireRedLeafGreen -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteRubySapphire -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteDiamondPearl -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteHeartGoldSoulSilver -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpritePlatinum -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteBlackWhite -> {
+                return if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                } else {
+                    animated.getImageFromSprite(targetSprite, targetSpriteType)
+                }
+            }
+
+            is SpriteAnimated -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteOmegaRubyAlphaSapphire -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteXY -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteIcons -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+
+            is SpriteUltraSunUltraMoon -> {
+                if (this::class == targetSprite::class) {
+                    return getSpriteByType(targetSpriteType)
+                }
+            }
+        }
+
+        return ""
+    }
 }
 
 interface SelectableSprite : Sprite {
@@ -35,6 +346,20 @@ interface SelectableSprite : Sprite {
 
     fun hasSprites(): Boolean {
         return getAllSprites().isNotEmpty()
+    }
+
+    fun getSpriteByType(spriteType: SpriteType): String {
+        val index = getAllSprites().map { it.getSpriteType() }.indexOfFirst { it == spriteType }
+        return getAllSprites().getOrNull(index) ?: ""
+    }
+
+    fun hasSpriteByType(spriteType: SpriteType): Boolean {
+        return getAllSprites().map { it.getSpriteType() }.any { it == spriteType }
+    }
+
+    fun getFrontSprites(): List<SpriteType> {
+        return getAllSprites().map { it.getSpriteType() }
+            .filter { it.orientation == SpriteTypes.Front }
     }
 }
 
@@ -53,7 +378,8 @@ data class Sprites(
     val versions: SpriteVersions = SpriteVersions()
 ) : Sprite, SelectableSprite, GroupSprite {
 
-    override fun getName(): String = "Default"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_default_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -77,7 +403,8 @@ data class SpriteOther(
     @field:Json(name = "official-artwork") val official_artwork: SpriteOfficialArtwork = SpriteOfficialArtwork()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Others"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_other_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -93,7 +420,8 @@ data class SpriteDreamWorld(
     val front_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Dream World"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_dream_world_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -110,7 +438,8 @@ data class SpriteHome(
     val front_shiny_female: String? = null,
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Home"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_home_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -127,7 +456,8 @@ data class SpriteOfficialArtwork(
     val front_shiny: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Official Artwork"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_official_artwork_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -148,7 +478,8 @@ data class SpriteVersions(
     @field:Json(name = "generation-viii") val generation_viii: SpriteGenerationVIII = SpriteGenerationVIII(),
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Versions"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_versions_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -169,7 +500,8 @@ data class SpriteGenerationI(
     val yellow: SpriteYellow = SpriteYellow()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation I"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationI_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -185,7 +517,8 @@ data class SpriteGenerationII(
     val silver: SpriteSilver = SpriteSilver()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation II"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationII_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -202,7 +535,8 @@ data class SpriteGenerationIII(
     @field:Json(name = "ruby-sapphire") val ruby_sapphire: SpriteRubySapphire = SpriteRubySapphire()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation III"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationIII_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -219,7 +553,8 @@ data class SpriteGenerationIV(
     val platinum: SpritePlatinum = SpritePlatinum()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation IV"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationIV_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -234,7 +569,8 @@ data class SpriteGenerationV(
     @field:Json(name = "black-white") val black_white: SpriteBlackWhite = SpriteBlackWhite()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation V"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationV_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -248,7 +584,8 @@ data class SpriteGenerationVI(
     @field:Json(name = "x-y") val x_y: SpriteXY = SpriteXY()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation VI"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationVI_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -263,7 +600,8 @@ data class SpriteGenerationVII(
     @field:Json(name = "ultra-sun-ultra-moon") val ultra_sun_ultra_moon: SpriteUltraSunUltraMoon = SpriteUltraSunUltraMoon()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation VII"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationVII_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -277,7 +615,8 @@ data class SpriteGenerationVIII(
     val icons: SpriteIcons = SpriteIcons()
 ) : Sprite, GroupSprite {
 
-    override fun getName(): String = "Generation VIII"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_generationVIII_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -295,7 +634,8 @@ data class SpriteRedBlue(
     val front_transparent: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Red Blue"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_red_blue_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -318,7 +658,8 @@ data class SpriteYellow(
     val front_transparent: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Yellow"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_yellow_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -343,7 +684,8 @@ data class SpriteCrystal(
     val front_transparent: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Crystal"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_crystal_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -367,7 +709,8 @@ data class SpriteGold(
     val front_transparent: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Gold"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_gold_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -388,7 +731,8 @@ data class SpriteSilver(
     val front_transparent: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Silver"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_silver_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -406,7 +750,8 @@ data class SpriteEmerald(
     val front_shiny: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Emerald"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_emerald_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -423,7 +768,8 @@ data class SpriteFireRedLeafGreen(
     val front_shiny: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Fire Red Leaf Green"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_fire_red_leaf_green_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -442,7 +788,8 @@ data class SpriteRubySapphire(
     val front_shiny: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Ruby Sapphire"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_ruby_sapphire_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -465,7 +812,8 @@ data class SpriteDiamondPearl(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Diamond Pearl"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_diamond_pearl_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -492,7 +840,8 @@ data class SpriteHeartGoldSoulSilver(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Heart Gold Soul Silver"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_heart_gold_soul_silver_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -519,7 +868,8 @@ data class SpritePlatinum(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Platinum"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_platinum_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -547,7 +897,8 @@ data class SpriteBlackWhite(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite, GroupSprite {
 
-    override fun getName(): String = "Black White"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_black_white_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -575,7 +926,8 @@ data class SpriteAnimated(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Animated"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_animated_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -598,7 +950,8 @@ data class SpriteOmegaRubyAlphaSapphire(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Omega Ruby Alpha Sapphire"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_omega_ruby_alpha_sapphire_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -617,7 +970,8 @@ data class SpriteXY(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "XY"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_x_y_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -634,7 +988,8 @@ data class SpriteIcons(
     val front_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Icons"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_icons_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(
@@ -651,7 +1006,8 @@ data class SpriteUltraSunUltraMoon(
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
 
-    override fun getName(): String = "Ultra Sun Ultra Moon"
+    @StringRes
+    override fun getName(): Int = R.string.sprites_ultra_sun_ultra_moon_title
 
     override fun getAllOptions(): List<Any?> {
         return listOf(

@@ -22,5 +22,38 @@
     <string name="details_screen_sprites_title">Sprites</string>
     <string name="details_screen_sprites_select">Select</string>
 
+    <!-- Sprites -->
+    <string name="sprites_default_title">Default</string>
+    <string name="sprites_other_title">Others</string>
+    <string name="sprites_dream_world_title">Dream World</string>
+    <string name="sprites_home_title">Home</string>
+    <string name="sprites_official_artwork_title">Official Artwork</string>
+    <string name="sprites_versions_title">Versions</string>
+    <string name="sprites_generationI_title">Generation I</string>
+    <string name="sprites_generationII_title">Generation II</string>
+    <string name="sprites_generationIII_title">Generation III</string>
+    <string name="sprites_generationIV_title">Generation IV</string>
+    <string name="sprites_generationV_title">Generation V</string>
+    <string name="sprites_generationVI_title">Generation VI</string>
+    <string name="sprites_generationVII_title">Generation VII</string>
+    <string name="sprites_generationVIII_title">Generation VIII</string>
+    <string name="sprites_red_blue_title">Red &amp; Blue</string>
+    <string name="sprites_yellow_title">Yellow</string>
+    <string name="sprites_crystal_title">Crystal</string>
+    <string name="sprites_gold_title">Gold</string>
+    <string name="sprites_silver_title">Silver</string>
+    <string name="sprites_emerald_title">Emerald</string>
+    <string name="sprites_fire_red_leaf_green_title">FireRed &amp; LeafGreen</string>
+    <string name="sprites_ruby_sapphire_title">Ruby &amp; Sapphire</string>
+    <string name="sprites_diamond_pearl_title">Diamond &amp; Pearl</string>
+    <string name="sprites_heart_gold_soul_silver_title">HeartGold &amp; SoulSilver</string>
+    <string name="sprites_platinum_title">Platinum</string>
+    <string name="sprites_black_white_title">Black &amp; White</string>
+    <string name="sprites_animated_title">Animated</string>
+    <string name="sprites_omega_ruby_alpha_sapphire_title">Omega Ruby &amp; Alpha Sapphire</string>
+    <string name="sprites_x_y_title">XY</string>
+    <string name="sprites_icons_title">Icons</string>
+    <string name="sprites_ultra_sun_ultra_moon_title">Ultra Sun &amp; Ultra Moon</string>
+
 
 </resources>

@@ -29,11 +29,22 @@ class Pokemon(
 
     fun getGifOrImage(): String {
         return getGif().front_default.orEmpty()
-            .ifBlank { sprites.other.official_artwork.front_default }.orEmpty()
-            .ifBlank { sprites.front_default }.orEmpty()
+            .ifBlank { getDefaultImage().front_default }.orEmpty()
     }
 
-    fun getGif(): SpriteAnimated {
+    private fun getGif(): SpriteAnimated {
         return sprites.versions.generation_v.black_white.animated
+    }
+
+    private fun getDefaultImage(): SpriteOfficialArtwork {
+        return sprites.other.official_artwork
+    }
+
+    fun getAvailableGifOrImageSprite(): SelectableSprite {
+        return if (getGif().hasSpriteByType(SpriteType.defaultType)) {
+            getGif()
+        } else {
+            getDefaultImage()
+        }
     }
 }

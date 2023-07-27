@@ -34,8 +34,13 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
+import com.project.mypokedex.model.GroupSprite
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.SelectableSprite
 import com.project.mypokedex.model.Sprite
+import com.project.mypokedex.model.SpriteGender
+import com.project.mypokedex.model.SpriteTypes
+import com.project.mypokedex.model.SpriteVariant
 import com.project.mypokedex.model.Sprites
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.ui.components.CardScreen
@@ -59,11 +64,16 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                 .padding(horizontal = 10.dp)
         ) {
             state.pokemon?.let { pokemon ->
-                item {
-                    PokemonDetails(pokemon, state.pokemonImage)
-                }
 
-                spriteOrigin(
+                pokemonDetails(pokemon, state.pokemonImage)
+
+                spriteTypes(
+                    spriteGenderOptions = state.spriteGenderOptions,
+                    spriteVariantOptions = state.spriteVariantOptions,
+                    onSpriteTypeClick = state.onSpriteTypeClick
+                )
+
+                sprites(
                     selectableSpriteOptions = state.selectableSpriteOptions,
                     spriteGroupOptions = state.spriteGroupOptions,
                     onSelectableSpriteOptionClick = state.onSelectableSpriteOptionClick,
@@ -86,15 +96,58 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
     }
 }
 
-fun LazyListScope.spriteOrigin(
-    selectableSpriteOptions: List<Sprite>,
-    spriteGroupOptions: List<Sprite>,
-    onSelectableSpriteOptionClick: (Sprite) -> Unit,
+fun LazyListScope.spriteTypes(
+    spriteGenderOptions: SpriteGender?,
+    spriteVariantOptions: SpriteVariant?,
+    onSpriteTypeClick: (SpriteTypes) -> Unit
+) {
+    item {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            spriteGenderOptions?.let {
+                Text(
+                    text = spriteGenderOptions.toString(),
+                    color = BlackTextColor,
+                    fontSize = 12.sp,
+                    style = PokemonGB,
+                    modifier = Modifier
+                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                        .clickable {
+                            onSpriteTypeClick(it as SpriteTypes)
+                        }
+                        .padding(6.dp)
+                )
+            }
+            spriteVariantOptions?.let {
+                Text(
+                    text = spriteVariantOptions.toString(),
+                    color = BlackTextColor,
+                    fontSize = 12.sp,
+                    style = PokemonGB,
+                    modifier = Modifier
+                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                        .clickable {
+                            onSpriteTypeClick(it as SpriteTypes)
+                        }
+                        .padding(6.dp)
+                )
+            }
+        }
+    }
+}
+
+fun LazyListScope.sprites(
+    selectableSpriteOptions: List<SelectableSprite>,
+    spriteGroupOptions: List<GroupSprite>,
+    onSelectableSpriteOptionClick: (SelectableSprite) -> Unit,
     onSpriteGroupOptionClick: (Sprite) -> Unit,
     hasReturn: Boolean,
     onReturnSpritesClick: () -> Unit
 ) {
-
     item {
         SectionTitle(title = R.string.details_screen_sprites_title)
     }
@@ -134,7 +187,7 @@ fun LazyListScope.spriteOrigin(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ResponsiveText(
-                        text = it.getName(),
+                        text = stringResource(id = it.getName()),
                         color = BlackTextColor,
                         targetTextSizeHeight = 14.sp,
                         textStyle = PokemonGB,
@@ -179,7 +232,7 @@ fun LazyListScope.spriteOrigin(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ResponsiveText(
-                        text = it.getName(),
+                        text = stringResource(id = it.getName()),
                         color = BlackTextColor,
                         targetTextSizeHeight = 14.sp,
                         textStyle = PokemonGB,
@@ -356,63 +409,67 @@ fun LazyListScope.evolutionChain(
     }
 }
 
-@Composable
-fun PokemonDetails(pokemon: Pokemon, pokemonImage: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        // Pokemon ID
-        Text(
-            text = pokemon.formattedID(),
-            fontSize = 14.sp,
-            fontWeight = FontWeight(500),
-            color = BlackTextColor,
-            modifier = Modifier,
-            textAlign = TextAlign.Center,
-            style = PokemonGB
-        )
-
-        // Pokemon Name
-        ResponsiveText(
-            text = pokemon.formattedName(),
-            targetTextSizeHeight = 16.sp,
-            fontWeight = FontWeight(1000),
-            color = BlackTextColor,
-            modifier = Modifier
-                .padding(vertical = 4.dp),
-            textAlign = TextAlign.Center,
-            textStyle = PokemonGB,
-            maxLines = 1
-        )
-
-        // Pokemon Types
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            pokemon.types.forEach {
-                PokemonTypeToUI(
-                    pokemonType = it,
-                    size = 34.dp
-                )
-            }
-        }
-
-        // Pokemon Images
-        RotationalImage(
-            frontImage = pokemonImage,
-            backImage = "",
+fun LazyListScope.pokemonDetails(pokemon: Pokemon, pokemonImage: String) {
+    item {
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
-                .align(CenterHorizontally),
-            backgroundType = BackgroundType.RadialBackground(White.copy(alpha = 0.5F), Transparent)
-        )
+                .padding(vertical = 10.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            // Pokemon ID
+            Text(
+                text = pokemon.formattedID(),
+                fontSize = 14.sp,
+                fontWeight = FontWeight(500),
+                color = BlackTextColor,
+                modifier = Modifier,
+                textAlign = TextAlign.Center,
+                style = PokemonGB
+            )
+
+            // Pokemon Name
+            ResponsiveText(
+                text = pokemon.formattedName(),
+                targetTextSizeHeight = 16.sp,
+                fontWeight = FontWeight(1000),
+                color = BlackTextColor,
+                modifier = Modifier
+                    .padding(vertical = 4.dp),
+                textAlign = TextAlign.Center,
+                textStyle = PokemonGB,
+                maxLines = 1
+            )
+
+            // Pokemon Types
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                pokemon.types.forEach {
+                    PokemonTypeToUI(
+                        pokemonType = it,
+                        size = 34.dp
+                    )
+                }
+            }
+
+            // Pokemon Images
+            RotationalImage(
+                frontImage = pokemonImage,
+                backImage = "",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+                    .align(CenterHorizontally),
+                backgroundType = BackgroundType.RadialBackground(
+                    White.copy(alpha = 0.5F),
+                    Transparent
+                )
+            )
+        }
     }
 }
 
@@ -431,7 +488,9 @@ fun DetailsUIScreenPreview() {
                         )
                     ),
                     selectableSpriteOptions = listOf(Sprites()),
-                    spriteGroupOptions = listOf(Sprites())
+                    spriteGroupOptions = listOf(Sprites()),
+                    spriteGenderOptions = SpriteTypes.Male,
+                    spriteVariantOptions = SpriteTypes.Normal
                 )
             )
         }

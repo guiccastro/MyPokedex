@@ -6,37 +6,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
 import com.project.mypokedex.extensions.toGrid
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.SelectableSprite
 import com.project.mypokedex.model.Sprite
-import com.project.mypokedex.model.SpriteAnimated
-import com.project.mypokedex.model.SpriteBlackWhite
-import com.project.mypokedex.model.SpriteCrystal
-import com.project.mypokedex.model.SpriteDiamondPearl
-import com.project.mypokedex.model.SpriteDreamWorld
-import com.project.mypokedex.model.SpriteEmerald
-import com.project.mypokedex.model.SpriteFireRedLeafGreen
-import com.project.mypokedex.model.SpriteGenerationI
-import com.project.mypokedex.model.SpriteGenerationII
-import com.project.mypokedex.model.SpriteGenerationIII
-import com.project.mypokedex.model.SpriteGenerationIV
-import com.project.mypokedex.model.SpriteGenerationV
-import com.project.mypokedex.model.SpriteGenerationVI
-import com.project.mypokedex.model.SpriteGenerationVII
-import com.project.mypokedex.model.SpriteGenerationVIII
-import com.project.mypokedex.model.SpriteGold
-import com.project.mypokedex.model.SpriteHeartGoldSoulSilver
-import com.project.mypokedex.model.SpriteHome
-import com.project.mypokedex.model.SpriteIcons
-import com.project.mypokedex.model.SpriteOfficialArtwork
-import com.project.mypokedex.model.SpriteOmegaRubyAlphaSapphire
-import com.project.mypokedex.model.SpriteOther
-import com.project.mypokedex.model.SpritePlatinum
-import com.project.mypokedex.model.SpriteRedBlue
-import com.project.mypokedex.model.SpriteRubySapphire
-import com.project.mypokedex.model.SpriteSilver
-import com.project.mypokedex.model.SpriteUltraSunUltraMoon
-import com.project.mypokedex.model.SpriteVersions
-import com.project.mypokedex.model.SpriteXY
-import com.project.mypokedex.model.SpriteYellow
+import com.project.mypokedex.model.SpriteGender
+import com.project.mypokedex.model.SpriteType
+import com.project.mypokedex.model.SpriteType.Companion.defaultType
+import com.project.mypokedex.model.SpriteType.Companion.switchGender
+import com.project.mypokedex.model.SpriteType.Companion.switchVariant
+import com.project.mypokedex.model.SpriteTypes
+import com.project.mypokedex.model.SpriteVariant
 import com.project.mypokedex.model.Sprites
 import com.project.mypokedex.navigation.MainNavComponent
 import com.project.mypokedex.navigation.MainNavComponent.Companion.getSingleTopWithPopUpTo
@@ -65,6 +43,8 @@ class DetailsScreenViewModel @Inject constructor(
     val uiState get() = _uiState.asStateFlow()
 
     private val spritesStack = ArrayList<Sprite>()
+    private var currentSpriteType = defaultType
+    private var currentSelectableSprite: SelectableSprite? = null
 
     init {
         _uiState.update {
@@ -90,6 +70,9 @@ class DetailsScreenViewModel @Inject constructor(
                 },
                 onReturnSpritesClick = {
                     onReturnSpritesClick()
+                },
+                onSpriteTypeClick = { spriteTypes ->
+                    onSpriteTypeClick(spriteTypes)
                 }
             )
         }
@@ -101,8 +84,13 @@ class DetailsScreenViewModel @Inject constructor(
                 .collect { id ->
                     repository.getPokemon(id)?.let {
                         setPokemon(it)
+                        selectNewPokemonImage(
+                            it,
+                            it.getAvailableGifOrImageSprite(),
+                            currentSpriteType
+                        )
                         setEvolutionChain(it)
-                        setSpecies(it)
+                        setVarieties(it)
                         onSpriteGroupOptionClick(it.sprites)
                     }
                 }
@@ -113,8 +101,7 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    pokemon = pokemon,
-                    pokemonImage = pokemon.getGifOrImage()
+                    pokemon = pokemon
                 )
             }
         }
@@ -130,14 +117,12 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
-    private fun setSpecies(pokemon: Pokemon) {
+    private fun setVarieties(pokemon: Pokemon) {
         viewModelScope.launch {
-            _uiState.update {
+            _uiState.update { currentState ->
                 val varieties =
-                    repository.getSpecies(pokemon).varieties.mapNotNull { pokemonVarieties ->
-                        if (pokemonVarieties == pokemon) null else pokemonVarieties
-                    }.toGrid(3)
-                it.copy(
+                    repository.getSpecies(pokemon).varieties.filter { it != pokemon }.toGrid(3)
+                currentState.copy(
                     varieties = varieties
                 )
             }
@@ -149,8 +134,9 @@ class DetailsScreenViewModel @Inject constructor(
         updateSpriteOptionsList(spritesStack.last())
     }
 
-    private fun onSelectableSpriteOptionClick(sprite: Sprite) {
-        selectNewPokemonImage(sprite)
+    private fun onSelectableSpriteOptionClick(sprite: SelectableSprite) {
+        currentSpriteType = defaultType
+        selectNewPokemonImage(_uiState.value.pokemon, sprite, currentSpriteType)
     }
 
     private fun onSpriteGroupOptionClick(sprite: Sprite) {
@@ -158,11 +144,73 @@ class DetailsScreenViewModel @Inject constructor(
         updateSpriteOptionsList(sprite)
     }
 
-    private fun selectNewPokemonImage(sprite: Sprite) {
+    private fun selectNewPokemonImage(
+        pokemon: Pokemon?,
+        sprite: SelectableSprite,
+        spriteType: SpriteType
+    ) {
+        currentSelectableSprite = sprite
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    pokemonImage = pokemon?.sprites?.getImageFromSprite(
+                        sprite,
+                        spriteType
+                    ) ?: ""
+                )
+            }
+        }
+
+        setAvailableSpriteTypes(sprite)
+    }
+
+    private fun onSpriteTypeClick(spriteTypes: SpriteTypes) {
+        when (spriteTypes) {
+            SpriteTypes.Male,
+            SpriteTypes.Female -> {
+                currentSpriteType = currentSpriteType.switchGender()
+            }
+
+            SpriteTypes.Normal,
+            SpriteTypes.Shiny -> {
+                currentSpriteType = currentSpriteType.switchVariant()
+            }
+
+            else -> {}
+        }
+
+        currentSelectableSprite?.let {
+            selectNewPokemonImage(
+                _uiState.value.pokemon,
+                it, currentSpriteType
+            )
+        }
+    }
+
+    private fun setAvailableSpriteTypes(sprite: SelectableSprite) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                pokemonImage = getImageFromSprite(_uiState.value.pokemon?.sprites, sprite)
+                spriteGenderOptions = getSpriteGenderOption(sprite),
+                spriteVariantOptions = getSpriteVariantOption(sprite)
             )
+        }
+    }
+
+    private fun getSpriteGenderOption(sprite: SelectableSprite): SpriteGender? {
+        val genderOptions = sprite.getFrontSprites().map { it.gender }.toMutableList().distinct()
+        return if (genderOptions.size > 1) {
+            genderOptions.first { it == currentSpriteType.gender }
+        } else {
+            null
+        }
+    }
+
+    private fun getSpriteVariantOption(sprite: SelectableSprite): SpriteVariant? {
+        val variantOptions = sprite.getFrontSprites().map { it.variant }.toMutableList().distinct()
+        return if (variantOptions.size > 1) {
+            variantOptions.first { it == currentSpriteType.variant }
+        } else {
+            null
         }
     }
 
@@ -200,217 +248,5 @@ class DetailsScreenViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun getImageFromSprite(currentSprite: Any?, targetSprite: Sprite): String {
-        if (currentSprite == null) return ""
-        when (currentSprite) {
-            is Sprites -> {
-                return if (currentSprite == targetSprite) {
-                    currentSprite.front_default ?: ""
-                } else {
-                    getImageFromSprite(currentSprite.other, targetSprite)
-                        .ifBlank { getImageFromSprite(currentSprite.versions, targetSprite) }
-                }
-            }
-
-            is SpriteOther -> {
-                return getImageFromSprite(currentSprite.dream_world, targetSprite)
-                    .ifBlank { getImageFromSprite(currentSprite.home, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.official_artwork, targetSprite) }
-            }
-
-            is SpriteDreamWorld -> {
-                return if (currentSprite == targetSprite) {
-                    currentSprite.front_default ?: ""
-                } else {
-                    ""
-                }
-            }
-
-            is SpriteHome -> {
-                return if (currentSprite == targetSprite) {
-                    currentSprite.front_default ?: ""
-                } else {
-                    ""
-                }
-            }
-
-            is SpriteOfficialArtwork -> {
-                return if (currentSprite == targetSprite) {
-                    currentSprite.front_default ?: ""
-                } else {
-                    ""
-                }
-            }
-
-            is SpriteVersions -> {
-                return getImageFromSprite(currentSprite.generation_i, targetSprite)
-                    .ifBlank { getImageFromSprite(currentSprite.generation_ii, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.generation_iii, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.generation_iv, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.generation_v, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.generation_vi, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.generation_vii, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.generation_viii, targetSprite) }
-            }
-
-            is SpriteGenerationI -> {
-                return getImageFromSprite(currentSprite.red_blue, targetSprite)
-                    .ifBlank { getImageFromSprite(currentSprite.yellow, targetSprite) }
-            }
-
-            is SpriteGenerationII -> {
-                return getImageFromSprite(currentSprite.crystal, targetSprite)
-                    .ifBlank { getImageFromSprite(currentSprite.gold, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.silver, targetSprite) }
-            }
-
-            is SpriteGenerationIII -> {
-                return getImageFromSprite(currentSprite.emerald, targetSprite)
-                    .ifBlank { getImageFromSprite(currentSprite.firered_leafgreen, targetSprite) }
-                    .ifBlank { getImageFromSprite(currentSprite.ruby_sapphire, targetSprite) }
-            }
-
-            is SpriteGenerationIV -> {
-                return getImageFromSprite(currentSprite.diamond_pearl, targetSprite)
-                    .ifBlank {
-                        getImageFromSprite(
-                            currentSprite.heartgold_soulsilver,
-                            targetSprite
-                        )
-                    }
-                    .ifBlank { getImageFromSprite(currentSprite.platinum, targetSprite) }
-            }
-
-            is SpriteGenerationV -> {
-                return getImageFromSprite(currentSprite.black_white, targetSprite)
-            }
-
-            is SpriteGenerationVI -> {
-                return getImageFromSprite(currentSprite.omegaruby_alphasapphire, targetSprite)
-                    .ifBlank { getImageFromSprite(currentSprite.x_y, targetSprite) }
-            }
-
-            is SpriteGenerationVII -> {
-                return getImageFromSprite(currentSprite.icons, targetSprite)
-                    .ifBlank {
-                        getImageFromSprite(
-                            currentSprite.ultra_sun_ultra_moon,
-                            targetSprite
-                        )
-                    }
-            }
-
-            is SpriteGenerationVIII -> {
-                return getImageFromSprite(currentSprite.icons, targetSprite)
-            }
-
-            is SpriteRedBlue -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteYellow -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteCrystal -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteGold -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteSilver -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteEmerald -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteFireRedLeafGreen -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteRubySapphire -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteDiamondPearl -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteHeartGoldSoulSilver -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpritePlatinum -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteBlackWhite -> {
-                return if (currentSprite == targetSprite) {
-                    currentSprite.front_default ?: ""
-                } else {
-                    getImageFromSprite(currentSprite.animated, targetSprite)
-                }
-            }
-
-            is SpriteAnimated -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteOmegaRubyAlphaSapphire -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteXY -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteIcons -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-
-            is SpriteUltraSunUltraMoon -> {
-                if (currentSprite == targetSprite) {
-                    return currentSprite.front_default ?: ""
-                }
-            }
-        }
-
-        return ""
     }
 }
