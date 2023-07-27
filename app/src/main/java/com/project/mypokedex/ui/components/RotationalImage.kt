@@ -26,10 +26,9 @@ fun RotationalImage(
     backgroundType: BackgroundType = BackgroundType.None
 ) {
     val rotationSensitivity = 0.5F
-    var degrees by remember { mutableFloatStateOf(0F) }
-    var side by remember { mutableStateOf(RotationalImageSide.Front) }
-
     val canRotate = frontImage.isNotBlank() && backImage.isNotBlank()
+    var degrees by remember(canRotate) { mutableFloatStateOf(0F) }
+    var side by remember(canRotate) { mutableStateOf(RotationalImageSide.Front) }
     Box(
         modifier = Modifier
             .pointerInput(canRotate) {
