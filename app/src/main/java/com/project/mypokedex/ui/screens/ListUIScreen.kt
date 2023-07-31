@@ -3,8 +3,6 @@ package com.project.mypokedex.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,13 +21,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,17 +42,18 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
-import com.project.mypokedex.ui.components.AppIcon
 import com.project.mypokedex.ui.components.CardScreen
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
+import com.project.mypokedex.ui.components.SearchInputText
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
-import com.project.mypokedex.ui.theme.SearchTextBackground
 import com.project.mypokedex.ui.theme.White
 import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
@@ -82,14 +77,22 @@ fun ListUIScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Screen(state, pagerState)
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 20.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = 20.dp, vertical = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            SearchInputText(state)
+            SearchInputText(
+                searchText = state.searchText,
+                onSearchChange = {
+                    CoroutineScope(Main).launch {
+                        pagerState.scrollToPage(0)
+                    }
+                    state.onSearchChange(it)
+                }
+            )
             DirectionalButtons(state, pagerState)
         }
     }
@@ -130,12 +133,13 @@ fun Screen(state: ListScreenUIState, pagerState: PagerState) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DirectionalButtons(state: ListScreenUIState, pagerState: PagerState) {
-    val directionalsSize = 120.dp
+    val directionalsSize = 160.dp
     val buttonWidth = (directionalsSize.value / 3.44).dp
     val buttonHeight = (directionalsSize.value / 2.81).dp
     val animationScope = rememberCoroutineScope()
     Column(
         modifier = Modifier
+            .padding(top = 10.dp)
             .size(directionalsSize)
     ) {
         Row(
@@ -238,7 +242,6 @@ fun DirectionalButtons(state: ListScreenUIState, pagerState: PagerState) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PokemonListCard(pokemon: Pokemon) {
     Row(modifier = Modifier.padding(horizontal = 6.dp)) {
@@ -303,49 +306,6 @@ fun PokemonListCard(pokemon: Pokemon) {
     }
 }
 
-@Composable
-fun SearchInputText(state: ListScreenUIState) {
-    OutlinedTextField(
-        modifier = Modifier
-            .width(220.dp)
-            .height(46.dp)
-            .background(SearchTextBackground, RoundedCornerShape(25))
-            .border(1.dp, MainBlack, RoundedCornerShape(25)),
-        value = state.searchText,
-        onValueChange = {
-            state.onSearchChange(it)
-        },
-        shape = RoundedCornerShape(25),
-        leadingIcon = {
-            AppIcon(
-                id = R.drawable.ic_search
-            )
-        },
-        placeholder = {
-            Text(
-                text = "Search by ID",
-                style = PokemonGB,
-                fontSize = 12.sp,
-                maxLines = 1
-            )
-        },
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = SearchTextBackground,
-            unfocusedContainerColor = SearchTextBackground,
-            disabledContainerColor = SearchTextBackground,
-            errorContainerColor = SearchTextBackground,
-            focusedTextColor = MainBlack,
-            disabledTextColor = MainBlack,
-            errorTextColor = MainBlack,
-            unfocusedTextColor = MainBlack
-        ),
-        textStyle = PokemonGB.copy(fontSize = 12.sp),
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-    )
-
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
@@ -361,7 +321,6 @@ fun ListUiScreenPreview() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun PokemonListCardPreview() {

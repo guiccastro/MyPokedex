@@ -2,16 +2,14 @@ package com.project.mypokedex.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,8 +20,6 @@ class ListScreenViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<ListScreenUIState> =
         MutableStateFlow(ListScreenUIState())
     val uiState get() = _uiState.asStateFlow()
-
-    private val formatter = DecimalFormat("#")
 
     init {
         _uiState.update { currentState ->
@@ -44,30 +40,18 @@ class ListScreenViewModel @Inject constructor(
     }
 
     private fun onSearchChange(newText: String) {
-        val newSearch = try {
-            formatter.format(newText.toInt())
-        } catch (e: IllegalArgumentException) {
-            if (newText.isEmpty()) {
-                newText
-            } else {
-                null
-            }
-        }
-
-        newSearch?.let {
-            _uiState.value = _uiState.value.copy(
-                searchText = newSearch
-            )
-        }
-
-        searchPokemonById(newSearch?.toIntOrNull())
+        _uiState.value = _uiState.value.copy(
+            pokemonList = filterList(newText),
+            searchText = newText
+        )
     }
 
-    private fun searchPokemonById(id: Int?) {
-        id?.let {
-            CoroutineScope(IO).launch {
-                repository.getPokemon(id)
-            }
+    private fun filterList(text: String): List<Pokemon> {
+        val id = text.toIntOrNull() ?: 0
+        return repository.pokemonList.value.filter {
+            it.id == id ||
+                    it.name.contains(text) ||
+                    it.types.toString().lowercase().contains(text)
         }
     }
 }
