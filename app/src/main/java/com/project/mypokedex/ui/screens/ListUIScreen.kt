@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -57,21 +59,29 @@ import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.SearchTextBackground
 import com.project.mypokedex.ui.theme.White
 import com.project.mypokedex.ui.viewmodels.ListScreenViewModel
+import kotlinx.coroutines.launch
+import kotlin.math.min
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListUIScreen(viewModel: ListScreenViewModel) {
     val state = viewModel.uiState.collectAsState().value
-    ListUIScreen(state = state)
+    val pagerState = rememberPagerState { state.pokemonList.size }
+    ListUIScreen(state = state, pagerState = pagerState)
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListUIScreen(state: ListScreenUIState = ListScreenUIState()) {
+fun ListUIScreen(
+    state: ListScreenUIState = ListScreenUIState(),
+    pagerState: PagerState = rememberPagerState { 1 }
+) {
     Column(
         modifier = Modifier
             .fillMaxHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        Screen(state)
+        Screen(state, pagerState)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,7 +90,7 @@ fun ListUIScreen(state: ListScreenUIState = ListScreenUIState()) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             SearchInputText(state)
-            DirectionalButtons(state)
+            DirectionalButtons(state, pagerState)
         }
     }
 
@@ -88,7 +98,7 @@ fun ListUIScreen(state: ListScreenUIState = ListScreenUIState()) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Screen(state: ListScreenUIState) {
+fun Screen(state: ListScreenUIState, pagerState: PagerState) {
     CardScreen(
         cardModifier = Modifier
             .fillMaxWidth()
@@ -108,9 +118,8 @@ fun Screen(state: ListScreenUIState) {
             modifier = Modifier
                 .fillMaxSize()
         )
-
         HorizontalPager(
-            state = rememberPagerState { state.pokemonList.size },
+            state = pagerState,
             pageSpacing = 10.dp
         ) {
             PokemonListCard(pokemon = state.pokemonList[it])
@@ -118,11 +127,13 @@ fun Screen(state: ListScreenUIState) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DirectionalButtons(state: ListScreenUIState) {
+fun DirectionalButtons(state: ListScreenUIState, pagerState: PagerState) {
     val directionalsSize = 120.dp
     val buttonWidth = (directionalsSize.value / 3.44).dp
     val buttonHeight = (directionalsSize.value / 2.81).dp
+    val animationScope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .size(directionalsSize)
@@ -134,7 +145,13 @@ fun DirectionalButtons(state: ListScreenUIState) {
         ) {
             /** UP BUTTON **/
             Button(
-                onClick = { state.onClickUp() },
+                onClick = {
+                    animationScope.launch {
+                        pagerState.animateScrollToPage(
+                            min(state.pokemonList.size - 11, pagerState.currentPage) + 10
+                        )
+                    }
+                },
                 modifier = Modifier
                     .width(buttonWidth)
                     .height(buttonHeight),
@@ -157,7 +174,7 @@ fun DirectionalButtons(state: ListScreenUIState) {
         ) {
             /** LEFT BUTTON **/
             Button(
-                onClick = { state.onClickLeft() },
+                onClick = { animationScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) } },
                 modifier = Modifier
                     .width(buttonHeight)
                     .height(buttonWidth),
@@ -174,7 +191,7 @@ fun DirectionalButtons(state: ListScreenUIState) {
 
             /** RIGHT BUTTON **/
             Button(
-                onClick = { state.onClickRight() },
+                onClick = { animationScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) } },
                 modifier = Modifier
                     .width(buttonHeight)
                     .height(buttonWidth),
@@ -197,7 +214,13 @@ fun DirectionalButtons(state: ListScreenUIState) {
         ) {
             /** DOWN BUTTON **/
             Button(
-                onClick = { state.onClickDown() },
+                onClick = {
+                    animationScope.launch {
+                        pagerState.animateScrollToPage(
+                            pagerState.currentPage.coerceAtLeast(10) - 10
+                        )
+                    }
+                },
                 modifier = Modifier
                     .width(buttonWidth)
                     .height(buttonHeight),
@@ -215,6 +238,7 @@ fun DirectionalButtons(state: ListScreenUIState) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PokemonListCard(pokemon: Pokemon) {
     Row(modifier = Modifier.padding(horizontal = 6.dp)) {
@@ -322,16 +346,22 @@ fun SearchInputText(state: ListScreenUIState) {
 
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun ListUiScreenPreview() {
     MyPokedexTheme {
         Surface {
-            ListUIScreen()
+            ListUIScreen(
+                state = ListScreenUIState(
+                    pokemonList = listOf(charizard)
+                )
+            )
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun PokemonListCardPreview() {
