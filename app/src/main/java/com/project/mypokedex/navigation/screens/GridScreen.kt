@@ -10,7 +10,6 @@ import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.BottomAppBarItem
-import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.TopAppBarActionItem
 import com.project.mypokedex.ui.screens.GridUIScreen
 import com.project.mypokedex.ui.viewmodels.GridScreenViewModel
@@ -41,12 +40,10 @@ object GridScreen : Screen {
         }
     }
 
-    override fun NavGraphBuilder.screen(
-        onClickPokemon: (Pokemon) -> Unit
-    ) {
+    override fun NavGraphBuilder.screen() {
         composable(gridRoute) {
             viewModel = hiltViewModel()
-            GridUIScreen(viewModel = viewModel, onClick = onClickPokemon)
+            GridUIScreen(viewModel = viewModel)
         }
     }
 

@@ -45,13 +45,13 @@ import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.viewmodels.GridScreenViewModel
 
 @Composable
-fun GridUIScreen(viewModel: GridScreenViewModel, onClick: (Pokemon) -> Unit = {}) {
+fun GridUIScreen(viewModel: GridScreenViewModel) {
     val state = viewModel.uiState.collectAsState().value
-    GridUIScreen(state = state, onClick = onClick)
+    GridUIScreen(state = state)
 }
 
 @Composable
-fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
+fun GridUIScreen(state: GridScreenUIState) {
     Column {
         AnimatedVisibility(
             visible = state.isSearching,
@@ -79,7 +79,7 @@ fun GridUIScreen(state: GridScreenUIState, onClick: (Pokemon) -> Unit = {}) {
                     contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
                 ) {
                     items(state.pokemonList) { pokemon ->
-                        PokemonGridCard(pokemon = pokemon, onClick = onClick)
+                        PokemonGridCard(pokemon = pokemon, onClick = state.onPokemonClick)
                     }
                 }
             }

@@ -3,6 +3,7 @@ package com.project.mypokedex.ui.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -125,7 +126,7 @@ fun Screen(state: ListScreenUIState, pagerState: PagerState) {
             state = pagerState,
             pageSpacing = 10.dp
         ) {
-            PokemonListCard(pokemon = state.pokemonList[it])
+            PokemonListCard(pokemon = state.pokemonList[it], onClick = state.onPokemonClick)
         }
     }
 }
@@ -243,8 +244,14 @@ fun DirectionalButtons(state: ListScreenUIState, pagerState: PagerState) {
 }
 
 @Composable
-fun PokemonListCard(pokemon: Pokemon) {
-    Row(modifier = Modifier.padding(horizontal = 6.dp)) {
+fun PokemonListCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .padding(horizontal = 6.dp)
+            .clickable {
+                onClick(pokemon)
+            }
+    ) {
         Box(modifier = Modifier.size(150.dp)) {
             PokemonImage(
                 url = pokemon.getGifOrImage(),

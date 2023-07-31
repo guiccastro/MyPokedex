@@ -6,7 +6,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.navigation
 import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
-import com.project.mypokedex.model.Pokemon
 
 object HomeGroupScreen : GroupNavigation {
 
@@ -19,16 +18,14 @@ object HomeGroupScreen : GroupNavigation {
             GameScreen
         )
 
-    override fun NavGraphBuilder.graph(
-        onClickPokemon: (Pokemon) -> Unit
-    ) {
+    override fun NavGraphBuilder.graph() {
         navigation(
             startDestination = GridScreen.getRoute(),
             route = homeGraphRoute
         ) {
             listScreens.forEach {
                 it.apply {
-                    screen(onClickPokemon)
+                    screen()
                 }
             }
         }

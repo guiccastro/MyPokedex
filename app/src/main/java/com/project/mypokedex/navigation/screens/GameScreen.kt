@@ -11,7 +11,6 @@ import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.BottomAppBarItem
-import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.TopAppBarActionItem
 import com.project.mypokedex.ui.screens.GameUIScreen
 import com.project.mypokedex.ui.viewmodels.GameScreenViewModel
@@ -33,7 +32,7 @@ object GameScreen : Screen {
         }
     }
 
-    override fun NavGraphBuilder.screen(onClickPokemon: (Pokemon) -> Unit) {
+    override fun NavGraphBuilder.screen() {
         composable(gameRoute) {
             val viewModel: GameScreenViewModel = hiltViewModel()
             GameUIScreen(state = viewModel.uiState.collectAsState().value)

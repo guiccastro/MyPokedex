@@ -3,6 +3,8 @@ package com.project.mypokedex.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.navigation.MainNavComponent
+import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +29,8 @@ class GridScreenViewModel @Inject constructor(
             currentState.copy(
                 showList = false,
                 isSearching = false,
-                onSearchChange = { onSearchChange(it) }
+                onSearchChange = { onSearchChange(it) },
+                onPokemonClick = { onPokemonClick(it) }
             )
         }
 
@@ -44,6 +47,14 @@ class GridScreenViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(
                 showList = true,
             )
+        }
+    }
+
+    private fun onPokemonClick(pokemon: Pokemon) {
+        MainNavComponent.navController.apply {
+            DetailsScreen.apply {
+                navigateToItself(pokemonId = pokemon.id)
+            }
         }
     }
 

@@ -50,17 +50,7 @@ class DetailsScreenViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 onPokemonClick = { pokemon ->
-                    MainNavComponent.navController.apply {
-                        val lastId =
-                            this.currentBackStackEntry?.arguments?.getInt(pokemonIdArgument)
-                        DetailsScreen.apply {
-                            val navOptions =
-                                if (pokemon.id == lastId) getSingleTopWithPopUpTo(getRoute()) else navOptions {
-                                    popBackStack()
-                                }
-                            navigateToItself(pokemonId = pokemon.id, navOptions = navOptions)
-                        }
-                    }
+                    onPokemonClick(pokemon)
                 },
                 onSelectableSpriteOptionClick = { sprite ->
                     onSelectableSpriteOptionClick(sprite)
@@ -94,6 +84,20 @@ class DetailsScreenViewModel @Inject constructor(
                         onSpriteGroupOptionClick(it.sprites)
                     }
                 }
+        }
+    }
+
+    private fun onPokemonClick(pokemon: Pokemon) {
+        MainNavComponent.navController.apply {
+            val lastId =
+                this.currentBackStackEntry?.arguments?.getInt(pokemonIdArgument)
+            DetailsScreen.apply {
+                val navOptions =
+                    if (pokemon.id == lastId) getSingleTopWithPopUpTo(getRoute()) else navOptions {
+                        popBackStack()
+                    }
+                navigateToItself(pokemonId = pokemon.id, navOptions = navOptions)
+            }
         }
     }
 

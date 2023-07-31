@@ -12,7 +12,6 @@ import com.project.mypokedex.R
 import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
-import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.TopAppBarActionItem
 import com.project.mypokedex.ui.screens.DetailsUIScreen
 import com.project.mypokedex.ui.viewmodels.DetailsScreenViewModel
@@ -32,9 +31,7 @@ object DetailsScreen : Screen {
 
     override val bottomAppBarComponent: BottomAppBarComponent? = null
 
-    override fun NavGraphBuilder.screen(
-        onClickPokemon: (Pokemon) -> Unit
-    ) {
+    override fun NavGraphBuilder.screen() {
         composable(
             route = "$detailsRoute/{$pokemonIdArgument}",
             arguments = listOf(navArgument(pokemonIdArgument) { type = NavType.IntType })

@@ -58,13 +58,7 @@ class MainNavComponent private constructor() {
             ) {
                 groupNavigation.forEach {
                     it.apply {
-                        graph(onClickPokemon = { pokemon ->
-                            navController.apply {
-                                DetailsScreen.apply {
-                                    navigateToItself(pokemonId = pokemon.id)
-                                }
-                            }
-                        })
+                        graph()
                     }
                 }
                 screensList.forEach {
