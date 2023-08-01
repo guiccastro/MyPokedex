@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="red">#FFf14948</color>
+    <color name="MainRed">#FFf14948</color>
+    <color name="MainWhite">#FFd6d5c9</color>
+    <color name="HeavyRed">#FFdd3524</color>
+    <color name="MainBlack">#FF3c3635</color>
+    <color name="MainBlue">#FF52b2cf</color>
 </resources>
