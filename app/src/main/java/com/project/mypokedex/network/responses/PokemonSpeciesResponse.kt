@@ -4,7 +4,8 @@ import com.squareup.moshi.Json
 
 data class PokemonSpeciesResponse(
     @field:Json(name = "evolution_chain") val evolutionChain: PokemonSpeciesEvolutionChainResponse,
-    val varieties: List<PokemonSpeciesVarietiesResponse>
+    val varieties: List<PokemonSpeciesVarietiesResponse>,
+    val generation: BasicResponse
 )
 
 data class PokemonSpeciesEvolutionChainResponse(

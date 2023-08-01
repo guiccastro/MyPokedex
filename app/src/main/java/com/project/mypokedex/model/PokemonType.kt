@@ -98,10 +98,6 @@ enum class PokemonType(val id: Int) {
     }
 
     companion object {
-        fun fromName(name: String): PokemonType? {
-            return values().firstOrNull { it.name.lowercase() == name.lowercase() }
-        }
-
         fun fromId(id: Int): PokemonType? {
             return values().firstOrNull { it.id == id }
         }

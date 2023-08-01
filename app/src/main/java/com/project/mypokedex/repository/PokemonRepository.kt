@@ -9,6 +9,7 @@ import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.PokemonGeneration
 import com.project.mypokedex.model.PokemonSpecies
 import com.project.mypokedex.model.PokemonType
 import com.project.mypokedex.network.responses.BasicKeysResponse
@@ -73,11 +74,12 @@ class PokemonRepository @Inject constructor(
             PokemonSpecies(
                 varieties = pokemonSpeciesResponse.varieties.mapNotNull {
                     getPokemon(it.pokemon.url.getIDFromURL())
-                }
+                },
+                generation = PokemonGeneration.fromId(pokemonSpeciesResponse.generation.url.getIDFromURL())
             )
         } catch (e: Exception) {
             Log.i(TAG, "onFailure: PokemonSpecies - $id - $e")
-            PokemonSpecies(emptyList())
+            PokemonSpecies(emptyList(), null)
         }
     }
 
