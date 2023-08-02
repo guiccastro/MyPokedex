@@ -1,6 +1,5 @@
 package com.project.mypokedex.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.mypokedex.model.Pokemon
@@ -9,7 +8,7 @@ import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,7 +24,7 @@ class GridScreenViewModel @Inject constructor(
         MutableStateFlow(GridScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
-    val pokemonsToRequest = 20
+    private val pokemonsToRequest = 20
 
     init {
         _uiState.update { currentState ->
@@ -37,25 +36,25 @@ class GridScreenViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch {
-//            repository.pokemonList.collect {
-//                _uiState.value = _uiState.value.copy(
-//                    pokemonList = filterList(_uiState.value.searchText)
-//                )
-//            }
-
-            val pokemonList = repository.getPokemonList(1, 20)
-            Log.println(Log.ASSERT, "pokemonList", pokemonList.toString())
-            _uiState.value = _uiState.value.copy(
-                pokemonList = pokemonList
-            )
-        }
+        getPokemonList(0, pokemonsToRequest)
 
         viewModelScope.launch {
-            delay(1000)
             _uiState.value = _uiState.value.copy(
                 showList = true,
             )
+        }
+    }
+
+    private fun getPokemonList(initialId: Int, count: Int) {
+        viewModelScope.launch {
+            repository.getPokemonIdList(initialId, count).forEach { id ->
+                async {
+                    val pokemon = repository.getPokemon(id)
+                    _uiState.value = _uiState.value.copy(
+                        pokemonList = (_uiState.value.pokemonList + pokemon).sortedBy { it.id }
+                    )
+                }
+            }
         }
     }
 

@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,15 +19,13 @@ class AnimatedEnterViewModel @Inject constructor(
         MutableStateFlow(AnimatedEnterUIState())
     val animatedEnterUIState get() = _animatedEnterUIState.asStateFlow()
 
-    private val downloadProgressFormatter = DecimalFormat("#.##")
-
     init {
         viewModelScope.launch {
-            _animatedEnterUIState.value = _animatedEnterUIState.value.copy(
-                downloadProgress = 1F,
-                formattedDownloadProgress = "${downloadProgressFormatter.format(1F * 100)}%",
-                isDownloading = 1F < 1F
-            )
+            repository.canOpenApp.collect {
+                _animatedEnterUIState.value = _animatedEnterUIState.value.copy(
+                    canShowApp = it
+                )
+            }
         }
     }
 }

@@ -27,15 +27,13 @@ import com.project.mypokedex.saveTotalPokemonsPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import javax.inject.Inject
+import kotlin.math.min
 
 class PokemonRepository @Inject constructor(
     private val dao: PokemonDao,
@@ -303,7 +301,6 @@ class PokemonRepository @Inject constructor(
 
     init {
         CoroutineScope(Main).launch {
-            delay(5000)
             runBlocking(IO) {
                 setBasicKeys(getBasicKeysPreferences(context).first())
                 totalPokemons = getTotalPokemonsPreferences(context).first()
@@ -366,16 +363,15 @@ class PokemonRepository @Inject constructor(
         pokemonBasicKeyName = keyList.associate { it.first to it.second }
     }
 
-    suspend fun getPokemonList(initialId: Int, count: Int): List<Pokemon> {
-        val fromIndex = pokemonBasicKeyID.keys.indexOfFirst { it == initialId }
-        Log.i(TAG, "getPokemonList: fromIndex $fromIndex")
-        if (fromIndex == -1) {
-            return emptyList()
+    fun getPokemonIdList(pokemonId: Int, count: Int): List<Int> {
+        val idsList = pokemonBasicKeyID.keys.toList()
+        var fromIndex = 0
+        if (pokemonId != 0) {
+            fromIndex = idsList.indexOf(pokemonId) + 1
         }
+        val toIndex = min(idsList.size, fromIndex + count)
 
-        return pokemonBasicKeyID.keys.toList().subList(fromIndex, pokemonBasicKeyID.keys.size).take(count).map {
-            getPokemon(it)
-        }
+        return idsList.subList(fromIndex, toIndex)
     }
 
     suspend fun getPokemon(id: Int): Pokemon {
