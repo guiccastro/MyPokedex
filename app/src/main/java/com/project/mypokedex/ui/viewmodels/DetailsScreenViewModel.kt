@@ -3,8 +3,6 @@ package com.project.mypokedex.ui.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.navOptions
-import com.project.mypokedex.extensions.toGrid
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.SelectableSprite
 import com.project.mypokedex.model.Sprite
@@ -16,9 +14,6 @@ import com.project.mypokedex.model.SpriteType.Companion.switchVariant
 import com.project.mypokedex.model.SpriteTypes
 import com.project.mypokedex.model.SpriteVariant
 import com.project.mypokedex.model.Sprites
-import com.project.mypokedex.navigation.MainNavComponent
-import com.project.mypokedex.navigation.MainNavComponent.Companion.getSingleTopWithPopUpTo
-import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.screens.DetailsScreen.pokemonIdArgument
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
@@ -87,18 +82,18 @@ class DetailsScreenViewModel @Inject constructor(
         }
     }
 
-    private fun onPokemonClick(pokemon: Pokemon) {
-        MainNavComponent.navController.apply {
-            val lastId =
-                this.currentBackStackEntry?.arguments?.getInt(pokemonIdArgument)
-            DetailsScreen.apply {
-                val navOptions =
-                    if (pokemon.id == lastId) getSingleTopWithPopUpTo(getRoute()) else navOptions {
-                        popBackStack()
-                    }
-                navigateToItself(pokemonId = pokemon.id, navOptions = navOptions)
-            }
-        }
+    private fun onPokemonClick(pokemon: String) {
+//        MainNavComponent.navController.apply {
+//            val lastId =
+//                this.currentBackStackEntry?.arguments?.getInt(pokemonIdArgument)
+//            DetailsScreen.apply {
+//                val navOptions =
+//                    if (pokemon.id == lastId) getSingleTopWithPopUpTo(getRoute()) else navOptions {
+//                        popBackStack()
+//                    }
+//                navigateToItself(pokemonId = pokemon.id, navOptions = navOptions)
+//            }
+//        }
     }
 
     private fun setPokemon(pokemon: Pokemon) {
@@ -115,7 +110,7 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    evolutionChain = repository.getEvolutionChainByPokemon(pokemon)
+                    evolutionChain = null //repository.getEvolutionChainByPokemon(pokemon)
                 )
             }
         }
@@ -124,8 +119,7 @@ class DetailsScreenViewModel @Inject constructor(
     private fun setVarieties(pokemon: Pokemon) {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val varieties =
-                    repository.getSpecies(pokemon).varieties.filter { it != pokemon }.toGrid(3)
+                val varieties = emptyList<List<Pokemon>>()
                 currentState.copy(
                     varieties = varieties
                 )

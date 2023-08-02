@@ -24,13 +24,11 @@ class AnimatedEnterViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.progressRequest.collect {
-                _animatedEnterUIState.value = _animatedEnterUIState.value.copy(
-                    downloadProgress = it,
-                    formattedDownloadProgress = "${downloadProgressFormatter.format(it * 100)}%",
-                    isDownloading = it < 1F
-                )
-            }
+            _animatedEnterUIState.value = _animatedEnterUIState.value.copy(
+                downloadProgress = 1F,
+                formattedDownloadProgress = "${downloadProgressFormatter.format(1F * 100)}%",
+                isDownloading = 1F < 1F
+            )
         }
     }
 }

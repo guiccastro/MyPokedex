@@ -32,11 +32,15 @@ class ListScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.pokemonList.collect {
-                _uiState.value = _uiState.value.copy(
-                    pokemonList = it
-                )
-            }
+//            repository.pokemonList.collect {
+//                _uiState.value = _uiState.value.copy(
+//                    pokemonList = it
+//                )
+//            }
+
+            _uiState.value = _uiState.value.copy(
+                pokemonList = emptyList()
+            )
         }
     }
 
@@ -57,10 +61,11 @@ class ListScreenViewModel @Inject constructor(
 
     private fun filterList(text: String): List<Pokemon> {
         val id = text.toIntOrNull() ?: 0
-        return repository.pokemonList.value.filter {
-            it.id == id ||
-                    it.name.contains(text) ||
-                    it.types.toString().lowercase().contains(text)
-        }
+        return emptyList()
+//        return repository.pokemonList.value.filter {
+//            it.id == id ||
+//                    it.name.contains(text) ||
+//                    it.types.toString().lowercase().contains(text)
+//        }
     }
 }

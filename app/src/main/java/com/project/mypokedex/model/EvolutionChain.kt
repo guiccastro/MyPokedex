@@ -4,18 +4,18 @@ class EvolutionChain(
     val chain: EvolutionChainItem
 ) {
 
-    fun getAllPaths(): List<List<Pokemon>> {
-        val allPaths = ArrayList<List<Pokemon>>()
+    fun getAllPaths(): List<List<Int>> {
+        val allPaths = ArrayList<List<Int>>()
         findPathsDFS(chain, ArrayList(), allPaths)
         return allPaths
     }
 
     private fun findPathsDFS(
         currentItem: EvolutionChainItem,
-        currentPath: ArrayList<Pokemon>,
-        allPaths: ArrayList<List<Pokemon>>
+        currentPath: ArrayList<Int>,
+        allPaths: ArrayList<List<Int>>
     ) {
-        currentPath.add(currentItem.pokemon)
+        currentPath.add(currentItem.pokemonId)
 
         if (currentItem.evolvesTo.isEmpty()) {
             allPaths.add(currentPath.toList())

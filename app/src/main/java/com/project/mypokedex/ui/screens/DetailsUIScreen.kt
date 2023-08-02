@@ -287,7 +287,7 @@ fun SectionTitle(@StringRes title: Int) {
 
 fun LazyListScope.varieties(
     varieties: List<List<Pokemon>>,
-    onPokemonClick: (Pokemon) -> Unit
+    onPokemonClick: (String) -> Unit
 ) {
     if (varieties.isNotEmpty()) {
         item {
@@ -319,7 +319,7 @@ fun LazyListScope.varieties(
                                 .weight(1F),
                             clickable = true,
                             onClick = {
-                                onPokemonClick(pokemon)
+                                onPokemonClick("") //pokemon)
                             }
                         )
                         ResponsiveText(
@@ -345,7 +345,7 @@ fun LazyListScope.varieties(
 
 fun LazyListScope.evolutionChain(
     evolutionChain: EvolutionChain?,
-    onPokemonClick: (Pokemon) -> Unit
+    onPokemonClick: (String) -> Unit
 ) {
     if (evolutionChain == null) return
 
@@ -370,18 +370,18 @@ fun LazyListScope.evolutionChain(
                     horizontalAlignment = CenterHorizontally
                 ) {
                     PokemonImage(
-                        url = pokemon.getGifOrImage(),
+                        url = "", //pokemon.getGifOrImage(),
                         backgroundType = BackgroundType.None,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1F),
                         clickable = true,
                         onClick = {
-                            onPokemonClick(pokemon)
+                            onPokemonClick("") //pokemon.id)
                         }
                     )
                     ResponsiveText(
-                        text = pokemon.formattedName(),
+                        text = "", //pokemon.formattedName(),
                         textStyle = PokemonGB,
                         color = BlackTextColor,
                         targetTextSizeHeight = 7.sp,
@@ -489,7 +489,7 @@ fun DetailsUIScreenPreview() {
                     pokemon = charizard,
                     evolutionChain = EvolutionChain(
                         chain = EvolutionChainItem(
-                            pokemon = charizard,
+                            pokemonId = charizard.id,
                             evolvesTo = emptyList(),
                         )
                     ),

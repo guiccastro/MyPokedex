@@ -9,11 +9,12 @@ enum class PokemonGeneration(val id: Int) {
     Gen6(6),
     Gen7(7),
     Gen8(8),
-    Gen9(9);
+    Gen9(9),
+    Unknown(0);
 
     companion object {
-        fun fromId(id: Int): PokemonGeneration? {
-            return PokemonGeneration.values().firstOrNull { it.id == id }
+        fun fromId(id: Int): PokemonGeneration {
+            return PokemonGeneration.values().firstOrNull { it.id == id } ?: Unknown
         }
     }
 
@@ -28,6 +29,7 @@ enum class PokemonGeneration(val id: Int) {
             Gen7 -> "Gen 7"
             Gen8 -> "Gen 8"
             Gen9 -> "Gen 9"
+            else -> "-"
         }
     }
 }

@@ -13,8 +13,12 @@ import com.project.mypokedex.model.PokemonGeneration
 import com.project.mypokedex.model.PokemonSpecies
 import com.project.mypokedex.model.PokemonType
 import com.project.mypokedex.network.responses.BasicKeysResponse
+import com.project.mypokedex.network.responses.BasicResponse
 import com.project.mypokedex.network.responses.EvolutionChainResponse
 import com.project.mypokedex.network.responses.PokemonResponse
+import com.project.mypokedex.network.responses.PokemonSpeciesEvolutionChainResponse
+import com.project.mypokedex.network.responses.PokemonSpeciesResponse
+import com.project.mypokedex.network.responses.PokemonSpeciesVarietiesResponse
 import com.project.mypokedex.network.services.EvolutionChainService
 import com.project.mypokedex.network.services.PokemonService
 import com.project.mypokedex.network.services.PokemonSpeciesService
@@ -24,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -44,19 +49,262 @@ class PokemonRepository @Inject constructor(
         private const val TAG = "PokemonRepository"
     }
 
+//    private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
+//    private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
+//    private var totalPokemons = 0
+//
+//    private val requestPokemons = ArrayList<Int>()
+//
+//    val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
+//    var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
+
+//    init {
+//        CoroutineScope(Main).launch {
+//            runBlocking(IO) {
+//                pokemonList.value = dao.getAll()
+//                setBasicKeys(getBasicKeysPreferences(context).first())
+//                totalPokemons = getTotalPokemonsPreferences(context).first()
+//            }
+//
+//            verifyDaoData()
+//        }
+//    }
+//
+//    private suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
+//        return try {
+//            Log.i(TAG, "getPokemonSpecies: $id")
+//            val pokemonSpeciesResponse = pokemonSpeciesClient.getPokemonSpecies(id)
+//            Log.i(TAG, "onResponse: PokemonSpecies - $id")
+//
+//            PokemonSpecies(
+//                varieties = pokemonSpeciesResponse.varieties.map {
+//                    it.pokemon.url.getIDFromURL()
+//                },
+//                generation = PokemonGeneration.fromId(pokemonSpeciesResponse.generation.url.getIDFromURL()),
+//                evolutionChain = EvolutionChain(EvolutionChainItem(0, emptyList()))
+//            )
+//        } catch (e: Exception) {
+//            Log.i(TAG, "onFailure: PokemonSpecies - $id - $e")
+//            PokemonSpecies(EvolutionChain(EvolutionChainItem(0, emptyList())), emptyList(), null)
+//        }
+//    }
+//
+//    suspend fun getEvolutionChainByPokemon(pokemon: Pokemon): EvolutionChain {
+//        try {
+//            val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemon.id)
+//            val evolutionChainID =
+//                pokemonSpecies.evolutionChain.url.getIDFromURL()
+//            val evolutionChainResponse =
+//                evolutionChainClient.getEvolutionChain(evolutionChainID).chain
+//
+//            return EvolutionChain(
+//                chain = createEvolutionChain(evolutionChainResponse)
+//            )
+//        } catch (e: HttpException) {
+//            return EvolutionChain(
+//                chain = EvolutionChainItem(
+//                    pokemon.id,
+//                    emptyList()
+//                )
+//            )
+//        }
+//
+//    }
+//
+//    private fun createEvolutionChain(chainResponse: EvolutionChainResponse): EvolutionChainItem {
+//        return EvolutionChainItem(
+//            pokemonId = chainResponse.species.url.getIDFromURL(),
+//            evolvesTo = chainResponse.evolvesToList.mapNotNull { createEvolutionChain(it) }
+//        )
+//    }
+//
+//    private fun setBasicKeys(keyList: List<Pair<String, Int>>) {
+//        pokemonBasicKeyID = keyList.associate { it.second to it.first }
+//        pokemonBasicKeyName = keyList.associate { it.first to it.second }
+//    }
+//
+//    private suspend fun verifyDaoData() {
+//        if (needToRequestBasicKeys()) {
+//            getBasicKeys()
+//        } else {
+//            Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
+//        }
+//
+//        if (needToRequestPokemon()) {
+//            setRequestPokemons()
+//            requestAllPokemons()
+//        } else {
+//            Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
+//            totalPokemons = pokemonList.value.size
+//            progressRequest.value = 1F
+//        }
+//    }
+//
+//    private fun needToRequestBasicKeys(): Boolean =
+//        pokemonBasicKeyID.isEmpty() || pokemonBasicKeyName.isEmpty() || totalPokemons == 0
+//
+//    private fun needToRequestPokemon(): Boolean =
+//        pokemonList.value.isEmpty() || pokemonList.value.size != totalPokemons
+//
+//    private fun setRequestPokemons() {
+//        pokemonBasicKeyID.keys.forEach { keyID ->
+//            if (pokemonList.value.indexOfFirst { it.id == keyID } == -1) {
+//                requestPokemons.add(keyID)
+//            }
+//        }
+//    }
+//
+//    private suspend fun getBasicKeys() {
+//        var onFailureCount = 0
+//
+//        try {
+//            Log.i(TAG, "getBasicKeys: Requesting Basic Keys")
+//            val basicKeys = pokemonClient.getBasicKeys()
+//            Log.i(TAG, "onResponse: Basic Keys")
+//
+//            parseAndSaveBasicKeysResponse(basicKeys)
+//        } catch (e: Exception) {
+//            onFailureCount++
+//            Log.i(TAG, "onFailure: Basic Keys - Failures: $onFailureCount - $e")
+//            if (onFailureCount < MAX_BASIC_KEY_RETRY) {
+//                getBasicKeys()
+//            }
+//        }
+//    }
+//
+//    private fun parseAndSaveBasicKeysResponse(basicKeys: BasicKeysResponse) {
+//        totalPokemons = basicKeys.count
+//
+//        val keyList = ArrayList<Pair<String, Int>>()
+//        basicKeys.results.forEach { keyResponse ->
+//            val name = keyResponse.name
+//            val id = keyResponse.url.getIDFromURL()
+//            keyList.add(Pair(name, id))
+//        }
+//
+//        CoroutineScope(IO).launch {
+//            saveBasicKeysPreferences(context, keyList)
+//            saveTotalPokemonsPreferences(context, totalPokemons)
+//        }
+//
+//        setBasicKeys(keyList)
+//    }
+//
+//    private suspend fun requestAllPokemons() {
+//        var responseCount = 0
+//        val toIndex = if (requestPokemons.size >= totalPokemons) {
+//            totalPokemons
+//        } else {
+//            requestPokemons.size
+//        }
+//        CoroutineScope(Main).launch {
+//            requestPokemons.subList(0, toIndex).forEach { id ->
+//                async {
+//                    try {
+//                        Log.i(TAG, "requestPokemon: $id")
+//                        val pokemon = pokemonClient.getPokemon(id)
+//                        Log.i(TAG, "onResponse: Pokemon - $id")
+//
+//                        parseAndSavePokemonResponse(pokemon)
+//                        requestPokemons.remove(id)
+//
+//                        calculateProgressRequest()
+//
+//                        responseCount++
+//                    } catch (e: Exception) {
+//                        Log.i(TAG, "onFailure: Pokemon - $id - $e")
+//                    }
+//                }
+//            }
+//        }.join()
+//
+//        if (progressRequest.value == 1F) {
+//            pokemonList.value = pokemonList.value.sortedBy { it.id }
+//            Log.i(TAG, "onResponse: All Pokemons requested correctly!")
+//        } else {
+//            requestAllPokemons()
+//        }
+//
+//    }
+//
+//    private fun parseAndSavePokemonResponse(info: PokemonResponse) {
+//        val id = info.id
+//        val name = info.name
+//        val types = info.types.mapNotNull {
+//            PokemonType.fromId(
+//                it.type.url.getIDFromURL()
+//            )
+//        }
+//        val species = info.species.url.getIDFromURL()
+//        val sprites = info.sprites
+//
+//        val newPokemon = Pokemon(id, name, types, species, sprites)
+//        Log.i(TAG, "parseAndSave: $newPokemon")
+//        pokemonList.value = (pokemonList.value + newPokemon)
+//
+//        CoroutineScope(IO).launch {
+//            dao.insert(newPokemon)
+//        }
+//    }
+//
+//    private fun calculateProgressRequest() {
+//        progressRequest.value = pokemonList.value.size.toFloat() / totalPokemons.toFloat()
+//        Log.i(TAG, "ProgressRequest: ${progressRequest.value}%")
+//    }
+//
+//    fun getPokemon(id: Int): Pokemon? {
+//        return pokemonList.value.find {
+//            it.id == id
+//        } ?: dao.getById(id)
+//    }
+//
+//    suspend fun getRandomPokemons(quantity: Int): List<Pokemon> {
+//        if (totalPokemons == 0) return emptyList()
+//        val idList = 1.rangeTo(totalPokemons).toMutableList()
+//        val selectedIds = ArrayList<Int>()
+//
+//        repeat(quantity) {
+//            val id = idList.toIntArray().random()
+//            selectedIds.add(id)
+//            idList.remove(id)
+//        }
+//
+//        val selectedPokemons = ArrayList<Pokemon>()
+//        selectedIds.forEach { id ->
+//            withContext(IO) {
+//                getPokemon(id)?.let { pokemon ->
+//                    selectedPokemons.add(pokemon)
+//                }
+//            }
+//        }
+//
+//        if (selectedPokemons.size != quantity) {
+//            selectedPokemons.addAll(getRandomPokemons(selectedPokemons.size - quantity))
+//        }
+//
+//        return selectedPokemons
+//    }
+//
+//    suspend fun getSpecies(pokemon: Pokemon): PokemonSpecies {
+//        return pokemon.species ?: run {
+//            val species = getPokemonSpecies(pokemon.speciesId)
+//            pokemon.species = species
+//            species
+//        }
+//    }
+
+    /** ----------------------------------------------------------------------------------- **/
+
     private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
     private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
     private var totalPokemons = 0
 
-    private val requestPokemons = ArrayList<Int>()
-
-    val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
-    var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
+    var canOpenApp: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     init {
         CoroutineScope(Main).launch {
+            delay(5000)
             runBlocking(IO) {
-                pokemonList.value = dao.getAll()
                 setBasicKeys(getBasicKeysPreferences(context).first())
                 totalPokemons = getTotalPokemonsPreferences(context).first()
             }
@@ -65,92 +313,13 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    private suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
-        return try {
-            Log.i(TAG, "getPokemonSpecies: $id")
-            val pokemonSpeciesResponse = pokemonSpeciesClient.getPokemonSpecies(id)
-            Log.i(TAG, "onResponse: PokemonSpecies - $id")
-
-            PokemonSpecies(
-                varieties = pokemonSpeciesResponse.varieties.mapNotNull {
-                    getPokemon(it.pokemon.url.getIDFromURL())
-                },
-                generation = PokemonGeneration.fromId(pokemonSpeciesResponse.generation.url.getIDFromURL())
-            )
-        } catch (e: Exception) {
-            Log.i(TAG, "onFailure: PokemonSpecies - $id - $e")
-            PokemonSpecies(emptyList(), null)
-        }
-    }
-
-    suspend fun getEvolutionChainByPokemon(pokemon: Pokemon): EvolutionChain {
-        try {
-            val pokemonSpecies = pokemonSpeciesClient.getPokemonSpecies(pokemon.id)
-            val evolutionChainID =
-                pokemonSpecies.evolutionChain.url.getIDFromURL()
-            val evolutionChainResponse =
-                evolutionChainClient.getEvolutionChain(evolutionChainID).chain
-
-            return EvolutionChain(
-                chain = createEvolutionChain(evolutionChainResponse) ?: EvolutionChainItem(
-                    pokemon,
-                    emptyList()
-                )
-            )
-        } catch (e: HttpException) {
-            return EvolutionChain(
-                chain = EvolutionChainItem(
-                    pokemon,
-                    emptyList()
-                )
-            )
-        }
-
-    }
-
-    private fun createEvolutionChain(chainResponse: EvolutionChainResponse): EvolutionChainItem? {
-        return getPokemon(chainResponse.species.url.getIDFromURL())?.let { pokemon ->
-            EvolutionChainItem(
-                pokemon = pokemon,
-                evolvesTo = chainResponse.evolvesToList.mapNotNull { createEvolutionChain(it) }
-            )
-        }
-    }
-
-    private fun setBasicKeys(keyList: List<Pair<String, Int>>) {
-        pokemonBasicKeyID = keyList.associate { it.second to it.first }
-        pokemonBasicKeyName = keyList.associate { it.first to it.second }
-    }
-
     private suspend fun verifyDaoData() {
         if (needToRequestBasicKeys()) {
             getBasicKeys()
         } else {
             Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
         }
-
-        if (needToRequestPokemon()) {
-            setRequestPokemons()
-            requestAllPokemons()
-        } else {
-            Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
-            totalPokemons = pokemonList.value.size
-            progressRequest.value = 1F
-        }
-    }
-
-    private fun needToRequestBasicKeys(): Boolean =
-        pokemonBasicKeyID.isEmpty() || pokemonBasicKeyName.isEmpty() || totalPokemons == 0
-
-    private fun needToRequestPokemon(): Boolean =
-        pokemonList.value.isEmpty() || pokemonList.value.size != totalPokemons
-
-    private fun setRequestPokemons() {
-        pokemonBasicKeyID.keys.forEach { keyID ->
-            if (pokemonList.value.indexOfFirst { it.id == keyID } == -1) {
-                requestPokemons.add(keyID)
-            }
-        }
+        canOpenApp.value = true
     }
 
     private suspend fun getBasicKeys() {
@@ -189,106 +358,108 @@ class PokemonRepository @Inject constructor(
         setBasicKeys(keyList)
     }
 
-    private suspend fun requestAllPokemons() {
-        var responseCount = 0
-        val toIndex = if (requestPokemons.size >= totalPokemons) {
-            totalPokemons
-        } else {
-            requestPokemons.size
-        }
-        CoroutineScope(Main).launch {
-            requestPokemons.subList(0, toIndex).forEach { id ->
-                async {
-                    try {
-                        Log.i(TAG, "requestPokemon: $id")
-                        val pokemon = pokemonClient.getPokemon(id)
-                        Log.i(TAG, "onResponse: Pokemon - $id")
+    private fun needToRequestBasicKeys(): Boolean =
+        pokemonBasicKeyID.isEmpty() || pokemonBasicKeyName.isEmpty() || totalPokemons == 0
 
-                        parseAndSavePokemonResponse(pokemon)
-                        requestPokemons.remove(id)
-
-                        calculateProgressRequest()
-
-                        responseCount++
-                    } catch (e: Exception) {
-                        Log.i(TAG, "onFailure: Pokemon - $id - $e")
-                    }
-                }
-            }
-        }.join()
-
-        if (progressRequest.value == 1F) {
-            pokemonList.value = pokemonList.value.sortedBy { it.id }
-            Log.i(TAG, "onResponse: All Pokemons requested correctly!")
-        } else {
-            requestAllPokemons()
-        }
-
+    private fun setBasicKeys(keyList: List<Pair<String, Int>>) {
+        pokemonBasicKeyID = keyList.associate { it.second to it.first }
+        pokemonBasicKeyName = keyList.associate { it.first to it.second }
     }
 
-    private fun parseAndSavePokemonResponse(info: PokemonResponse) {
-        val id = info.id
-        val name = info.name
-        val types = info.types.mapNotNull {
+    suspend fun getPokemonList(initialId: Int, count: Int): List<Pokemon> {
+        val fromIndex = pokemonBasicKeyID.keys.indexOfFirst { it == initialId }
+        Log.i(TAG, "getPokemonList: fromIndex $fromIndex")
+        if (fromIndex == -1) {
+            return emptyList()
+        }
+
+        return pokemonBasicKeyID.keys.toList().subList(fromIndex, pokemonBasicKeyID.keys.size).take(count).map {
+            getPokemon(it)
+        }
+    }
+
+    suspend fun getPokemon(id: Int): Pokemon {
+        return withContext(IO) {
+            Log.i(TAG, "getPokemon: Getting pokemon $id from DAO")
+            return@withContext dao.getById(id)
+        } ?: run {
+            Log.i(TAG, "getPokemon: Pokemon $id not found in DAO. Getting from client")
+            requestPokemon(id)
+        }
+    }
+
+    private suspend fun requestPokemon(id: Int): Pokemon {
+        Log.i(TAG, "requestPokemon: Requesting pokemon $id from client")
+        val pokemonResponse = pokemonClient.getPokemon(id)
+        Log.i(TAG, "requestPokemon: Get pokemon $id from client")
+        val pokemon = createPokemon(pokemonResponse).apply {
+            species = getPokemonSpeciesNew(speciesId)
+        }
+
+        CoroutineScope(IO).launch {
+            dao.insert(pokemon)
+        }
+
+        return pokemon
+    }
+
+    private suspend fun getPokemonSpeciesNew(id: Int): PokemonSpecies {
+        Log.i(TAG, "getPokemonSpeciesNew: Requesting pokemon species $id from client")
+        val pokemonSpeciesResponse = pokemonSpeciesClient.getPokemonSpecies(id)
+        Log.i(TAG, "getPokemonSpeciesNew: Get pokemon species $id from client")
+        return createPokemonSpecies(pokemonSpeciesResponse)
+    }
+
+    private fun createPokemon(pokemonResponse: PokemonResponse): Pokemon {
+        Log.i(TAG, "createPokemon: Creating pokemon")
+        val id = pokemonResponse.id
+        val name = pokemonResponse.name
+        val types = pokemonResponse.types.mapNotNull {
             PokemonType.fromId(
                 it.type.url.getIDFromURL()
             )
         }
-        val species = info.species.url.getIDFromURL()
-        val sprites = info.sprites
+        val species = pokemonResponse.species.url.getIDFromURL()
+        val sprites = pokemonResponse.sprites
 
         val newPokemon = Pokemon(id, name, types, species, sprites)
-        Log.i(TAG, "parseAndSave: $newPokemon")
-        pokemonList.value = (pokemonList.value + newPokemon)
+        Log.i(TAG, "createPokemon: Pokemon created $newPokemon")
 
-        CoroutineScope(IO).launch {
-            dao.insert(newPokemon)
-        }
+        return newPokemon
     }
 
-    private fun calculateProgressRequest() {
-        progressRequest.value = pokemonList.value.size.toFloat() / totalPokemons.toFloat()
-        Log.i(TAG, "ProgressRequest: ${progressRequest.value}%")
+    private suspend fun createPokemonSpecies(pokemonSpeciesResponse: PokemonSpeciesResponse): PokemonSpecies {
+        Log.i(TAG, "createPokemonSpecies: Creating pokemon species")
+        val evolutionChain = createEvolutionChain(pokemonSpeciesResponse.evolutionChain)
+        val varieties = createPokemonVarieties(pokemonSpeciesResponse.varieties)
+        val generation = createPokemonGeneration(pokemonSpeciesResponse.generation)
+        Log.i(TAG, "createPokemonSpecies: Pokemon species created")
+
+        return PokemonSpecies(evolutionChain, varieties, generation)
     }
 
-    fun getPokemon(id: Int): Pokemon? {
-        return pokemonList.value.find {
-            it.id == id
-        } ?: dao.getById(id)
+    private suspend fun createEvolutionChain(evolutionChainSpeciesResponse: PokemonSpeciesEvolutionChainResponse): EvolutionChain {
+        Log.i(TAG, "createEvolutionChain: Creating evolution chain")
+        val evolutionChainId = evolutionChainSpeciesResponse.url.getIDFromURL()
+        val evolutionChainResponse = evolutionChainClient.getEvolutionChain(evolutionChainId).chain
+        val evolutionChainBaseItem = createEvolutionChainItem(evolutionChainResponse)
+        Log.i(TAG, "createEvolutionChain: Evolution chain created")
+
+        return EvolutionChain(evolutionChainBaseItem)
     }
 
-    suspend fun getRandomPokemons(quantity: Int): List<Pokemon> {
-        if (totalPokemons == 0) return emptyList()
-        val idList = 1.rangeTo(totalPokemons).toMutableList()
-        val selectedIds = ArrayList<Int>()
-
-        repeat(quantity) {
-            val id = idList.toIntArray().random()
-            selectedIds.add(id)
-            idList.remove(id)
-        }
-
-        val selectedPokemons = ArrayList<Pokemon>()
-        selectedIds.forEach { id ->
-            withContext(IO) {
-                getPokemon(id)?.let { pokemon ->
-                    selectedPokemons.add(pokemon)
-                }
-            }
-        }
-
-        if (selectedPokemons.size != quantity) {
-            selectedPokemons.addAll(getRandomPokemons(selectedPokemons.size - quantity))
-        }
-
-        return selectedPokemons
+    private fun createEvolutionChainItem(chainResponse: EvolutionChainResponse): EvolutionChainItem {
+        return EvolutionChainItem(
+            pokemonId = chainResponse.species.url.getIDFromURL(),
+            evolvesTo = chainResponse.evolvesToList.map { createEvolutionChainItem(it) }
+        )
     }
 
-    suspend fun getSpecies(pokemon: Pokemon): PokemonSpecies {
-        return pokemon.species ?: run {
-            val species = getPokemonSpecies(pokemon.speciesId)
-            pokemon.species = species
-            species
-        }
+    private fun createPokemonVarieties(varietiesResponse: List<PokemonSpeciesVarietiesResponse>): List<Int> {
+        return varietiesResponse.map { it.pokemon.url.getIDFromURL() }
+    }
+
+    private fun createPokemonGeneration(generationResponse: BasicResponse): PokemonGeneration {
+        return PokemonGeneration.fromId(generationResponse.url.getIDFromURL())
     }
 }

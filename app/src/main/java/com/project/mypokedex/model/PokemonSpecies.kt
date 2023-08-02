@@ -1,6 +1,7 @@
 package com.project.mypokedex.model
 
 data class PokemonSpecies(
-    val varieties: List<Pokemon>,
+    val evolutionChain: EvolutionChain,
+    val varieties: List<Int>,
     val generation: PokemonGeneration?
 )

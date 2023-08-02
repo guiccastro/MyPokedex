@@ -13,7 +13,7 @@ data class DetailsScreenUIState(
     val pokemon: Pokemon? = null,
     val evolutionChain: EvolutionChain? = null,
     val varieties: List<List<Pokemon>> = emptyList(),
-    val onPokemonClick: (Pokemon) -> Unit = {},
+    val onPokemonClick: (String) -> Unit = {},
     val selectableSpriteOptions: List<SelectableSprite> = emptyList(),
     val spriteGroupOptions: List<GroupSprite> = emptyList(),
     val onSelectableSpriteOptionClick: (SelectableSprite) -> Unit = {},
