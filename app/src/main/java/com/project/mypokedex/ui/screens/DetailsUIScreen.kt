@@ -33,8 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
-import com.project.mypokedex.model.EvolutionChain
-import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.GroupSprite
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.SelectableSprite
@@ -287,7 +285,7 @@ fun SectionTitle(@StringRes title: Int) {
 
 fun LazyListScope.varieties(
     varieties: List<List<Pokemon>>,
-    onPokemonClick: (String) -> Unit
+    onPokemonClick: (Pokemon) -> Unit
 ) {
     if (varieties.isNotEmpty()) {
         item {
@@ -319,7 +317,7 @@ fun LazyListScope.varieties(
                                 .weight(1F),
                             clickable = true,
                             onClick = {
-                                onPokemonClick("") //pokemon)
+                                onPokemonClick(pokemon)
                             }
                         )
                         ResponsiveText(
@@ -344,16 +342,16 @@ fun LazyListScope.varieties(
 
 
 fun LazyListScope.evolutionChain(
-    evolutionChain: EvolutionChain?,
-    onPokemonClick: (String) -> Unit
+    evolutionChain: List<List<Pokemon>>,
+    onPokemonClick: (Pokemon) -> Unit
 ) {
-    if (evolutionChain == null) return
+    if (evolutionChain.isEmpty()) return
 
     item {
         SectionTitle(title = R.string.details_screen_evolution_chain_title)
     }
 
-    items(evolutionChain.getAllPaths()) { rowEvolution ->
+    items(evolutionChain) { rowEvolution ->
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
@@ -370,18 +368,18 @@ fun LazyListScope.evolutionChain(
                     horizontalAlignment = CenterHorizontally
                 ) {
                     PokemonImage(
-                        url = "", //pokemon.getGifOrImage(),
+                        url = pokemon.getGifOrImage(),
                         backgroundType = BackgroundType.None,
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1F),
                         clickable = true,
                         onClick = {
-                            onPokemonClick("") //pokemon.id)
+                            onPokemonClick(pokemon)
                         }
                     )
                     ResponsiveText(
-                        text = "", //pokemon.formattedName(),
+                        text = pokemon.formattedName(),
                         textStyle = PokemonGB,
                         color = BlackTextColor,
                         targetTextSizeHeight = 7.sp,
@@ -487,12 +485,7 @@ fun DetailsUIScreenPreview() {
             DetailsUIScreen(
                 state = DetailsScreenUIState(
                     pokemon = charizard,
-                    evolutionChain = EvolutionChain(
-                        chain = EvolutionChainItem(
-                            pokemonId = charizard.id,
-                            evolvesTo = emptyList(),
-                        )
-                    ),
+                    evolutionChain = emptyList(),
                     selectableSpriteOptions = listOf(Sprites()),
                     spriteGroupOptions = listOf(Sprites()),
                     spriteGenderOptions = SpriteTypes.Male,

@@ -21,12 +21,12 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             MyPokedexTheme {
-                val animatedEnterViewModel: AnimatedEnterViewModel = hiltViewModel()
-                AnimatedEnter(state = animatedEnterViewModel.animatedEnterUIState.collectAsState().value) {
-                    MainScaffold {
-                        AppNavHost()
-                    }
+                MainScaffold {
+                    AppNavHost()
                 }
+
+                val animatedEnterViewModel: AnimatedEnterViewModel = hiltViewModel()
+                AnimatedEnter(state = animatedEnterViewModel.animatedEnterUIState.collectAsState().value)
             }
         }
     }

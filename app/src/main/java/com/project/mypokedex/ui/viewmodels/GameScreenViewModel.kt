@@ -51,10 +51,10 @@ class GameScreenViewModel @Inject constructor(
 
     private fun setGame() {
         viewModelScope.launch {
-            //val options = repository.getRandomPokemons(3)
+            val options = repository.getRandomPokemons(3)
             _uiState.value = _uiState.value.copy(
-                options = emptyList(), //options,
-                pokemon = null, //options.getPokemon(),
+                options = options,
+                pokemon = options.getPokemon(),
                 answered = false,
                 isCorrect = false,
                 buttonsUIState = emptyList()
