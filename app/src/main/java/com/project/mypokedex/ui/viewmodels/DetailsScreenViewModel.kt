@@ -126,7 +126,7 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    varieties = pokemon.species?.varieties?.mapNotNull { repository.getPokemon(it) }
+                    varieties = pokemon.species?.varieties?.mapNotNull { repository.getPokemon(it) }?.filter { it != pokemon }
                         ?.toGrid(3) ?: emptyList()
                 )
             }

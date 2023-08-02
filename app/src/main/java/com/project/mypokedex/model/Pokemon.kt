@@ -12,7 +12,6 @@ class Pokemon(
     val speciesId: Int,
     val sprites: Sprites
 ) {
-    @Ignore
     var species: PokemonSpecies? = null
 
     override fun toString(): String {
