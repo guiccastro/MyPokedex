@@ -5,13 +5,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -302,41 +302,40 @@ fun LazyListScope.varieties(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 100.dp)
                     .padding(vertical = 8.dp)
             ) {
                 row.forEach { pokemon ->
-                    Column(
+                    Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp)
-                            .weight(1F),
-                        horizontalAlignment = CenterHorizontally
+                            .weight(1F)
                     ) {
-                        PokemonImage(
-                            url = pokemon.getGifOrImage(),
-                            backgroundType = BackgroundType.None,
+                        Column(
                             modifier = Modifier
-                                .weight(1F),
-                            clickable = true,
-                            onClick = {
-                                onPokemonClick(pokemon)
-                            }
-                        )
-                        ResponsiveText(
-                            text = pokemon.formattedName(),
-                            textStyle = PokemonGB,
-                            color = BlackTextColor,
-                            targetTextSizeHeight = 7.sp,
-                            fontWeight = FontWeight(1000),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 4.dp),
-                            textAlign = TextAlign.Center,
-                            maxLines = 1
-                        )
+                                .padding(horizontal = 4.dp),
+                            horizontalAlignment = CenterHorizontally
+                        ) {
+                            PokemonImage(
+                                url = pokemon.getGifOrImage(),
+                                backgroundType = BackgroundType.None,
+                                clickable = true,
+                                onClick = {
+                                    onPokemonClick(pokemon)
+                                }
+                            )
+                            ResponsiveText(
+                                text = pokemon.formattedName(),
+                                textStyle = PokemonGB,
+                                color = BlackTextColor,
+                                targetTextSizeHeight = 7.sp,
+                                fontWeight = FontWeight(1000),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp),
+                                textAlign = TextAlign.Center,
+                                maxLines = 1
+                            )
+                        }
                     }
-
                 }
             }
         }
@@ -360,40 +359,40 @@ fun LazyListScope.evolutionChain(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 100.dp)
                 .padding(vertical = 8.dp)
         ) {
             rowEvolution.forEach { pokemon ->
-                Column(
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1F),
-                    horizontalAlignment = CenterHorizontally
+                        .weight(1F)
                 ) {
-                    PokemonImage(
-                        url = pokemon.getGifOrImage(),
-                        backgroundType = BackgroundType.None,
+                    Column(
                         modifier = Modifier
-                            .weight(1F),
-                        clickable = true,
-                        onClick = {
-                            onPokemonClick(pokemon)
-                        }
-                    )
-                    ResponsiveText(
-                        text = pokemon.formattedName(),
-                        textStyle = PokemonGB,
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 7.sp,
-                        fontWeight = FontWeight(1000),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        textAlign = TextAlign.Center,
-                        maxLines = 1
-                    )
+                            .fillMaxWidth(),
+                        horizontalAlignment = CenterHorizontally
+                    ) {
+                        PokemonImage(
+                            url = pokemon.getGifOrImage(),
+                            backgroundType = BackgroundType.None,
+                            clickable = true,
+                            onClick = {
+                                onPokemonClick(pokemon)
+                            }
+                        )
+                        ResponsiveText(
+                            text = pokemon.formattedName(),
+                            textStyle = PokemonGB,
+                            color = BlackTextColor,
+                            targetTextSizeHeight = 7.sp,
+                            fontWeight = FontWeight(1000),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 4.dp),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
+                    }
                 }
-
 
                 if (rowEvolution.last() != pokemon) {
                     Image(
