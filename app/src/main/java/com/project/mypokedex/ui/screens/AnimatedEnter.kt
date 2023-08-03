@@ -42,7 +42,7 @@ fun AnimatedEnter(state: AnimatedEnterUIState) {
 
 @Composable
 fun DownloadInformation(state: AnimatedEnterUIState) {
-    if (state.isDownloading) {
+    if (state.isDownloading && state.downloadProgress != 0F) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
