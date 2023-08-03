@@ -317,7 +317,6 @@ fun LazyListScope.varieties(
                             url = pokemon.getGifOrImage(),
                             backgroundType = BackgroundType.None,
                             modifier = Modifier
-                                .fillMaxWidth()
                                 .weight(1F),
                             clickable = true,
                             onClick = {
@@ -375,7 +374,6 @@ fun LazyListScope.evolutionChain(
                         url = pokemon.getGifOrImage(),
                         backgroundType = BackgroundType.None,
                         modifier = Modifier
-                            .fillMaxWidth()
                             .weight(1F),
                         clickable = true,
                         onClick = {

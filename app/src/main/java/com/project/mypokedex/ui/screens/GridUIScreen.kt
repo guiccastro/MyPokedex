@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -92,7 +90,6 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
     Column(
         modifier = Modifier
             .width(130.dp)
-            .height(150.dp)
             .padding(4.dp)
             .background(Transparent, RoundedCornerShape(4.dp))
             .clickable {
@@ -136,8 +133,6 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
         // Pokemon Image
         PokemonImage(
             url = pokemon.getGifOrImage(),
-            modifier = Modifier
-                .fillMaxSize(),
             clickable = null,
             backgroundType = BackgroundType.ImageBackground(
                 id = R.drawable.ic_pokeball,
