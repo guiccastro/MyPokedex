@@ -4,11 +4,11 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -38,9 +38,9 @@ fun GameUIScreen(state: GameScreenUIState) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 20.dp)
+            .padding(top = 20.dp, bottom = 10.dp)
             .scrollable(state = rememberScrollState(), orientation = Orientation.Vertical),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = CenterHorizontally
     ) {
         PokemonImage(
@@ -53,17 +53,19 @@ fun GameUIScreen(state: GameScreenUIState) {
                 .weight(1F),
             backgroundType = BackgroundType.RadialBackground(White.copy(alpha = 0.5F), Transparent)
         )
-        Spacer(modifier = Modifier.height(40.dp))
-        OptionsButtons(state = state)
+        OptionsButtons(state = state, modifier = Modifier.weight(1F))
     }
 }
 
 @Composable
-fun OptionsButtons(state: GameScreenUIState) {
+fun OptionsButtons(state: GameScreenUIState, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 40.dp),
+            .wrapContentHeight()
+            .heightIn(max = 180.dp)
+            .padding(horizontal = 40.dp)
+            .padding(top = 10.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
         horizontalAlignment = CenterHorizontally
     ) {
@@ -76,19 +78,22 @@ fun OptionsButtons(state: GameScreenUIState) {
                     state.onOptionClick(option)
                 },
                 containerColor = backgroundColor,
-                enabled = isEnabled
+                enabled = isEnabled,
+                modifier = Modifier
+                    .weight(1F)
             )
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
         AppButton(
             text = stringResource(R.string.game_screen_next_button).uppercase(),
             onClick = {
                 state.onClickNext()
             },
+            enabled = state.answered,
             containerColor = MainBlue,
             modifier = Modifier
                 .alpha(if (state.answered) 1F else 0F)
+                .weight(1F)
         )
     }
 }

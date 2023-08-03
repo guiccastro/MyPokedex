@@ -49,7 +49,6 @@ fun ResponsiveText(
         onTextLayout = { textLayoutResult ->
             val maxCurrentLineIndex: Int = textLayoutResult.lineCount - 1
 
-
             if (textLayoutResult.isLineEllipsized(maxCurrentLineIndex)) {
                 textSize = textSize.times(TEXT_SCALE_REDUCTION_INTERVAL)
                 textWeight = min(1000f, textWeight.times(WEIGHT_SCALE_REDUCTION_INTERVAL))
