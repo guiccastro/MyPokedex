@@ -3,7 +3,7 @@
 
     <!-- Game Screen -->
     <string name="game_screen_label">Game</string>
-    <string name="game_screen_title">Game Screen</string>
+    <string name="game_screen_title">Who\'s That Pokémon</string>
     <string name="game_screen_next_button">Next</string>
 
     <!-- Grid Screen -->
