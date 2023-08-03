@@ -41,8 +41,12 @@ import com.project.mypokedex.model.SpriteGender
 import com.project.mypokedex.model.SpriteTypes
 import com.project.mypokedex.model.SpriteVariant
 import com.project.mypokedex.model.Sprites
+import com.project.mypokedex.sampledata.bulbasaur
 import com.project.mypokedex.sampledata.charizard
+import com.project.mypokedex.sampledata.charmander
+import com.project.mypokedex.sampledata.squirtle
 import com.project.mypokedex.ui.components.CardScreen
+import com.project.mypokedex.ui.components.PokemonGenerationToUI
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.ResponsiveText
@@ -422,16 +426,30 @@ fun LazyListScope.basicDetails(pokemon: Pokemon, frontImage: String, backImage: 
             verticalArrangement = Arrangement.Center
         ) {
 
-            // Pokemon ID
-            Text(
-                text = pokemon.formattedID(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight(500),
-                color = BlackTextColor,
-                modifier = Modifier,
-                textAlign = TextAlign.Center,
-                style = PokemonGB
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Pokemon ID
+                Text(
+                    text = pokemon.formattedID(),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(500),
+                    color = BlackTextColor,
+                    modifier = Modifier,
+                    textAlign = TextAlign.Center,
+                    style = PokemonGB
+                )
+
+                // Pokemon Generation
+                pokemon.species?.generation?.let {
+                    PokemonGenerationToUI(
+                        pokemonGeneration = it,
+                        fontSize = 8.sp
+                    )
+                }
+            }
+
 
             // Pokemon Name
             ResponsiveText(
@@ -446,12 +464,11 @@ fun LazyListScope.basicDetails(pokemon: Pokemon, frontImage: String, backImage: 
                 maxLines = 1
             )
 
-            // Pokemon Types
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                // Pokemon Types
                 pokemon.types.forEach {
                     PokemonTypeToUI(
                         pokemonType = it,
@@ -485,11 +502,12 @@ fun DetailsUIScreenPreview() {
             DetailsUIScreen(
                 state = DetailsScreenUIState(
                     pokemon = charizard,
-                    evolutionChain = emptyList(),
+                    evolutionChain = listOf(listOf(bulbasaur, squirtle, charmander)),
                     selectableSpriteOptions = listOf(Sprites()),
                     spriteGroupOptions = listOf(Sprites()),
                     spriteGenderOptions = SpriteTypes.Male,
-                    spriteVariantOptions = SpriteTypes.Normal
+                    spriteVariantOptions = SpriteTypes.Normal,
+                    varieties = listOf(listOf(bulbasaur, squirtle, charmander))
                 )
             )
         }
