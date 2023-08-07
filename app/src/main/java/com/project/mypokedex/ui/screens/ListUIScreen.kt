@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -72,29 +73,34 @@ fun ListUIScreen(
     state: ListScreenUIState = ListScreenUIState(),
     pagerState: PagerState = rememberPagerState { 1 }
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxHeight(),
         verticalArrangement = Arrangement.Center
     ) {
-        Screen(state, pagerState)
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            SearchInputText(
-                searchText = state.searchText,
-                onSearchChange = {
-                    CoroutineScope(Main).launch {
-                        pagerState.scrollToPage(0)
+        item {
+            Screen(state, pagerState)
+        }
+
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                SearchInputText(
+                    searchText = state.searchText,
+                    onSearchChange = {
+                        CoroutineScope(Main).launch {
+                            pagerState.scrollToPage(0)
+                        }
+                        state.onSearchChange(it)
                     }
-                    state.onSearchChange(it)
-                }
-            )
-            DirectionalButtons(state, pagerState)
+                )
+                DirectionalButtons(state, pagerState)
+            }
         }
     }
 
