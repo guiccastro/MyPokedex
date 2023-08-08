@@ -184,27 +184,36 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    private suspend fun requestPokemon(id: Int): Pokemon {
-        Log.i(TAG, "requestPokemon: Requesting pokemon $id from client")
-        val pokemonResponse = pokemonClient.getPokemon(id)
-        Log.i(TAG, "requestPokemon: Get pokemon $id from client")
-        val pokemon = createPokemon(pokemonResponse).apply {
-            species = getPokemonSpeciesNew(speciesId)
-        }
-        pokemonList.value = (pokemonList.value + pokemon)
+    private suspend fun requestPokemon(id: Int) {
+        try {
+            Log.i(TAG, "requestPokemon: Requesting pokemon $id from client")
+            val pokemonResponse = pokemonClient.getPokemon(id)
+            Log.i(TAG, "requestPokemon: Get pokemon $id from client")
+            val pokemon = createPokemon(pokemonResponse).apply {
+                species = getPokemonSpecies(speciesId)
+            }
+            pokemonList.value = (pokemonList.value + pokemon)
 
-        CoroutineScope(IO).launch {
-            dao.insert(pokemon)
+            CoroutineScope(IO).launch {
+                dao.insert(pokemon)
+            }
+        } catch (e: Exception) {
+            Log.i(TAG, "requestPokemon: Failure on requesting pokemon $id")
+            requestPokemon(id)
         }
-
-        return pokemon
     }
 
-    private suspend fun getPokemonSpeciesNew(id: Int): PokemonSpecies {
-        Log.i(TAG, "getPokemonSpeciesNew: Requesting pokemon species $id from client")
-        val pokemonSpeciesResponse = pokemonSpeciesClient.getPokemonSpecies(id)
-        Log.i(TAG, "getPokemonSpeciesNew: Get pokemon species $id from client")
-        return createPokemonSpecies(pokemonSpeciesResponse)
+    private suspend fun getPokemonSpecies(id: Int): PokemonSpecies {
+        return try {
+            Log.i(TAG, "getPokemonSpeciesNew: Requesting pokemon species $id from client")
+            val pokemonSpeciesResponse = pokemonSpeciesClient.getPokemonSpecies(id)
+            Log.i(TAG, "getPokemonSpeciesNew: Get pokemon species $id from client")
+            createPokemonSpecies(pokemonSpeciesResponse)
+        } catch (e: Exception) {
+            Log.i(TAG, "getPokemonSpeciesNew: Failure on requesting pokemon species $id")
+            getPokemonSpecies(id)
+        }
+
     }
 
     private fun createPokemon(pokemonResponse: PokemonResponse): Pokemon {
@@ -247,13 +256,20 @@ class PokemonRepository @Inject constructor(
     }
 
     private suspend fun createEvolutionChain(evolutionChainSpeciesResponse: PokemonSpeciesEvolutionChainResponse): EvolutionChain {
-        Log.i(TAG, "createEvolutionChain: Creating evolution chain")
-        val evolutionChainId = evolutionChainSpeciesResponse.url.getIDFromURL()
-        val evolutionChainResponse = evolutionChainClient.getEvolutionChain(evolutionChainId).chain
-        val evolutionChainBaseItem = createEvolutionChainItem(evolutionChainResponse)
-        Log.i(TAG, "createEvolutionChain: Evolution chain created")
+        return try {
+            Log.i(TAG, "createEvolutionChain: Creating evolution chain")
+            val evolutionChainId = evolutionChainSpeciesResponse.url.getIDFromURL()
+            val evolutionChainResponse =
+                evolutionChainClient.getEvolutionChain(evolutionChainId).chain
+            val evolutionChainBaseItem = createEvolutionChainItem(evolutionChainResponse)
+            Log.i(TAG, "createEvolutionChain: Evolution chain created")
 
-        return EvolutionChain(evolutionChainBaseItem)
+            EvolutionChain(evolutionChainBaseItem)
+        } catch (e: Exception) {
+            Log.i(TAG, "createEvolutionChain: Failure on creating evolution chain")
+            createEvolutionChain(evolutionChainSpeciesResponse)
+        }
+
     }
 
     private fun createEvolutionChainItem(chainResponse: EvolutionChainResponse): EvolutionChainItem {
