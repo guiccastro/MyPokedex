@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">MyPokedex</string>
 
+    <!-- Animated Enter Screen -->
+    <string name="animated_enter_download_description">Downloading Pokémon info.</string>
+
     <!-- Game Screen -->
     <string name="game_screen_label">Game</string>
     <string name="game_screen_title">Who\'s That Pokémon</string>

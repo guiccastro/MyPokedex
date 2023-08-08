@@ -22,12 +22,12 @@ private const val WEIGHT_SCALE_REDUCTION_INTERVAL = 1.1f
 
 @Composable
 fun ResponsiveText(
-    modifier: Modifier = Modifier,
     text: String,
+    modifier: Modifier = Modifier,
     color: Color = Black,
     textAlign: TextAlign = TextAlign.Center,
-    fontWeight: FontWeight,
-    textStyle: TextStyle,
+    fontWeight: FontWeight = FontWeight.Normal,
+    textStyle: TextStyle = TextStyle.Default,
     targetTextSizeHeight: TextUnit = textStyle.fontSize,
     maxLines: Int = 1,
 ) {

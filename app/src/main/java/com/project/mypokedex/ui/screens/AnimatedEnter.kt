@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,9 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.mypokedex.R
 import com.project.mypokedex.model.AnimatedEnterOrientation
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
@@ -33,6 +36,7 @@ import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokeballDetails
 import com.project.mypokedex.ui.theme.PokeballRed
 import com.project.mypokedex.ui.theme.PokeballWhite
+import com.project.mypokedex.ui.theme.PokemonGB
 
 @Composable
 fun AnimatedEnter(state: AnimatedEnterUIState) {
@@ -83,7 +87,7 @@ fun AnimatedScreen(state: AnimatedEnterUIState) {
             targetOffsetY = { -it }
         )
     ) {
-        HalfScreen(AnimatedEnterOrientation.Top)
+        HalfScreen(AnimatedEnterOrientation.Top, state)
     }
 
     AnimatedVisibility(
@@ -93,12 +97,12 @@ fun AnimatedScreen(state: AnimatedEnterUIState) {
             targetOffsetY = { it }
         )
     ) {
-        HalfScreen(AnimatedEnterOrientation.Bottom)
+        HalfScreen(AnimatedEnterOrientation.Bottom, state)
     }
 }
 
 @Composable
-fun HalfScreen(orientation: AnimatedEnterOrientation) {
+fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIState) {
     val heightFraction = when (orientation) {
         AnimatedEnterOrientation.Top -> 0.5f
         AnimatedEnterOrientation.Bottom -> 1F
@@ -145,6 +149,24 @@ fun HalfScreen(orientation: AnimatedEnterOrientation) {
                 .border(20.dp, PokeballDetails, CircleShape)
                 .align(alignment)
         )
+    }
+
+    if (orientation == AnimatedEnterOrientation.Bottom && state.isDownloading && state.downloadProgress != 0F) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 20.dp, horizontal = 20.dp)
+                .offset(y = -circleOffset)
+        ) {
+            Text(
+                text = stringResource(id = R.string.animated_enter_download_description),
+                style = PokemonGB,
+                fontSize = 10.sp,
+                color = BlackTextColor,
+                modifier = Modifier
+                    .align(Alignment.Center)
+            )
+        }
     }
 }
 
