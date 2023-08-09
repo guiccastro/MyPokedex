@@ -15,7 +15,8 @@ object HomeGroupScreen : GroupNavigation {
         get() = listOf(
             GridScreen,
             ListScreen,
-            GameScreen
+            GameScreen,
+            AboutScreen
         )
 
     override fun NavGraphBuilder.graph() {

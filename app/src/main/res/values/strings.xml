@@ -18,6 +18,17 @@
     <string name="list_screen_label">List</string>
     <string name="list_screen_title">List Screen</string>
 
+    <!-- About Screen -->
+    <string name="about_screen_label">About</string>
+    <string name="about_screen_title">About App</string>
+    <string name="about_screen_about_app">Hi! My name is Guilherme, I\'m a brazilian mobile developer. I developed this app to study and improve my skills about mobile development.</string>
+    <string name="about_screen_about_app_extra">Feel free to give me some feedback and ideas about the app.</string>
+    <string name="about_screen_contact_title">Contact</string>
+    <string name="about_screen_contact">You can contact me through my linkedin.</string>
+    <string name="about_screen_disclaimer_title">Disclaimer</string>
+    <string name="about_screen_disclaimer">MyPokedex is an unofficial, free fan made app and is not affiliated, endorsed or supported by Nintendo, GAME FREAK or The Pokémon Company in any way. Some images used in this are copyrighted and supported under fair use. Pokémon and Pokémon character names are trademarks of Nintendo. No copyright infringement intended.</string>
+    <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
+
     <!-- Details Screen -->
     <string name="details_screen_title">Game Screen</string>
     <string name="details_screen_evolution_chain_title">Evolution Chain</string>
