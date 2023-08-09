@@ -129,32 +129,34 @@ fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIStat
         AnimatedEnterOrientation.Bottom -> (-100).dp
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(heightFraction)
-            .background(backgroundColor)
-            .clipToBounds()
-    ) {
-
-        // Line Details
+    Surface {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(10.dp)
-                .align(alignment)
-                .background(PokeballDetails, RectangleShape)
-        )
+                .fillMaxHeight(heightFraction)
+                .background(backgroundColor)
+                .clipToBounds()
+        ) {
 
-        // Circle Details
-        Box(
-            modifier = Modifier
-                .size(200.dp)
-                .offset(y = circleOffset)
-                .background(PokeballWhite, CircleShape)
-                .border(20.dp, PokeballDetails, CircleShape)
-                .align(alignment)
-        )
+            // Line Details
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+                    .align(alignment)
+                    .background(PokeballDetails, RectangleShape)
+            )
+
+            // Circle Details
+            Box(
+                modifier = Modifier
+                    .size(200.dp)
+                    .offset(y = circleOffset)
+                    .background(PokeballWhite, CircleShape)
+                    .border(20.dp, PokeballDetails, CircleShape)
+                    .align(alignment)
+            )
+        }
     }
 
     if (orientation == AnimatedEnterOrientation.Bottom && state.isDownloading && state.downloadProgress != 0F) {
