@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,15 +24,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.model.AnimatedEnterOrientation
+import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
 import com.project.mypokedex.ui.theme.BlackTextColor
+import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokeballDetails
 import com.project.mypokedex.ui.theme.PokeballRed
@@ -165,6 +171,28 @@ fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIStat
                 color = BlackTextColor,
                 modifier = Modifier
                     .align(Alignment.Center)
+            )
+        }
+    }
+
+    if (orientation == AnimatedEnterOrientation.Top) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height((LocalConfiguration.current.screenHeightDp / 2).dp - circleOffset)
+                .padding(vertical = 20.dp, horizontal = 20.dp)
+        ) {
+            ResponsiveText(
+                text = "MyPokedex",
+                textStyle = PokemonGB,
+                targetTextSizeHeight = 26.sp,
+                color = BlackTextColor,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .background(MainWhite, RoundedCornerShape(6.dp))
+                    .border(4.dp, MainBlack, RoundedCornerShape(6.dp))
+                    .padding(vertical = 10.dp, horizontal = 20.dp)
             )
         }
     }
