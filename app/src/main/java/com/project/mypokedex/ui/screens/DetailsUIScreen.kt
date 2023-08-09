@@ -2,6 +2,7 @@ package com.project.mypokedex.ui.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +56,7 @@ import com.project.mypokedex.ui.components.RotationalImage
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.Transparent
@@ -123,11 +126,13 @@ fun LazyListScope.spriteTypes(
                     fontSize = 12.sp,
                     style = PokemonGB,
                     modifier = Modifier
+                        .shadow(4.dp, RoundedCornerShape(4.dp))
+                        .background(MainWhite, RoundedCornerShape(4.dp))
                         .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
                         .clickable {
                             onSpriteTypeClick(it as SpriteTypes)
                         }
-                        .padding(6.dp)
+                        .padding(vertical = 6.dp, horizontal = 10.dp)
                 )
             }
             spriteVariantOptions?.let {
@@ -137,11 +142,13 @@ fun LazyListScope.spriteTypes(
                     fontSize = 12.sp,
                     style = PokemonGB,
                     modifier = Modifier
+                        .shadow(4.dp, RoundedCornerShape(4.dp))
+                        .background(MainWhite, RoundedCornerShape(4.dp))
                         .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
                         .clickable {
                             onSpriteTypeClick(it as SpriteTypes)
                         }
-                        .padding(6.dp)
+                        .padding(vertical = 6.dp, horizontal = 10.dp)
                 )
             }
         }
@@ -169,6 +176,8 @@ fun LazyListScope.sprites(
                     .padding(start = 10.dp)
                     .padding(vertical = 2.dp)
                     .height(30.dp)
+                    .shadow(4.dp, RoundedCornerShape(4.dp))
+                    .background(MainWhite, RoundedCornerShape(4.dp))
                     .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
                     .clickable {
                         onReturnSpritesClick()
@@ -191,6 +200,8 @@ fun LazyListScope.sprites(
                         .clickable {
                             onSelectableSpriteOptionClick(it)
                         }
+                        .shadow(4.dp, RoundedCornerShape(4.dp))
+                        .background(MainWhite, RoundedCornerShape(4.dp))
                         .border(1.dp, MainBlack, RoundedCornerShape(4.dp)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -236,6 +247,8 @@ fun LazyListScope.sprites(
                         .clickable {
                             onSpriteGroupOptionClick(it)
                         }
+                        .shadow(4.dp, RoundedCornerShape(4.dp))
+                        .background(MainWhite, RoundedCornerShape(4.dp))
                         .border(1.dp, MainBlack, RoundedCornerShape(4.dp)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -504,7 +517,8 @@ fun DetailsUIScreenPreview() {
                     spriteGroupOptions = listOf(Sprites()),
                     spriteGenderOptions = SpriteTypes.Male,
                     spriteVariantOptions = SpriteTypes.Normal,
-                    varieties = listOf(listOf(bulbasaur, squirtle, charmander))
+                    varieties = listOf(listOf(bulbasaur, squirtle, charmander)),
+                    hasReturnSprite = true
                 )
             )
         }
