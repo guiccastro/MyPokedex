@@ -78,18 +78,18 @@ dependencies {
     implementation "io.coil-kt:coil-svg:2.2.2"
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
+    //implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    //implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1'
 
     // Resilience4j: https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-circuitbreaker
-    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.0.2'
+    //implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.0.2'
     // Resilience4j-Retrofit: https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-retrofit
-    implementation 'io.github.resilience4j:resilience4j-retrofit:1.7.1'
+    //implementation 'io.github.resilience4j:resilience4j-retrofit:1.7.1'
 
     // Room
     implementation "androidx.room:room-runtime:$room_version"

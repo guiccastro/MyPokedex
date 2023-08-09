@@ -142,8 +142,8 @@ class PokemonRepository @Inject constructor(
 
     private suspend fun requestAllPokemons() {
         var responseCount = 0
-        val toIndex = if (requestPokemons.size >= 5) {
-            5
+        val toIndex = if (requestPokemons.size >= totalPokemons) {
+            totalPokemons
         } else {
             requestPokemons.size
         }
@@ -198,7 +198,7 @@ class PokemonRepository @Inject constructor(
                 dao.insert(pokemon)
             }
         } catch (e: Exception) {
-            Log.i(TAG, "requestPokemon: Failure on requesting pokemon $id")
+            Log.i(TAG, "requestPokemon: Failure on requesting pokemon $id - $e")
             requestPokemon(id)
         }
     }
@@ -210,7 +210,7 @@ class PokemonRepository @Inject constructor(
             Log.i(TAG, "getPokemonSpeciesNew: Get pokemon species $id from client")
             createPokemonSpecies(pokemonSpeciesResponse)
         } catch (e: Exception) {
-            Log.i(TAG, "getPokemonSpeciesNew: Failure on requesting pokemon species $id")
+            Log.i(TAG, "getPokemonSpeciesNew: Failure on requesting pokemon species $id - $e")
             getPokemonSpecies(id)
         }
 
@@ -239,7 +239,7 @@ class PokemonRepository @Inject constructor(
         var evolutionChain: EvolutionChain = EvolutionChain(EvolutionChainItem(0, emptyList()))
         var varieties: List<Int> = emptyList()
         var generation: PokemonGeneration = PokemonGeneration.Unknown
-        CoroutineScope(IO).launch {
+        CoroutineScope(Main).launch {
             async {
                 evolutionChain = createEvolutionChain(pokemonSpeciesResponse.evolutionChain)
             }
@@ -266,7 +266,7 @@ class PokemonRepository @Inject constructor(
 
             EvolutionChain(evolutionChainBaseItem)
         } catch (e: Exception) {
-            Log.i(TAG, "createEvolutionChain: Failure on creating evolution chain")
+            Log.i(TAG, "createEvolutionChain: Failure on creating evolution chain - $e")
             createEvolutionChain(evolutionChainSpeciesResponse)
         }
 
