@@ -55,6 +55,7 @@ class PokemonRepository @Inject constructor(
 
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
+    var needToRequestPokemons: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     init {
         CoroutineScope(Main).launch {
@@ -75,14 +76,18 @@ class PokemonRepository @Inject constructor(
             Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
         }
 
-        if (needToRequestPokemon()) {
-            setRequestPokemons()
-            requestAllPokemons()
-        } else {
+        needToRequestPokemons.value = needToRequestPokemon()
+
+        if (!needToRequestPokemons.value) {
             Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
             totalPokemons = pokemonList.value.size
             progressRequest.value = 1F
         }
+    }
+
+    suspend fun prepareToRequestPokemons() {
+        setRequestPokemons()
+        requestAllPokemons()
     }
 
     private fun needToRequestBasicKeys(): Boolean =

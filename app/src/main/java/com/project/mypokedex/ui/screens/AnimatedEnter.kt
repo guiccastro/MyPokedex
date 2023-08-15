@@ -3,10 +3,14 @@ package com.project.mypokedex.ui.screens
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,8 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +43,7 @@ import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainRed
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokeballDetails
@@ -48,6 +55,7 @@ import com.project.mypokedex.ui.theme.PokemonGB
 fun AnimatedEnter(state: AnimatedEnterUIState) {
     MainScreen(state = state)
     DownloadInformation(state = state)
+    DownloadMessage(state = state)
 }
 
 @Composable
@@ -200,6 +208,105 @@ fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIStat
     }
 }
 
+@Composable
+fun DownloadMessage(state: AnimatedEnterUIState) {
+    if (state.showDownloadMessage) {
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .background(MainWhite, RoundedCornerShape(10.dp))
+                    .border(1.dp, MainBlack, RoundedCornerShape(10.dp))
+                    .padding(20.dp)
+                    .align(Alignment.Center),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_download),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MainBlack),
+                    modifier = Modifier
+                        .size(30.dp)
+                )
+
+                Text(
+                    text = stringResource(id = R.string.animated_enter_message_title),
+                    style = PokemonGB,
+                    color = BlackTextColor,
+                    fontSize = 14.sp
+                )
+
+                Text(
+                    text = stringResource(id = R.string.animated_enter_message),
+                    style = PokemonGB,
+                    color = BlackTextColor,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.animated_enter_message_close_app),
+                        style = PokemonGB,
+                        color = BlackTextColor,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .background(MainBlack.copy(alpha = 0.5F), RoundedCornerShape(4.dp))
+                            .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                            .padding(6.dp)
+                            .clickable {
+                                state.onCloseAppClick()
+                            }
+                    )
+
+                    Text(
+                        text = stringResource(id = R.string.animated_enter_message_download_now),
+                        style = PokemonGB,
+                        color = BlackTextColor,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .background(MainRed, RoundedCornerShape(4.dp))
+                            .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                            .padding(6.dp)
+                            .clickable {
+                                state.onDownloadClick()
+                            }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_alert),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(MainBlack),
+                        modifier = Modifier
+                            .padding(end = 6.dp)
+                            .size(10.dp)
+                    )
+
+                    Text(
+                        text = stringResource(id = R.string.animated_enter_message_alert),
+                        style = PokemonGB,
+                        color = BlackTextColor,
+                        fontSize = 8.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 fun AnimatedEnterPreview() {
@@ -209,7 +316,8 @@ fun AnimatedEnterPreview() {
                 state = AnimatedEnterUIState(
                     isDownloading = true,
                     downloadProgress = 0.75F,
-                    formattedDownloadProgress = "75%"
+                    formattedDownloadProgress = "75%",
+                    showDownloadMessage = true
                 )
             )
         }

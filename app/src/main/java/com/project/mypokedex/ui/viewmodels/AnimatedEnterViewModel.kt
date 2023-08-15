@@ -7,6 +7,7 @@ import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -16,21 +17,55 @@ class AnimatedEnterViewModel @Inject constructor(
     private val repository: PokemonRepository
 ) : ViewModel() {
 
-    private val _animatedEnterUIState: MutableStateFlow<AnimatedEnterUIState> =
+    private val _uiState: MutableStateFlow<AnimatedEnterUIState> =
         MutableStateFlow(AnimatedEnterUIState())
-    val animatedEnterUIState get() = _animatedEnterUIState.asStateFlow()
+    val uiState get() = _uiState.asStateFlow()
 
     private val downloadProgressFormatter = DecimalFormat("#.##")
 
     init {
+        _uiState.update {
+            it.copy(
+                onCloseAppClick = { onCloseAppClick() },
+                onDownloadClick = { onDownloadClick() }
+            )
+        }
+
+
         viewModelScope.launch {
             repository.progressRequest.collect {
-                _animatedEnterUIState.value = _animatedEnterUIState.value.copy(
+                _uiState.value = _uiState.value.copy(
                     downloadProgress = it,
                     formattedDownloadProgress = "${downloadProgressFormatter.format(it * 100)}%",
                     isDownloading = it < 1F
                 )
             }
+        }
+
+        viewModelScope.launch {
+            repository.needToRequestPokemons.collect { needToRequestPokemons ->
+                _uiState.update {
+                    it.copy(
+                        showDownloadMessage = needToRequestPokemons
+                    )
+                }
+            }
+        }
+    }
+
+    private fun onCloseAppClick() {
+
+    }
+
+    private fun onDownloadClick() {
+        viewModelScope.launch {
+            repository.prepareToRequestPokemons()
+        }
+
+        _uiState.update {
+            it.copy(
+                showDownloadMessage = false
+            )
         }
     }
 }

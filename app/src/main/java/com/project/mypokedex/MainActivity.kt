@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val animatedEnterViewModel: AnimatedEnterViewModel = hiltViewModel()
-                AnimatedEnter(state = animatedEnterViewModel.animatedEnterUIState.collectAsState().value)
+                AnimatedEnter(state = animatedEnterViewModel.uiState.collectAsState().value)
             }
         }
     }
