@@ -26,7 +26,6 @@ class AnimatedEnterViewModel @Inject constructor(
     init {
         _uiState.update {
             it.copy(
-                onCloseAppClick = { onCloseAppClick() },
                 onDownloadClick = { onDownloadClick() }
             )
         }
@@ -51,10 +50,6 @@ class AnimatedEnterViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun onCloseAppClick() {
-
     }
 
     private fun onDownloadClick() {

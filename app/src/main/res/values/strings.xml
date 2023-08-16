@@ -5,7 +5,6 @@
     <string name="animated_enter_download_description">Downloading Pokémon info.</string>
     <string name="animated_enter_message_title">Download Info</string>
     <string name="animated_enter_message">MyPokedex will download all the basic data now, so you can enjoy the app offline later. Only the images of the pokémons will be downloaded during the use of the app.</string>
-    <string name="animated_enter_message_close_app">Close App</string>
     <string name="animated_enter_message_download_now">Download Now</string>
     <string name="animated_enter_message_alert">A Wi-Fi connection is recommended.</string>
 

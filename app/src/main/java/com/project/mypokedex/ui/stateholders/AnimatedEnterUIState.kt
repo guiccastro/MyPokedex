@@ -5,6 +5,5 @@ data class AnimatedEnterUIState(
     val downloadProgress: Float = 0F,
     val formattedDownloadProgress: String = "",
     val showDownloadMessage: Boolean = false,
-    val onCloseAppClick: () -> Unit = {},
     val onDownloadClick: () -> Unit = {},
 )

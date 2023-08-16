@@ -248,39 +248,19 @@ fun DownloadMessage(state: AnimatedEnterUIState) {
                     lineHeight = 16.sp
                 )
 
-                Row(
+                Text(
+                    text = stringResource(id = R.string.animated_enter_message_download_now),
+                    style = PokemonGB,
+                    color = BlackTextColor,
+                    fontSize = 14.sp,
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.animated_enter_message_close_app),
-                        style = PokemonGB,
-                        color = BlackTextColor,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .background(MainBlack.copy(alpha = 0.5F), RoundedCornerShape(4.dp))
-                            .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                            .padding(6.dp)
-                            .clickable {
-                                state.onCloseAppClick()
-                            }
-                    )
-
-                    Text(
-                        text = stringResource(id = R.string.animated_enter_message_download_now),
-                        style = PokemonGB,
-                        color = BlackTextColor,
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .background(MainRed, RoundedCornerShape(4.dp))
-                            .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                            .padding(6.dp)
-                            .clickable {
-                                state.onDownloadClick()
-                            }
-                    )
-                }
+                        .background(MainRed, RoundedCornerShape(4.dp))
+                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                        .padding(6.dp)
+                        .clickable {
+                            state.onDownloadClick()
+                        }
+                )
 
                 Row(
                     modifier = Modifier
