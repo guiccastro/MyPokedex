@@ -1,6 +1,5 @@
 package com.project.mypokedex.ui.screens
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,14 +9,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,16 +36,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.SubcomposeAsyncImage
+import coil.imageLoader
 import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
-import com.project.mypokedex.model.GroupSprite
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.SelectableSprite
-import com.project.mypokedex.model.Sprite
 import com.project.mypokedex.model.SpriteGender
 import com.project.mypokedex.model.SpriteTypes
 import com.project.mypokedex.model.SpriteVariant
-import com.project.mypokedex.model.Sprites
 import com.project.mypokedex.sampledata.bulbasaur
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.charmander
@@ -85,12 +88,8 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                 )
 
                 sprites(
-                    selectableSpriteOptions = state.selectableSpriteOptions,
-                    spriteGroupOptions = state.spriteGroupOptions,
-                    onSelectableSpriteOptionClick = state.onSelectableSpriteOptionClick,
-                    onSpriteGroupOptionClick = state.onSpriteGroupOptionClick,
-                    hasReturn = state.hasReturnSprite,
-                    onReturnSpritesClick = state.onReturnSpritesClick
+                    spriteOptions = state.spriteOptions,
+                    onSpriteOptionClick = state.onSpriteOptionClick,
                 )
 
                 evolutionChain(
@@ -156,147 +155,47 @@ fun LazyListScope.spriteTypes(
 }
 
 fun LazyListScope.sprites(
-    selectableSpriteOptions: List<SelectableSprite>,
-    spriteGroupOptions: List<GroupSprite>,
-    onSelectableSpriteOptionClick: (SelectableSprite) -> Unit,
-    onSpriteGroupOptionClick: (Sprite) -> Unit,
-    hasReturn: Boolean,
-    onReturnSpritesClick: () -> Unit
+    spriteOptions: List<Pair<SelectableSprite, String>>,
+    onSpriteOptionClick: (SelectableSprite) -> Unit
 ) {
     item {
-        SectionTitle(title = R.string.details_screen_sprites_title)
-    }
+        Section(title = R.string.details_screen_sprites_title) {
+            LazyRow(
+                modifier = Modifier,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(spriteOptions) {
+                    Column(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .clickable {
+                                onSpriteOptionClick(it.first)
+                            },
+                        horizontalAlignment = CenterHorizontally
+                    ) {
+                        SubcomposeAsyncImage(
+                            model = it.second,
+                            contentDescription = null,
+                            imageLoader = LocalContext.current.imageLoader,
+                            filterQuality = FilterQuality.High,
+                            modifier = Modifier
+                                .aspectRatio(1F)
+                        )
 
-    item {
-        if (hasReturn) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_arrow_back),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(start = 10.dp)
-                    .padding(vertical = 2.dp)
-                    .height(30.dp)
-                    .shadow(4.dp, RoundedCornerShape(4.dp))
-                    .background(MainWhite, RoundedCornerShape(4.dp))
-                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                    .clickable {
-                        onReturnSpritesClick()
+                        ResponsiveText(
+                            text = stringResource(id = it.first.getName()),
+                            color = BlackTextColor,
+                            targetTextSizeHeight = 14.sp,
+                            textStyle = PokemonGB,
+                            fontWeight = FontWeight.Normal,
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier
+                                .padding(start = 4.dp)
+                        )
                     }
-                    .padding(horizontal = 16.dp)
-            )
-        }
-    }
-
-    item {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-        ) {
-            selectableSpriteOptions.forEach {
-                Row(
-                    modifier = Modifier
-                        .height(34.dp)
-                        .padding(vertical = 2.dp)
-                        .clickable {
-                            onSelectableSpriteOptionClick(it)
-                        }
-                        .shadow(4.dp, RoundedCornerShape(4.dp))
-                        .background(MainWhite, RoundedCornerShape(4.dp))
-                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp)),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ResponsiveText(
-                        text = stringResource(id = it.getName()),
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 14.sp,
-                        textStyle = PokemonGB,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .weight(1F)
-                            .fillMaxWidth()
-                            .padding(start = 4.dp)
-                    )
-
-                    ResponsiveText(
-                        text = stringResource(id = R.string.details_screen_sprites_select),
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 14.sp,
-                        textStyle = PokemonGB,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier
-                            .padding(end = 4.dp)
-                    )
                 }
             }
         }
-    }
-
-    item {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .padding(bottom = 20.dp)
-        ) {
-            spriteGroupOptions.forEach {
-                Row(
-                    modifier = Modifier
-                        .height(34.dp)
-                        .padding(vertical = 2.dp)
-                        .clickable {
-                            onSpriteGroupOptionClick(it)
-                        }
-                        .shadow(4.dp, RoundedCornerShape(4.dp))
-                        .background(MainWhite, RoundedCornerShape(4.dp))
-                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp)),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ResponsiveText(
-                        text = stringResource(id = it.getName()),
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 14.sp,
-                        textStyle = PokemonGB,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .weight(1F)
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp)
-                    )
-
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_simple_arrow_forward),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(vertical = 10.dp)
-                            .padding(horizontal = 4.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun SectionTitle(@StringRes title: Int) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ResponsiveText(
-            text = stringResource(id = title),
-            textStyle = PokemonGB,
-            color = BlackTextColor,
-            targetTextSizeHeight = 14.sp,
-            fontWeight = FontWeight(1000),
-            modifier = Modifier
-                .padding(bottom = 6.dp, end = 4.dp)
-        )
-
-        Divider(
-            thickness = 1.dp,
-            color = MainBlack
-        )
     }
 }
 
@@ -511,12 +410,10 @@ fun DetailsUIScreenPreview() {
                 state = DetailsScreenUIState(
                     pokemon = charizard,
                     evolutionChain = listOf(listOf(bulbasaur, squirtle, charmander)),
-                    selectableSpriteOptions = listOf(Sprites()),
-                    spriteGroupOptions = listOf(Sprites()),
+                    spriteOptions = listOf(),
                     spriteGenderOptions = SpriteTypes.Male,
                     spriteVariantOptions = SpriteTypes.Normal,
-                    varieties = listOf(listOf(bulbasaur, squirtle, charmander)),
-                    hasReturnSprite = true
+                    varieties = listOf(listOf(bulbasaur, squirtle, charmander))
                 )
             )
         }

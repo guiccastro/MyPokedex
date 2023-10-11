@@ -15,7 +15,6 @@ import com.project.mypokedex.model.SpriteType.Companion.switchGender
 import com.project.mypokedex.model.SpriteType.Companion.switchVariant
 import com.project.mypokedex.model.SpriteTypes
 import com.project.mypokedex.model.SpriteVariant
-import com.project.mypokedex.model.Sprites
 import com.project.mypokedex.navigation.MainNavComponent
 import com.project.mypokedex.navigation.MainNavComponent.Companion.getSingleTopWithPopUpTo
 import com.project.mypokedex.navigation.screens.DetailsScreen
@@ -42,7 +41,6 @@ class DetailsScreenViewModel @Inject constructor(
         MutableStateFlow(DetailsScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
-    private val spritesStack = ArrayList<Sprite>()
     private var currentSpriteType = defaultType
     private var currentSelectableSprite: SelectableSprite? = null
 
@@ -52,14 +50,8 @@ class DetailsScreenViewModel @Inject constructor(
                 onPokemonClick = { pokemon ->
                     onPokemonClick(pokemon)
                 },
-                onSelectableSpriteOptionClick = { sprite ->
-                    onSelectableSpriteOptionClick(sprite)
-                },
-                onSpriteGroupOptionClick = { sprite ->
-                    onSpriteGroupOptionClick(sprite)
-                },
-                onReturnSpritesClick = {
-                    onReturnSpritesClick()
+                onSpriteOptionClick = { sprite ->
+                    onSpriteOptionClick(sprite)
                 },
                 onSpriteTypeClick = { spriteTypes ->
                     onSpriteTypeClick(spriteTypes)
@@ -81,7 +73,7 @@ class DetailsScreenViewModel @Inject constructor(
                         )
                         setEvolutionChain(it)
                         setVarieties(it)
-                        onSpriteGroupOptionClick(it.sprites)
+                        updateSpriteOptionsList(it.sprites)
                     }
                 }
         }
@@ -126,26 +118,17 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    varieties = pokemon.species?.varieties?.mapNotNull { repository.getPokemon(it) }?.filter { it != pokemon }
+                    varieties = pokemon.species?.varieties?.mapNotNull { repository.getPokemon(it) }
+                        ?.filter { it != pokemon }
                         ?.toGrid(3) ?: emptyList()
                 )
             }
         }
     }
 
-    private fun onReturnSpritesClick() {
-        spritesStack.removeLast()
-        updateSpriteOptionsList(spritesStack.last())
-    }
-
-    private fun onSelectableSpriteOptionClick(sprite: SelectableSprite) {
+    private fun onSpriteOptionClick(sprite: SelectableSprite) {
         currentSpriteType = defaultType
         selectNewPokemonImage(_uiState.value.pokemon, sprite, currentSpriteType)
-    }
-
-    private fun onSpriteGroupOptionClick(sprite: Sprite) {
-        spritesStack.add(sprite)
-        updateSpriteOptionsList(sprite)
     }
 
     private fun selectNewPokemonImage(
@@ -218,36 +201,15 @@ class DetailsScreenViewModel @Inject constructor(
     }
 
     private fun updateSpriteOptionsList(sprite: Sprite) {
-        updateReturnSpritesButton(sprite)
-        updateSelectableSpriteOptionsList(sprite)
-        updateSpriteGroupOptionsList(sprite)
-    }
-
-    private fun updateReturnSpritesButton(sprite: Sprite) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    hasReturnSprite = sprite !is Sprites
-                )
-            }
-        }
-    }
-
-    private fun updateSelectableSpriteOptionsList(sprite: Sprite) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    selectableSpriteOptions = sprite.getSelectableSpriteOptions()
-                )
-            }
-        }
-    }
-
-    private fun updateSpriteGroupOptionsList(sprite: Sprite) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    spriteGroupOptions = sprite.getSpriteGroupOptions()
+                    spriteOptions = sprite.getAllSelectableSprites().map { selectableSprite ->
+                        Pair(
+                            selectableSprite,
+                            selectableSprite.getSpriteByType(defaultType)
+                        )
+                    }
                 )
             }
         }

@@ -9,6 +9,25 @@ import com.squareup.moshi.Json
 interface Sprite {
     fun getName(): Int
 
+    fun getAllSelectableSprites(): List<SelectableSprite> {
+        val allSelectableSprites = ArrayList<SelectableSprite>()
+        findSelectableSpritesDFS(this, allSelectableSprites)
+        return allSelectableSprites
+    }
+
+    private fun findSelectableSpritesDFS(
+        currentItem: Sprite,
+        allSelectableSprites: ArrayList<SelectableSprite>
+    ) {
+        allSelectableSprites.addAll(currentItem.getSelectableSpriteOptions())
+
+        if (currentItem.getSpriteGroupOptions().isNotEmpty()) {
+            currentItem.getSpriteGroupOptions().forEach { item ->
+                findSelectableSpritesDFS(item, allSelectableSprites)
+            }
+        }
+    }
+
     fun getSelectableSpriteOptions(): List<SelectableSprite> {
         val list = ArrayList<SelectableSprite>()
         if (this is SelectableSprite) {
