@@ -1,9 +1,8 @@
 package com.project.mypokedex.ui.scaffold.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -41,14 +40,8 @@ fun BottomBar(
     val items = state.bottomAppBarComponent?.getItems() ?: emptyList()
     AnimatedVisibility(
         visible = hasBottomAppBar,
-        enter = slideInVertically(
-            animationSpec = tween(1000),
-            initialOffsetY = { it },
-        ),
-        exit = slideOutVertically(
-            animationSpec = tween(1000),
-            targetOffsetY = { it },
-        )
+        enter = expandVertically(),
+        exit = shrinkVertically()
     ) {
         NavigationBar(
             modifier = Modifier
