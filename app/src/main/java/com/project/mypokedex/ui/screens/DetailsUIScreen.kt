@@ -15,11 +15,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,47 +72,49 @@ import com.project.mypokedex.ui.theme.White
 @Composable
 fun DetailsUIScreen(state: DetailsScreenUIState) {
     CardScreen {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 10.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             state.pokemon?.let { pokemon ->
 
-                basicDetails(
+                BasicDetails(
                     pokemon = pokemon,
                     frontImage = state.pokemonFrontImage,
                     backImage = state.pokemonBackImage
                 )
 
-                spriteTypes(
+                SpriteTypes(
                     spriteGenderOptions = state.spriteGenderOptions,
                     spriteVariantOptions = state.spriteVariantOptions,
                     onSpriteTypeClick = state.onSpriteTypeClick
                 )
 
-                sprites(
+                Sprites(
                     spriteOptions = state.spriteOptions,
                     onSpriteOptionClick = state.onSpriteOptionClick,
                 )
 
-                evolutionChain(
+                EvolutionChain(
                     evolutionChain = state.evolutionChain,
                     onPokemonClick = state.onPokemonClick
                 )
 
-                varieties(
+                Varieties(
                     varieties = state.varieties,
                     onPokemonClick = state.onPokemonClick
                 )
 
-                advancedDetails(pokemon = pokemon, personHeight = 1.84F * 100)
+                AdvancedDetails(pokemon = pokemon, personHeight = 1.84F * 100)
             }
         }
     }
 }
 
-fun LazyListScope.advancedDetails(pokemon: Pokemon, personHeight: Float) {
+@Composable
+fun AdvancedDetails(pokemon: Pokemon, personHeight: Float) {
     val imageBaseHeight = 100.dp
     val pokemonHeight = pokemon.height * 10
 
@@ -125,237 +127,231 @@ fun LazyListScope.advancedDetails(pokemon: Pokemon, personHeight: Float) {
         personHeightImage = ((personHeight * imageBaseHeight.value) / pokemonHeight).dp
     }
 
-
-    item {
-        Section(title = R.string.details_screen_advanced_details_title) {
-            Row(
+    Section(title = R.string.details_screen_advanced_details_title) {
+        Row(
+            modifier = Modifier
+                .height(imageBaseHeight)
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Box(
                 modifier = Modifier
                     .height(imageBaseHeight)
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    .weight(1F)
             ) {
-                Box(
+                ResponsiveText(
+                    text = stringResource(id = R.string.details_screen_height_title),
+                    color = BlackTextColor,
+                    targetTextSizeHeight = 12.sp,
+                    textStyle = PokemonGB,
                     modifier = Modifier
-                        .height(imageBaseHeight)
-                        .weight(1F)
-                ) {
-                    ResponsiveText(
-                        text = stringResource(id = R.string.details_screen_height_title),
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 12.sp,
-                        textStyle = PokemonGB,
-                        modifier = Modifier
-                            .align(TopCenter)
-                    )
-                }
-
-                Box(
-                    modifier = Modifier
-                        .height(personHeightImage)
-                        .weight(1F)
-                ) {
-                    ResponsiveText(
-                        text = "$personHeight cm",
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 10.sp,
-                        textStyle = PokemonGB,
-                        modifier = Modifier
-                            .align(Center)
-                    )
-                }
-
-                Image(
-                    painter = painterResource(id = R.drawable.ic_height),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MainBlack),
-                    modifier = Modifier
-                        .height(personHeightImage)
+                        .align(TopCenter)
                 )
+            }
 
-                Image(
-                    painter = painterResource(id = R.drawable.ic_person),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MainBlack),
+            Box(
+                modifier = Modifier
+                    .height(personHeightImage)
+                    .weight(1F)
+            ) {
+                ResponsiveText(
+                    text = "$personHeight cm",
+                    color = BlackTextColor,
+                    targetTextSizeHeight = 10.sp,
+                    textStyle = PokemonGB,
                     modifier = Modifier
-                        .height(personHeightImage)
+                        .align(Center)
                 )
+            }
 
-                SubcomposeAsyncImage(
-                    model = pokemon.sprites.other.dream_world.front_default,
-                    contentDescription = null,
-                    //colorFilter = ColorFilter.tint(MainBlack),
+            Image(
+                painter = painterResource(id = R.drawable.ic_height),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MainBlack),
+                modifier = Modifier
+                    .height(personHeightImage)
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_person),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MainBlack),
+                modifier = Modifier
+                    .height(personHeightImage)
+            )
+
+            SubcomposeAsyncImage(
+                model = pokemon.sprites.other.dream_world.front_default,
+                contentDescription = null,
+                //colorFilter = ColorFilter.tint(MainBlack),
+                modifier = Modifier
+                    .height(pokemonHeightImage)
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_height),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MainBlack),
+                modifier = Modifier
+                    .height(pokemonHeightImage)
+            )
+
+            Box(
+                modifier = Modifier
+                    .height(pokemonHeightImage)
+                    .weight(1F)
+            ) {
+                ResponsiveText(
+                    text = "$pokemonHeight cm",
+                    color = BlackTextColor,
+                    targetTextSizeHeight = 10.sp,
+                    textStyle = PokemonGB,
                     modifier = Modifier
-                        .height(pokemonHeightImage)
+                        .align(Center)
                 )
-
-                Image(
-                    painter = painterResource(id = R.drawable.ic_height),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MainBlack),
-                    modifier = Modifier
-                        .height(pokemonHeightImage)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .height(pokemonHeightImage)
-                        .weight(1F)
-                ) {
-                    ResponsiveText(
-                        text = "$pokemonHeight cm",
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 10.sp,
-                        textStyle = PokemonGB,
-                        modifier = Modifier
-                            .align(Center)
-                    )
-                }
             }
         }
     }
 }
 
-fun LazyListScope.spriteTypes(
+@Composable
+fun SpriteTypes(
     spriteGenderOptions: SpriteGender?,
     spriteVariantOptions: SpriteVariant?,
     onSpriteTypeClick: (SpriteTypes) -> Unit
 ) {
-    item {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            spriteGenderOptions?.let {
-                Text(
-                    text = spriteGenderOptions.toString(),
-                    color = BlackTextColor,
-                    fontSize = 12.sp,
-                    style = PokemonGB,
-                    modifier = Modifier
-                        .shadow(4.dp, RoundedCornerShape(4.dp))
-                        .background(MainWhite, RoundedCornerShape(4.dp))
-                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                        .clickable {
-                            onSpriteTypeClick(it as SpriteTypes)
-                        }
-                        .padding(vertical = 6.dp, horizontal = 10.dp)
-                )
-            }
-            spriteVariantOptions?.let {
-                Text(
-                    text = spriteVariantOptions.toString(),
-                    color = BlackTextColor,
-                    fontSize = 12.sp,
-                    style = PokemonGB,
-                    modifier = Modifier
-                        .shadow(4.dp, RoundedCornerShape(4.dp))
-                        .background(MainWhite, RoundedCornerShape(4.dp))
-                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                        .clickable {
-                            onSpriteTypeClick(it as SpriteTypes)
-                        }
-                        .padding(vertical = 6.dp, horizontal = 10.dp)
-                )
-            }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        spriteGenderOptions?.let {
+            Text(
+                text = spriteGenderOptions.toString(),
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                style = PokemonGB,
+                modifier = Modifier
+                    .shadow(4.dp, RoundedCornerShape(4.dp))
+                    .background(MainWhite, RoundedCornerShape(4.dp))
+                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                    .clickable {
+                        onSpriteTypeClick(it as SpriteTypes)
+                    }
+                    .padding(vertical = 6.dp, horizontal = 10.dp)
+            )
+        }
+        spriteVariantOptions?.let {
+            Text(
+                text = spriteVariantOptions.toString(),
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                style = PokemonGB,
+                modifier = Modifier
+                    .shadow(4.dp, RoundedCornerShape(4.dp))
+                    .background(MainWhite, RoundedCornerShape(4.dp))
+                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                    .clickable {
+                        onSpriteTypeClick(it as SpriteTypes)
+                    }
+                    .padding(vertical = 6.dp, horizontal = 10.dp)
+            )
         }
     }
 }
 
-fun LazyListScope.sprites(
+@Composable
+fun Sprites(
     spriteOptions: List<Pair<SelectableSprite, String>>,
     onSpriteOptionClick: (SelectableSprite) -> Unit
 ) {
-    item {
-        Section(title = R.string.details_screen_sprites_title) {
-            LazyRow(
-                modifier = Modifier,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(spriteOptions) {
-                    Column(
+    Section(title = R.string.details_screen_sprites_title) {
+        LazyRow(
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(spriteOptions) {
+                Column(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .clickable {
+                            onSpriteOptionClick(it.first)
+                        },
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    SubcomposeAsyncImage(
+                        model = it.second,
+                        contentDescription = null,
+                        imageLoader = LocalContext.current.imageLoader,
+                        filterQuality = FilterQuality.High,
                         modifier = Modifier
-                            .width(100.dp)
-                            .clickable {
-                                onSpriteOptionClick(it.first)
-                            },
-                        horizontalAlignment = CenterHorizontally
-                    ) {
-                        SubcomposeAsyncImage(
-                            model = it.second,
-                            contentDescription = null,
-                            imageLoader = LocalContext.current.imageLoader,
-                            filterQuality = FilterQuality.High,
-                            modifier = Modifier
-                                .aspectRatio(1F)
-                        )
+                            .aspectRatio(1F)
+                    )
 
-                        ResponsiveText(
-                            text = stringResource(id = it.first.getName()),
-                            color = BlackTextColor,
-                            targetTextSizeHeight = 14.sp,
-                            textStyle = PokemonGB,
-                            fontWeight = FontWeight.Normal,
-                            textAlign = TextAlign.Start,
-                            modifier = Modifier
-                                .padding(start = 4.dp)
-                        )
-                    }
+                    ResponsiveText(
+                        text = stringResource(id = it.first.getName()),
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 14.sp,
+                        textStyle = PokemonGB,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                    )
                 }
             }
         }
     }
 }
 
-fun LazyListScope.varieties(
+@Composable
+fun Varieties(
     varieties: List<List<Pokemon>>,
     onPokemonClick: (Pokemon) -> Unit
 ) {
     if (varieties.isNotEmpty()) {
-        item {
-            Section(R.string.details_screen_varieties_title) {
-                varieties.forEach { row ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                    ) {
-                        row.forEach { pokemon ->
-                            Box(
+        Section(R.string.details_screen_varieties_title) {
+            varieties.forEach { row ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    row.forEach { pokemon ->
+                        Box(
+                            modifier = Modifier
+                                .weight(1F)
+                        ) {
+                            Column(
                                 modifier = Modifier
-                                    .weight(1F)
+                                    .padding(horizontal = 4.dp),
+                                horizontalAlignment = CenterHorizontally
                             ) {
-                                Column(
+                                PokemonImage(
+                                    url = pokemon.getGifOrImage(),
+                                    backgroundType = BackgroundType.None,
+                                    clickable = true,
+                                    onClick = {
+                                        onPokemonClick(pokemon)
+                                    }
+                                )
+                                ResponsiveText(
+                                    text = pokemon.formattedName(),
+                                    textStyle = PokemonGB,
+                                    color = BlackTextColor,
+                                    targetTextSizeHeight = 7.sp,
+                                    fontWeight = FontWeight(1000),
                                     modifier = Modifier
-                                        .padding(horizontal = 4.dp),
-                                    horizontalAlignment = CenterHorizontally
-                                ) {
-                                    PokemonImage(
-                                        url = pokemon.getGifOrImage(),
-                                        backgroundType = BackgroundType.None,
-                                        clickable = true,
-                                        onClick = {
-                                            onPokemonClick(pokemon)
-                                        }
-                                    )
-                                    ResponsiveText(
-                                        text = pokemon.formattedName(),
-                                        textStyle = PokemonGB,
-                                        color = BlackTextColor,
-                                        targetTextSizeHeight = 7.sp,
-                                        fontWeight = FontWeight(1000),
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(top = 4.dp),
-                                        textAlign = TextAlign.Center,
-                                        maxLines = 1
-                                    )
-                                }
+                                        .fillMaxWidth()
+                                        .padding(top = 4.dp),
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1
+                                )
                             }
                         }
                     }
@@ -365,15 +361,15 @@ fun LazyListScope.varieties(
     }
 }
 
-
-fun LazyListScope.evolutionChain(
+@Composable
+fun EvolutionChain(
     evolutionChain: List<List<Pokemon>>,
     onPokemonClick: (Pokemon) -> Unit
 ) {
     if (evolutionChain.isEmpty()) return
 
-    item {
-        Section(title = R.string.details_screen_evolution_chain_title) {
+    Section(title = R.string.details_screen_evolution_chain_title) {
+        Column {
             evolutionChain.forEach { rowEvolution ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -427,88 +423,88 @@ fun LazyListScope.evolutionChain(
                 }
             }
 
-            Spacer(
-                modifier = Modifier
-                    .height(20.dp)
-            )
         }
+
+        Spacer(
+            modifier = Modifier
+                .height(20.dp)
+        )
     }
 }
 
-fun LazyListScope.basicDetails(pokemon: Pokemon, frontImage: String, backImage: String) {
-    item {
-        Column(
+@Composable
+fun BasicDetails(pokemon: Pokemon, frontImage: String, backImage: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Pokemon ID
+            Text(
+                text = pokemon.formattedID(),
+                fontSize = 14.sp,
+                fontWeight = FontWeight(500),
+                color = BlackTextColor,
+                modifier = Modifier,
+                textAlign = TextAlign.Center,
+                style = PokemonGB
+            )
+
+            // Pokemon Generation
+            pokemon.species?.generation?.let {
+                PokemonGenerationToUI(
+                    pokemonGeneration = it,
+                    fontSize = 8.sp
+                )
+            }
+        }
+
+
+        // Pokemon Name
+        ResponsiveText(
+            text = pokemon.formattedName(),
+            targetTextSizeHeight = 16.sp,
+            fontWeight = FontWeight(1000),
+            color = BlackTextColor,
+            modifier = Modifier
+                .padding(vertical = 4.dp),
+            textAlign = TextAlign.Center,
+            textStyle = PokemonGB,
+            maxLines = 1
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Pokemon Types
+            pokemon.types.forEach {
+                PokemonTypeToUI(
+                    pokemonType = it,
+                    size = 34.dp
+                )
+            }
+        }
+
+        // Pokemon Images
+        RotationalImage(
+            frontImage = frontImage,
+            backImage = backImage,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Pokemon ID
-                Text(
-                    text = pokemon.formattedID(),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(500),
-                    color = BlackTextColor,
-                    modifier = Modifier,
-                    textAlign = TextAlign.Center,
-                    style = PokemonGB
-                )
-
-                // Pokemon Generation
-                pokemon.species?.generation?.let {
-                    PokemonGenerationToUI(
-                        pokemonGeneration = it,
-                        fontSize = 8.sp
-                    )
-                }
-            }
-
-
-            // Pokemon Name
-            ResponsiveText(
-                text = pokemon.formattedName(),
-                targetTextSizeHeight = 16.sp,
-                fontWeight = FontWeight(1000),
-                color = BlackTextColor,
-                modifier = Modifier
-                    .padding(vertical = 4.dp),
-                textAlign = TextAlign.Center,
-                textStyle = PokemonGB,
-                maxLines = 1
+                .padding(20.dp)
+                .align(CenterHorizontally),
+            backgroundType = BackgroundType.RadialBackground(
+                White.copy(alpha = 0.5F),
+                Transparent
             )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Pokemon Types
-                pokemon.types.forEach {
-                    PokemonTypeToUI(
-                        pokemonType = it,
-                        size = 34.dp
-                    )
-                }
-            }
-
-            // Pokemon Images
-            RotationalImage(
-                frontImage = frontImage,
-                backImage = backImage,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp)
-                    .align(CenterHorizontally),
-                backgroundType = BackgroundType.RadialBackground(
-                    White.copy(alpha = 0.5F),
-                    Transparent
-                )
-            )
-        }
+        )
     }
 }
 
