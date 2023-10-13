@@ -232,8 +232,9 @@ class PokemonRepository @Inject constructor(
         }
         val species = pokemonResponse.species.url.getIDFromURL()
         val sprites = pokemonResponse.sprites
+        val height = pokemonResponse.height
 
-        val newPokemon = Pokemon(id, name, types, species, sprites)
+        val newPokemon = Pokemon(id, name, types, species, sprites, height)
         Log.i(TAG, "createPokemon: Pokemon created $newPokemon")
 
         return newPokemon

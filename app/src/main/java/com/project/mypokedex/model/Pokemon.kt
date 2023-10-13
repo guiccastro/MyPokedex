@@ -1,7 +1,6 @@
 package com.project.mypokedex.model
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
@@ -10,7 +9,8 @@ class Pokemon(
     val name: String,
     val types: List<PokemonType>,
     val speciesId: Int,
-    val sprites: Sprites
+    val sprites: Sprites,
+    val height: Int
 ) {
     var species: PokemonSpecies? = null
 

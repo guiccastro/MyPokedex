@@ -38,6 +38,8 @@
     <string name="details_screen_evolution_chain_title">Evolution Chain</string>
     <string name="details_screen_varieties_title">Varieties</string>
     <string name="details_screen_sprites_title">Sprites</string>
+    <string name="details_screen_advanced_details_title">Details</string>
+    <string name="details_screen_height_title">Height</string>
 
     <!-- Sprites -->
     <string name="sprites_default_title">Default</string>

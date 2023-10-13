@@ -24,9 +24,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -34,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
@@ -101,6 +105,113 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                     varieties = state.varieties,
                     onPokemonClick = state.onPokemonClick
                 )
+
+                advancedDetails(pokemon = pokemon, personHeight = 1.84F * 100)
+            }
+        }
+    }
+}
+
+fun LazyListScope.advancedDetails(pokemon: Pokemon, personHeight: Float) {
+    val imageBaseHeight = 100.dp
+    val pokemonHeight = pokemon.height * 10
+
+    var personHeightImage: Dp = imageBaseHeight
+    var pokemonHeightImage: Dp = imageBaseHeight
+
+    if (personHeight > pokemonHeight) {
+        pokemonHeightImage = ((pokemonHeight * imageBaseHeight.value) / personHeight).dp
+    } else {
+        personHeightImage = ((personHeight * imageBaseHeight.value) / pokemonHeight).dp
+    }
+
+
+    item {
+        Section(title = R.string.details_screen_advanced_details_title) {
+            Row(
+                modifier = Modifier
+                    .height(imageBaseHeight)
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(imageBaseHeight)
+                        .weight(1F)
+                ) {
+                    ResponsiveText(
+                        text = stringResource(id = R.string.details_screen_height_title),
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 12.sp,
+                        textStyle = PokemonGB,
+                        modifier = Modifier
+                            .align(TopCenter)
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .height(personHeightImage)
+                        .weight(1F)
+                ) {
+                    ResponsiveText(
+                        text = "$personHeight cm",
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 10.sp,
+                        textStyle = PokemonGB,
+                        modifier = Modifier
+                            .align(Center)
+                    )
+                }
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_height),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MainBlack),
+                    modifier = Modifier
+                        .height(personHeightImage)
+                )
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_person),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MainBlack),
+                    modifier = Modifier
+                        .height(personHeightImage)
+                )
+
+                SubcomposeAsyncImage(
+                    model = pokemon.sprites.other.dream_world.front_default,
+                    contentDescription = null,
+                    //colorFilter = ColorFilter.tint(MainBlack),
+                    modifier = Modifier
+                        .height(pokemonHeightImage)
+                )
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_height),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MainBlack),
+                    modifier = Modifier
+                        .height(pokemonHeightImage)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .height(pokemonHeightImage)
+                        .weight(1F)
+                ) {
+                    ResponsiveText(
+                        text = "$pokemonHeight cm",
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 10.sp,
+                        textStyle = PokemonGB,
+                        modifier = Modifier
+                            .align(Center)
+                    )
+                }
             }
         }
     }
