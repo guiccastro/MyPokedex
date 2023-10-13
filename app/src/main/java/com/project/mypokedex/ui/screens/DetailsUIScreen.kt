@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -116,7 +117,7 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                     onPokemonClick = state.onPokemonClick
                 )
 
-                AdvancedDetails(pokemon = pokemon, personHeight = 1.84F * 100)
+                AdvancedDetails(pokemon = pokemon, personHeight = 184)
             }
         }
     }
@@ -175,7 +176,7 @@ fun InputHeightDialog() {
 }
 
 @Composable
-fun AdvancedDetails(pokemon: Pokemon, personHeight: Float) {
+fun AdvancedDetails(pokemon: Pokemon, personHeight: Int) {
     val imageBaseHeight = 100.dp
     val pokemonHeight = pokemon.height * 10
 
@@ -202,11 +203,11 @@ fun AdvancedDetails(pokemon: Pokemon, personHeight: Float) {
                     .height(imageBaseHeight)
                     .weight(1F)
             ) {
-                ResponsiveText(
-                    text = stringResource(id = R.string.details_screen_height_title),
+                Text(
+                    text = "${stringResource(id = R.string.details_screen_height_title)}:",
                     color = BlackTextColor,
-                    targetTextSizeHeight = 12.sp,
-                    textStyle = PokemonGB,
+                    fontSize = 10.sp,
+                    style = PokemonGB,
                     modifier = Modifier
                         .align(TopCenter)
                 )
@@ -217,11 +218,11 @@ fun AdvancedDetails(pokemon: Pokemon, personHeight: Float) {
                     .height(personHeightImage)
                     .weight(1F)
             ) {
-                ResponsiveText(
+                Text(
                     text = "$personHeight cm",
                     color = BlackTextColor,
-                    targetTextSizeHeight = 10.sp,
-                    textStyle = PokemonGB,
+                    fontSize = 10.sp,
+                    style = PokemonGB,
                     modifier = Modifier
                         .align(Center)
                 )
@@ -233,6 +234,8 @@ fun AdvancedDetails(pokemon: Pokemon, personHeight: Float) {
                 colorFilter = ColorFilter.tint(MainBlack),
                 modifier = Modifier
                     .height(personHeightImage)
+                    .widthIn(max = 10.dp),
+                contentScale = ContentScale.FillBounds
             )
 
             Image(
@@ -257,6 +260,8 @@ fun AdvancedDetails(pokemon: Pokemon, personHeight: Float) {
                 colorFilter = ColorFilter.tint(MainBlack),
                 modifier = Modifier
                     .height(pokemonHeightImage)
+                    .widthIn(max = 10.dp),
+                contentScale = ContentScale.FillBounds
             )
 
             Box(
@@ -264,11 +269,11 @@ fun AdvancedDetails(pokemon: Pokemon, personHeight: Float) {
                     .height(pokemonHeightImage)
                     .weight(1F)
             ) {
-                ResponsiveText(
+                Text(
                     text = "$pokemonHeight cm",
                     color = BlackTextColor,
-                    targetTextSizeHeight = 10.sp,
-                    textStyle = PokemonGB,
+                    fontSize = 10.sp,
+                    style = PokemonGB,
                     modifier = Modifier
                         .align(Center)
                 )
