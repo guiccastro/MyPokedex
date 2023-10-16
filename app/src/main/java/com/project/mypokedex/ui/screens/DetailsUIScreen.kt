@@ -339,7 +339,8 @@ fun AdvancedDetails(
             )
 
             SubcomposeAsyncImage(
-                model = pokemon.sprites.other.dream_world.front_default,
+                model = pokemon.sprites.other.dream_world.front_default
+                    ?: pokemon.sprites.other.official_artwork.front_default,
                 contentDescription = null,
                 //colorFilter = ColorFilter.tint(MainBlack),
                 modifier = Modifier
