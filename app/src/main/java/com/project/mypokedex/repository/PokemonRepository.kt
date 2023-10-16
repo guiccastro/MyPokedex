@@ -40,7 +40,7 @@ class PokemonRepository @Inject constructor(
     private val pokemonClient: PokemonService,
     private val evolutionChainClient: EvolutionChainService,
     private val pokemonSpeciesClient: PokemonSpeciesService,
-    private val context: Context
+    val context: Context
 ) {
     companion object {
         private const val MAX_BASIC_KEY_RETRY = 5

@@ -17,5 +17,11 @@ data class DetailsScreenUIState(
     val pokemonBackImage: String = "",
     val spriteGenderOptions: SpriteGender? = null,
     val spriteVariantOptions: SpriteVariant? = null,
-    val onSpriteTypeClick: (SpriteTypes) -> Unit = {}
+    val onSpriteTypeClick: (SpriteTypes) -> Unit = {},
+    val personHeight: Int = 184,
+    val onChangeHeightDialogState: (Boolean) -> Unit = {},
+    val onSaveHeightDialog: (String) -> Unit = {},
+    val verifyNewHeightText: (String) -> Unit = {},
+    val heightDialogState: Boolean = false,
+    val heightDialogStateError: Boolean = false
 )

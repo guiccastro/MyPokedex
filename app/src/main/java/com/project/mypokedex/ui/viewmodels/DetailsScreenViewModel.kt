@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
 import com.project.mypokedex.extensions.toGrid
+import com.project.mypokedex.getUserHeight
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.SelectableSprite
 import com.project.mypokedex.model.Sprite
@@ -20,6 +21,7 @@ import com.project.mypokedex.navigation.MainNavComponent.Companion.getSingleTopW
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.screens.DetailsScreen.pokemonIdArgument
 import com.project.mypokedex.repository.PokemonRepository
+import com.project.mypokedex.saveUserHeight
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +58,15 @@ class DetailsScreenViewModel @Inject constructor(
                 },
                 onSpriteTypeClick = { spriteTypes ->
                     onSpriteTypeClick(spriteTypes)
+                },
+                onChangeHeightDialogState = { showDialog ->
+                    onChangeHeightDialogState(showDialog)
+                },
+                onSaveHeightDialog = { newHeight ->
+                    onSaveHeightDialog(newHeight)
+                },
+                verifyNewHeightText = { newHeightText ->
+                    verifyNewHeightText(newHeightText)
                 }
             )
         }
@@ -76,6 +88,18 @@ class DetailsScreenViewModel @Inject constructor(
                         updateSpriteOptionsList(it.sprites)
                     }
                 }
+        }
+
+        CoroutineScope(IO).launch {
+            getUserHeight(repository.context).collect { height ->
+                viewModelScope.launch {
+                    _uiState.update {
+                        it.copy(
+                            personHeight = height
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -211,6 +235,57 @@ class DetailsScreenViewModel @Inject constructor(
                         )
                     }
                 )
+            }
+        }
+    }
+
+    private fun verifyNewHeightText(newHeight: String) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    heightDialogStateError = !isNewHeightValid(newHeight)
+                )
+            }
+        }
+    }
+
+    private fun onSaveHeightDialog(newHeight: String) {
+        if (!_uiState.value.heightDialogStateError && newHeight.isNotEmpty()) {
+            viewModelScope.launch {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        personHeight = newHeight.toInt(),
+                        heightDialogState = false
+                    )
+                }
+                withContext(IO) {
+                    saveUserHeight(repository.context, newHeight.toInt())
+                }
+            }
+        }
+    }
+
+    private fun onChangeHeightDialogState(showDialog: Boolean) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    heightDialogState = showDialog
+                )
+            }
+        }
+    }
+
+    private fun isNewHeightValid(value: String): Boolean {
+        return if (value.isEmpty()) {
+            true
+        } else if (value.contains("-") || value.contains(".") || value.contains(",")) {
+            false
+        } else {
+            try {
+                val intValue = value.toInt()
+                intValue > 0
+            } catch (e: Exception) {
+                false
             }
         }
     }

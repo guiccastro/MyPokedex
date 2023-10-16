@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
@@ -62,6 +63,7 @@ import com.project.mypokedex.sampledata.bulbasaur
 import com.project.mypokedex.sampledata.charizard
 import com.project.mypokedex.sampledata.charmander
 import com.project.mypokedex.sampledata.squirtle
+import com.project.mypokedex.ui.components.AppButton
 import com.project.mypokedex.ui.components.CardScreen
 import com.project.mypokedex.ui.components.CustomTextField
 import com.project.mypokedex.ui.components.PokemonGenerationToUI
@@ -73,6 +75,7 @@ import com.project.mypokedex.ui.components.Section
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainRed
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
@@ -117,14 +120,27 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                     onPokemonClick = state.onPokemonClick
                 )
 
-                AdvancedDetails(pokemon = pokemon, personHeight = 184)
+                AdvancedDetails(
+                    pokemon = pokemon,
+                    personHeight = state.personHeight,
+                    heightDialogState = state.heightDialogState,
+                    onChangeHeightDialogState = state.onChangeHeightDialogState,
+                    onSaveHeightDialog = state.onSaveHeightDialog,
+                    verifyNewHeightText = state.verifyNewHeightText,
+                    heightDialogStateError = state.heightDialogStateError
+                )
             }
         }
     }
 }
 
 @Composable
-fun InputHeightDialog() {
+fun InputHeightDialog(
+    onChangeHeightDialogState: (Boolean) -> Unit,
+    onSaveHeightDialog: (String) -> Unit,
+    verifyNewHeightText: (String) -> Unit,
+    heightDialogStateError: Boolean
+) {
     Dialog(onDismissRequest = { }) {
         Column(
             modifier = Modifier
@@ -136,7 +152,7 @@ fun InputHeightDialog() {
             horizontalAlignment = CenterHorizontally
         ) {
             Text(
-                text = "Input your height.",
+                text = stringResource(id = R.string.input_height_dialog_title),
                 color = BlackTextColor,
                 fontSize = 12.sp,
                 style = PokemonGB,
@@ -147,7 +163,7 @@ fun InputHeightDialog() {
             )
 
             Text(
-                text = "The value must be in centimeter.",
+                text = stringResource(id = R.string.input_height_dialog_desc),
                 color = BlackTextColor,
                 fontSize = 8.sp,
                 style = PokemonGB,
@@ -163,20 +179,72 @@ fun InputHeightDialog() {
                 text = text,
                 onValueChange = {
                     text = it
+                    verifyNewHeightText(it)
                 },
-                placeholderText = "Height",
+                placeholderText = stringResource(id = R.string.input_height_dialog_hint),
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .padding(bottom = 2.dp)
+                    .widthIn(max = 100.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+
+            if (heightDialogStateError) {
+                Text(
+                    text = stringResource(id = R.string.input_height_dialog_error),
+                    color = MainRed,
+                    fontSize = 6.sp,
+                    style = PokemonGB,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                        .padding(bottom = 2.dp)
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .padding(bottom = 10.dp)
-                    .widthIn(max = 100.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
-            )
+                    .padding(top = 8.dp)
+            ) {
+                AppButton(
+                    text = stringResource(id = R.string.input_height_dialog_cancel),
+                    onClick = { onChangeHeightDialogState(false) },
+                    modifier = Modifier
+                        .weight(1F),
+                    containerColor = MainBlack.copy(alpha = 0.3F),
+                    borderWidth = 1.dp,
+                    textSize = 10.sp
+                )
+
+                AppButton(
+                    text = stringResource(id = R.string.input_height_dialog_save),
+                    onClick = { onSaveHeightDialog(text) },
+                    modifier = Modifier
+                        .weight(1F),
+                    containerColor = White.copy(alpha = 0.3F),
+                    borderWidth = 1.dp,
+                    textSize = 10.sp,
+                    enabled = !heightDialogStateError
+                )
+            }
         }
     }
 }
 
 @Composable
-fun AdvancedDetails(pokemon: Pokemon, personHeight: Int) {
+fun AdvancedDetails(
+    pokemon: Pokemon,
+    personHeight: Int,
+    heightDialogState: Boolean,
+    onChangeHeightDialogState: (Boolean) -> Unit,
+    onSaveHeightDialog: (String) -> Unit,
+    verifyNewHeightText: (String) -> Unit,
+    heightDialogStateError: Boolean
+) {
     val imageBaseHeight = 100.dp
     val pokemonHeight = pokemon.height * 10
 
@@ -213,19 +281,43 @@ fun AdvancedDetails(pokemon: Pokemon, personHeight: Int) {
                 )
             }
 
-            Box(
+            Column(
                 modifier = Modifier
                     .height(personHeightImage)
-                    .weight(1F)
+                    .weight(1F),
+                horizontalAlignment = CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     text = "$personHeight cm",
                     color = BlackTextColor,
                     fontSize = 10.sp,
-                    style = PokemonGB,
-                    modifier = Modifier
-                        .align(Center)
+                    style = PokemonGB
                 )
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MainBlack),
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(16.dp)
+                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                        .background(MainWhite, RoundedCornerShape(4.dp))
+                        .padding(2.dp)
+                        .clickable {
+                            onChangeHeightDialogState(true)
+                        },
+                )
+
+                if (heightDialogState) {
+                    InputHeightDialog(
+                        onChangeHeightDialogState,
+                        onSaveHeightDialog,
+                        verifyNewHeightText,
+                        heightDialogStateError
+                    )
+                }
             }
 
             Image(

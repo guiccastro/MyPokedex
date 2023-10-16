@@ -130,7 +130,7 @@ fun CustomTextField(
                         placeholderText,
                         style = textStyle.copy(
                             fontSize = textSize,
-                            color = textColor.copy(alpha = 0.7F)
+                            color = textColor.copy(alpha = 0.8F)
                         )
                     )
                     innerTextField()

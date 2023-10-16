@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.ui.theme.BlackTextColor
@@ -25,17 +27,19 @@ fun AppButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    textSize: TextUnit = 12.sp,
     containerColor: Color = MainWhite,
     enabled: Boolean = true,
+    borderWidth: Dp = 2.dp
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                if (enabled) containerColor else containerColor.copy(alpha = 0.5F),
+                if (enabled) containerColor else containerColor.copy(alpha = containerColor.alpha / 2),
                 RoundedCornerShape(6.dp)
             )
-            .border(2.dp, MainBlack, RoundedCornerShape(6.dp))
+            .border(borderWidth, MainBlack, RoundedCornerShape(6.dp))
             .clickable(
                 enabled = enabled
             ) {
@@ -50,7 +54,7 @@ fun AppButton(
             style = PokemonGB,
             color = BlackTextColor,
             modifier = modifier,
-            fontSize = 12.sp
+            fontSize = textSize
         )
     }
 }

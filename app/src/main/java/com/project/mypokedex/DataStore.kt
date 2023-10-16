@@ -14,6 +14,7 @@ private object PreferencesKeys {
     const val DATA_STORE_TITLE = "basic-keys-preferences"
     val BASIC_KEYS = stringPreferencesKey("basic-keys")
     val TOTAL_POKEMONS = intPreferencesKey("total-pokemons")
+    val USER_HEIGHT = intPreferencesKey("user-height")
 }
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PreferencesKeys.DATA_STORE_TITLE)
@@ -47,3 +48,16 @@ fun getTotalPokemonsPreferences(context: Context): Flow<Int> {
         preferences[PreferencesKeys.TOTAL_POKEMONS] ?: 0
     }
 }
+
+suspend fun saveUserHeight(context: Context, height: Int) {
+    context.dataStore.edit { settings ->
+        settings[PreferencesKeys.USER_HEIGHT] = height
+    }
+}
+
+fun getUserHeight(context: Context): Flow<Int> {
+    return context.dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.USER_HEIGHT] ?: 150
+    }
+}
+
