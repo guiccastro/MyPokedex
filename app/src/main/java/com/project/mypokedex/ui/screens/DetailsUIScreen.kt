@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -283,6 +284,7 @@ fun AdvancedDetails(
 
             Column(
                 modifier = Modifier
+                    .heightIn(min = personHeightImage + 16.dp + 4.dp)
                     .height(personHeightImage)
                     .weight(1F),
                 horizontalAlignment = CenterHorizontally,
