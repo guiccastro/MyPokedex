@@ -39,7 +39,6 @@
     <string name="details_screen_varieties_title">Varieties</string>
     <string name="details_screen_sprites_title">Sprites</string>
     <string name="details_screen_advanced_details_title">Details</string>
-    <string name="details_screen_height_title">Height</string>
     <string name="input_height_dialog_title">Input your height.</string>
     <string name="input_height_dialog_desc">The value must be in centimeter.</string>
     <string name="input_height_dialog_hint">Height</string>

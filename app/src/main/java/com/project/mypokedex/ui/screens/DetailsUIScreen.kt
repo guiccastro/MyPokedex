@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +25,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
@@ -132,6 +134,8 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
                     verifyNewHeightText = state.verifyNewHeightText,
                     heightDialogStateError = state.heightDialogStateError
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }
@@ -454,6 +458,13 @@ fun AdvancedDetails(
                 heightDialogStateError = heightDialogStateError
             )
 
+            Divider(
+                thickness = 1.dp,
+                color = MainBlack,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+            )
+
             WeightInfo(
                 pokemon = pokemon
             )
@@ -486,115 +497,108 @@ fun HeightInfo(
         modifier = Modifier
             .height(imageBaseHeight)
             .fillMaxWidth()
-            .padding(bottom = 10.dp),
+            .padding(vertical = 10.dp),
         verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .height(imageBaseHeight)
-                .weight(1F)
-        ) {
-            Text(
-                text = "${stringResource(id = R.string.details_screen_height_title)}:",
-                color = BlackTextColor,
-                fontSize = 10.sp,
-                style = PokemonGB,
-                modifier = Modifier
-                    .align(TopCenter)
-            )
-        }
 
-        Column(
+        Row(
             modifier = Modifier
-                .heightIn(min = personHeightImage + 16.dp + 4.dp)
-                .height(personHeightImage)
-                .weight(1F),
-            horizontalAlignment = CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .padding(horizontal = 2.dp)
         ) {
-            Text(
-                text = "$personHeight cm",
-                color = BlackTextColor,
-                fontSize = 10.sp,
-                style = PokemonGB
-            )
+            Column(
+                modifier = Modifier
+                    .heightIn(min = personHeightImage + 16.dp + 4.dp)
+                    .height(personHeightImage),
+                horizontalAlignment = CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "$personHeight cm",
+                    color = BlackTextColor,
+                    fontSize = 10.sp,
+                    style = PokemonGB
+                )
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MainBlack),
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(16.dp)
+                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                        .background(MainWhite, RoundedCornerShape(4.dp))
+                        .padding(2.dp)
+                        .clickable {
+                            onChangeHeightDialogState(true)
+                        },
+                )
+
+                if (heightDialogState) {
+                    InputHeightDialog(
+                        onChangeHeightDialogState,
+                        onSaveHeightDialog,
+                        verifyNewHeightText,
+                        heightDialogStateError
+                    )
+                }
+            }
 
             Image(
-                painter = painterResource(id = R.drawable.ic_edit),
+                painter = painterResource(id = R.drawable.ic_height),
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(MainBlack),
                 modifier = Modifier
-                    .padding(4.dp)
-                    .size(16.dp)
-                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                    .background(MainWhite, RoundedCornerShape(4.dp))
-                    .padding(2.dp)
-                    .clickable {
-                        onChangeHeightDialogState(true)
-                    },
+                    .height(personHeightImage)
+                    .widthIn(max = 10.dp),
+                contentScale = ContentScale.FillBounds
             )
 
-            if (heightDialogState) {
-                InputHeightDialog(
-                    onChangeHeightDialogState,
-                    onSaveHeightDialog,
-                    verifyNewHeightText,
-                    heightDialogStateError
-                )
-            }
+            Image(
+                painter = painterResource(id = R.drawable.ic_person),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MainBlack),
+                modifier = Modifier
+                    .height(personHeightImage)
+            )
         }
 
-        Image(
-            painter = painterResource(id = R.drawable.ic_height),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(MainBlack),
+        Row(
             modifier = Modifier
-                .height(personHeightImage)
-                .widthIn(max = 10.dp),
-            contentScale = ContentScale.FillBounds
-        )
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_person),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(MainBlack),
-            modifier = Modifier
-                .height(personHeightImage)
-        )
-
-        SubcomposeAsyncImage(
-            model = pokemon.sprites.other.dream_world.front_default
-                ?: pokemon.sprites.other.official_artwork.front_default,
-            contentDescription = null,
-            //colorFilter = ColorFilter.tint(MainBlack),
-            modifier = Modifier
-                .height(pokemonHeightImage)
-        )
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_height),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(MainBlack),
-            modifier = Modifier
-                .height(pokemonHeightImage)
-                .widthIn(max = 10.dp),
-            contentScale = ContentScale.FillBounds
-        )
-
-        Box(
-            modifier = Modifier
-                .height(pokemonHeightImage)
-                .weight(1F)
+                .padding(horizontal = 2.dp)
         ) {
-            Text(
-                text = "$pokemonHeight cm",
-                color = BlackTextColor,
-                fontSize = 10.sp,
-                style = PokemonGB,
+            SubcomposeAsyncImage(
+                model = pokemon.sprites.other.dream_world.front_default
+                    ?: pokemon.sprites.other.official_artwork.front_default,
+                contentDescription = null,
                 modifier = Modifier
-                    .align(Center)
+                    .height(pokemonHeightImage)
             )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_height),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MainBlack),
+                modifier = Modifier
+                    .height(pokemonHeightImage)
+                    .widthIn(max = 10.dp),
+                contentScale = ContentScale.FillBounds
+            )
+
+            Box(
+                modifier = Modifier
+                    .height(pokemonHeightImage)
+            ) {
+                Text(
+                    text = "$pokemonHeight cm",
+                    color = BlackTextColor,
+                    fontSize = 10.sp,
+                    style = PokemonGB,
+                    modifier = Modifier
+                        .align(Center)
+                )
+            }
         }
     }
 }
@@ -703,20 +707,25 @@ fun InputHeightDialog(
 @Composable
 fun WeightInfo(pokemon: Pokemon) {
     val weight = pokemon.weight.toFloat() / 10F
-    Row {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
         Image(
             painter = painterResource(id = R.drawable.ic_weight),
             contentDescription = null,
             modifier = Modifier
-                .size(64.dp)
-                .padding(vertical = 4.dp, horizontal = 10.dp),
+                .size(24.dp),
             colorFilter = ColorFilter.tint(MainBlack)
         )
 
         Box(
             modifier = Modifier
-                .height(64.dp)
-                .padding(vertical = 4.dp)
+                .fillMaxHeight()
+                .padding(horizontal = 4.dp)
         ) {
             Text(
                 text = "$weight kg",
