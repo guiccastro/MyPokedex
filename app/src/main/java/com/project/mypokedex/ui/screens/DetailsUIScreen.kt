@@ -136,6 +136,468 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
 }
 
 @Composable
+fun BasicDetails(
+    pokemon: Pokemon,
+    frontImage: String,
+    backImage: String
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Pokemon ID
+            Text(
+                text = pokemon.formattedID(),
+                fontSize = 14.sp,
+                fontWeight = FontWeight(500),
+                color = BlackTextColor,
+                modifier = Modifier,
+                textAlign = TextAlign.Center,
+                style = PokemonGB
+            )
+
+            // Pokemon Generation
+            pokemon.species?.generation?.let {
+                PokemonGenerationToUI(
+                    pokemonGeneration = it,
+                    fontSize = 8.sp
+                )
+            }
+        }
+
+        // Pokemon Name
+        ResponsiveText(
+            text = pokemon.formattedName(),
+            targetTextSizeHeight = 16.sp,
+            fontWeight = FontWeight(1000),
+            color = BlackTextColor,
+            modifier = Modifier
+                .padding(vertical = 4.dp),
+            textAlign = TextAlign.Center,
+            textStyle = PokemonGB,
+            maxLines = 1
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Pokemon Types
+            pokemon.types.forEach {
+                PokemonTypeToUI(
+                    pokemonType = it,
+                    size = 34.dp
+                )
+            }
+        }
+
+        // Pokemon Images
+        RotationalImage(
+            frontImage = frontImage,
+            backImage = backImage,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .align(CenterHorizontally),
+            backgroundType = BackgroundType.RadialBackground(
+                White.copy(alpha = 0.5F),
+                Transparent
+            )
+        )
+    }
+}
+
+@Composable
+fun SpriteTypes(
+    spriteGenderOptions: SpriteGender?,
+    spriteVariantOptions: SpriteVariant?,
+    onSpriteTypeClick: (SpriteTypes) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 20.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        spriteGenderOptions?.let {
+            Text(
+                text = spriteGenderOptions.toString(),
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                style = PokemonGB,
+                modifier = Modifier
+                    .shadow(4.dp, RoundedCornerShape(4.dp))
+                    .background(MainWhite, RoundedCornerShape(4.dp))
+                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                    .clickable {
+                        onSpriteTypeClick(it as SpriteTypes)
+                    }
+                    .padding(vertical = 6.dp, horizontal = 10.dp)
+            )
+        }
+        spriteVariantOptions?.let {
+            Text(
+                text = spriteVariantOptions.toString(),
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                style = PokemonGB,
+                modifier = Modifier
+                    .shadow(4.dp, RoundedCornerShape(4.dp))
+                    .background(MainWhite, RoundedCornerShape(4.dp))
+                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                    .clickable {
+                        onSpriteTypeClick(it as SpriteTypes)
+                    }
+                    .padding(vertical = 6.dp, horizontal = 10.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun Sprites(
+    spriteOptions: List<Pair<SelectableSprite, String>>,
+    onSpriteOptionClick: (SelectableSprite) -> Unit
+) {
+    Section(title = R.string.details_screen_sprites_title) {
+        LazyRow(
+            modifier = Modifier,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(spriteOptions) {
+                Column(
+                    modifier = Modifier
+                        .width(100.dp)
+                        .clickable {
+                            onSpriteOptionClick(it.first)
+                        },
+                    horizontalAlignment = CenterHorizontally
+                ) {
+                    SubcomposeAsyncImage(
+                        model = it.second,
+                        contentDescription = null,
+                        imageLoader = LocalContext.current.imageLoader,
+                        filterQuality = FilterQuality.High,
+                        modifier = Modifier
+                            .aspectRatio(1F)
+                    )
+
+                    ResponsiveText(
+                        text = stringResource(id = it.first.getName()),
+                        color = BlackTextColor,
+                        targetTextSizeHeight = 14.sp,
+                        textStyle = PokemonGB,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun EvolutionChain(
+    evolutionChain: List<List<Pokemon>>,
+    onPokemonClick: (Pokemon) -> Unit
+) {
+    if (evolutionChain.isEmpty()) return
+
+    Section(title = R.string.details_screen_evolution_chain_title) {
+        Column {
+            evolutionChain.forEach { rowEvolution ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    rowEvolution.forEach { pokemon ->
+                        Box(
+                            modifier = Modifier
+                                .weight(1F)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                                horizontalAlignment = CenterHorizontally
+                            ) {
+                                PokemonImage(
+                                    url = pokemon.getGifOrImage(),
+                                    backgroundType = BackgroundType.None,
+                                    clickable = true,
+                                    onClick = {
+                                        onPokemonClick(pokemon)
+                                    }
+                                )
+                                ResponsiveText(
+                                    text = pokemon.formattedName(),
+                                    textStyle = PokemonGB,
+                                    color = BlackTextColor,
+                                    targetTextSizeHeight = 7.sp,
+                                    fontWeight = FontWeight(1000),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 4.dp),
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+
+                        if (rowEvolution.last() != pokemon) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_arrow_forward),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(horizontal = 6.dp)
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
+
+        Spacer(
+            modifier = Modifier
+                .height(20.dp)
+        )
+    }
+}
+
+@Composable
+fun Varieties(
+    varieties: List<List<Pokemon>>,
+    onPokemonClick: (Pokemon) -> Unit
+) {
+    if (varieties.isNotEmpty()) {
+        Section(R.string.details_screen_varieties_title) {
+            varieties.forEach { row ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    row.forEach { pokemon ->
+                        Box(
+                            modifier = Modifier
+                                .weight(1F)
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp),
+                                horizontalAlignment = CenterHorizontally
+                            ) {
+                                PokemonImage(
+                                    url = pokemon.getGifOrImage(),
+                                    backgroundType = BackgroundType.None,
+                                    clickable = true,
+                                    onClick = {
+                                        onPokemonClick(pokemon)
+                                    }
+                                )
+                                ResponsiveText(
+                                    text = pokemon.formattedName(),
+                                    textStyle = PokemonGB,
+                                    color = BlackTextColor,
+                                    targetTextSizeHeight = 7.sp,
+                                    fontWeight = FontWeight(1000),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 4.dp),
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AdvancedDetails(
+    pokemon: Pokemon,
+    personHeight: Int,
+    heightDialogState: Boolean,
+    onChangeHeightDialogState: (Boolean) -> Unit,
+    onSaveHeightDialog: (String) -> Unit,
+    verifyNewHeightText: (String) -> Unit,
+    heightDialogStateError: Boolean
+) {
+    Section(title = R.string.details_screen_advanced_details_title) {
+        Column {
+            HeightInfo(
+                pokemon = pokemon,
+                personHeight = personHeight,
+                heightDialogState = heightDialogState,
+                onChangeHeightDialogState = onChangeHeightDialogState,
+                onSaveHeightDialog = onSaveHeightDialog,
+                verifyNewHeightText = verifyNewHeightText,
+                heightDialogStateError = heightDialogStateError
+            )
+
+            WeightInfo(
+                pokemon = pokemon
+            )
+        }
+    }
+}
+
+@Composable
+fun HeightInfo(
+    pokemon: Pokemon,
+    personHeight: Int,
+    heightDialogState: Boolean,
+    onChangeHeightDialogState: (Boolean) -> Unit,
+    onSaveHeightDialog: (String) -> Unit,
+    verifyNewHeightText: (String) -> Unit,
+    heightDialogStateError: Boolean
+) {
+    val imageBaseHeight = 100.dp
+    val pokemonHeight = pokemon.height * 10
+
+    var personHeightImage: Dp = imageBaseHeight
+    var pokemonHeightImage: Dp = imageBaseHeight
+
+    if (personHeight > pokemonHeight) {
+        pokemonHeightImage = ((pokemonHeight * imageBaseHeight.value) / personHeight).dp
+    } else {
+        personHeightImage = ((personHeight * imageBaseHeight.value) / pokemonHeight).dp
+    }
+    Row(
+        modifier = Modifier
+            .height(imageBaseHeight)
+            .fillMaxWidth()
+            .padding(bottom = 10.dp),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .height(imageBaseHeight)
+                .weight(1F)
+        ) {
+            Text(
+                text = "${stringResource(id = R.string.details_screen_height_title)}:",
+                color = BlackTextColor,
+                fontSize = 10.sp,
+                style = PokemonGB,
+                modifier = Modifier
+                    .align(TopCenter)
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .heightIn(min = personHeightImage + 16.dp + 4.dp)
+                .height(personHeightImage)
+                .weight(1F),
+            horizontalAlignment = CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "$personHeight cm",
+                color = BlackTextColor,
+                fontSize = 10.sp,
+                style = PokemonGB
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_edit),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MainBlack),
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(16.dp)
+                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+                    .background(MainWhite, RoundedCornerShape(4.dp))
+                    .padding(2.dp)
+                    .clickable {
+                        onChangeHeightDialogState(true)
+                    },
+            )
+
+            if (heightDialogState) {
+                InputHeightDialog(
+                    onChangeHeightDialogState,
+                    onSaveHeightDialog,
+                    verifyNewHeightText,
+                    heightDialogStateError
+                )
+            }
+        }
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_height),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(MainBlack),
+            modifier = Modifier
+                .height(personHeightImage)
+                .widthIn(max = 10.dp),
+            contentScale = ContentScale.FillBounds
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_person),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(MainBlack),
+            modifier = Modifier
+                .height(personHeightImage)
+        )
+
+        SubcomposeAsyncImage(
+            model = pokemon.sprites.other.dream_world.front_default
+                ?: pokemon.sprites.other.official_artwork.front_default,
+            contentDescription = null,
+            //colorFilter = ColorFilter.tint(MainBlack),
+            modifier = Modifier
+                .height(pokemonHeightImage)
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.ic_height),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(MainBlack),
+            modifier = Modifier
+                .height(pokemonHeightImage)
+                .widthIn(max = 10.dp),
+            contentScale = ContentScale.FillBounds
+        )
+
+        Box(
+            modifier = Modifier
+                .height(pokemonHeightImage)
+                .weight(1F)
+        ) {
+            Text(
+                text = "$pokemonHeight cm",
+                color = BlackTextColor,
+                fontSize = 10.sp,
+                style = PokemonGB,
+                modifier = Modifier
+                    .align(Center)
+            )
+        }
+    }
+}
+
+@Composable
 fun InputHeightDialog(
     onChangeHeightDialogState: (Boolean) -> Unit,
     onSaveHeightDialog: (String) -> Unit,
@@ -237,435 +699,42 @@ fun InputHeightDialog(
 }
 
 @Composable
-fun AdvancedDetails(
-    pokemon: Pokemon,
-    personHeight: Int,
-    heightDialogState: Boolean,
-    onChangeHeightDialogState: (Boolean) -> Unit,
-    onSaveHeightDialog: (String) -> Unit,
-    verifyNewHeightText: (String) -> Unit,
-    heightDialogStateError: Boolean
-) {
-    val imageBaseHeight = 100.dp
-    val pokemonHeight = pokemon.height * 10
-
-    var personHeightImage: Dp = imageBaseHeight
-    var pokemonHeightImage: Dp = imageBaseHeight
-
-    if (personHeight > pokemonHeight) {
-        pokemonHeightImage = ((pokemonHeight * imageBaseHeight.value) / personHeight).dp
-    } else {
-        personHeightImage = ((personHeight * imageBaseHeight.value) / pokemonHeight).dp
-    }
-
-    Section(title = R.string.details_screen_advanced_details_title) {
-        Row(
+fun WeightInfo(pokemon: Pokemon) {
+    val weight = pokemon.weight.toFloat() / 10F
+    Row {
+        Image(
+            painter = painterResource(id = R.drawable.ic_weight),
+            contentDescription = null,
             modifier = Modifier
-                .height(imageBaseHeight)
-                .fillMaxWidth()
-                .padding(bottom = 10.dp),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                .size(64.dp)
+                .padding(vertical = 4.dp, horizontal = 10.dp),
+            colorFilter = ColorFilter.tint(MainBlack)
+        )
+
+        Box(
+            modifier = Modifier
+                .height(64.dp)
+                .padding(vertical = 4.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .height(imageBaseHeight)
-                    .weight(1F)
-            ) {
-                Text(
-                    text = "${stringResource(id = R.string.details_screen_height_title)}:",
-                    color = BlackTextColor,
-                    fontSize = 10.sp,
-                    style = PokemonGB,
-                    modifier = Modifier
-                        .align(TopCenter)
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .heightIn(min = personHeightImage + 16.dp + 4.dp)
-                    .height(personHeightImage)
-                    .weight(1F),
-                horizontalAlignment = CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "$personHeight cm",
-                    color = BlackTextColor,
-                    fontSize = 10.sp,
-                    style = PokemonGB
-                )
-
-                Image(
-                    painter = painterResource(id = R.drawable.ic_edit),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MainBlack),
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .size(16.dp)
-                        .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                        .background(MainWhite, RoundedCornerShape(4.dp))
-                        .padding(2.dp)
-                        .clickable {
-                            onChangeHeightDialogState(true)
-                        },
-                )
-
-                if (heightDialogState) {
-                    InputHeightDialog(
-                        onChangeHeightDialogState,
-                        onSaveHeightDialog,
-                        verifyNewHeightText,
-                        heightDialogStateError
-                    )
-                }
-            }
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_height),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(MainBlack),
-                modifier = Modifier
-                    .height(personHeightImage)
-                    .widthIn(max = 10.dp),
-                contentScale = ContentScale.FillBounds
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_person),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(MainBlack),
-                modifier = Modifier
-                    .height(personHeightImage)
-            )
-
-            SubcomposeAsyncImage(
-                model = pokemon.sprites.other.dream_world.front_default
-                    ?: pokemon.sprites.other.official_artwork.front_default,
-                contentDescription = null,
-                //colorFilter = ColorFilter.tint(MainBlack),
-                modifier = Modifier
-                    .height(pokemonHeightImage)
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_height),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(MainBlack),
-                modifier = Modifier
-                    .height(pokemonHeightImage)
-                    .widthIn(max = 10.dp),
-                contentScale = ContentScale.FillBounds
-            )
-
-            Box(
-                modifier = Modifier
-                    .height(pokemonHeightImage)
-                    .weight(1F)
-            ) {
-                Text(
-                    text = "$pokemonHeight cm",
-                    color = BlackTextColor,
-                    fontSize = 10.sp,
-                    style = PokemonGB,
-                    modifier = Modifier
-                        .align(Center)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun SpriteTypes(
-    spriteGenderOptions: SpriteGender?,
-    spriteVariantOptions: SpriteVariant?,
-    onSpriteTypeClick: (SpriteTypes) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 20.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        spriteGenderOptions?.let {
             Text(
-                text = spriteGenderOptions.toString(),
+                text = "$weight kg",
                 color = BlackTextColor,
                 fontSize = 12.sp,
                 style = PokemonGB,
                 modifier = Modifier
-                    .shadow(4.dp, RoundedCornerShape(4.dp))
-                    .background(MainWhite, RoundedCornerShape(4.dp))
-                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                    .clickable {
-                        onSpriteTypeClick(it as SpriteTypes)
-                    }
-                    .padding(vertical = 6.dp, horizontal = 10.dp)
-            )
-        }
-        spriteVariantOptions?.let {
-            Text(
-                text = spriteVariantOptions.toString(),
-                color = BlackTextColor,
-                fontSize = 12.sp,
-                style = PokemonGB,
-                modifier = Modifier
-                    .shadow(4.dp, RoundedCornerShape(4.dp))
-                    .background(MainWhite, RoundedCornerShape(4.dp))
-                    .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-                    .clickable {
-                        onSpriteTypeClick(it as SpriteTypes)
-                    }
-                    .padding(vertical = 6.dp, horizontal = 10.dp)
+                    .align(Center)
             )
         }
     }
 }
 
+@Preview
 @Composable
-fun Sprites(
-    spriteOptions: List<Pair<SelectableSprite, String>>,
-    onSpriteOptionClick: (SelectableSprite) -> Unit
-) {
-    Section(title = R.string.details_screen_sprites_title) {
-        LazyRow(
-            modifier = Modifier,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(spriteOptions) {
-                Column(
-                    modifier = Modifier
-                        .width(100.dp)
-                        .clickable {
-                            onSpriteOptionClick(it.first)
-                        },
-                    horizontalAlignment = CenterHorizontally
-                ) {
-                    SubcomposeAsyncImage(
-                        model = it.second,
-                        contentDescription = null,
-                        imageLoader = LocalContext.current.imageLoader,
-                        filterQuality = FilterQuality.High,
-                        modifier = Modifier
-                            .aspectRatio(1F)
-                    )
-
-                    ResponsiveText(
-                        text = stringResource(id = it.first.getName()),
-                        color = BlackTextColor,
-                        targetTextSizeHeight = 14.sp,
-                        textStyle = PokemonGB,
-                        fontWeight = FontWeight.Normal,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .padding(start = 4.dp)
-                    )
-                }
-            }
+fun WeightInfoPreview() {
+    MyPokedexTheme {
+        Surface {
+            WeightInfo(charizard)
         }
-    }
-}
-
-@Composable
-fun Varieties(
-    varieties: List<List<Pokemon>>,
-    onPokemonClick: (Pokemon) -> Unit
-) {
-    if (varieties.isNotEmpty()) {
-        Section(R.string.details_screen_varieties_title) {
-            varieties.forEach { row ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    row.forEach { pokemon ->
-                        Box(
-                            modifier = Modifier
-                                .weight(1F)
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(horizontal = 4.dp),
-                                horizontalAlignment = CenterHorizontally
-                            ) {
-                                PokemonImage(
-                                    url = pokemon.getGifOrImage(),
-                                    backgroundType = BackgroundType.None,
-                                    clickable = true,
-                                    onClick = {
-                                        onPokemonClick(pokemon)
-                                    }
-                                )
-                                ResponsiveText(
-                                    text = pokemon.formattedName(),
-                                    textStyle = PokemonGB,
-                                    color = BlackTextColor,
-                                    targetTextSizeHeight = 7.sp,
-                                    fontWeight = FontWeight(1000),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 4.dp),
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EvolutionChain(
-    evolutionChain: List<List<Pokemon>>,
-    onPokemonClick: (Pokemon) -> Unit
-) {
-    if (evolutionChain.isEmpty()) return
-
-    Section(title = R.string.details_screen_evolution_chain_title) {
-        Column {
-            evolutionChain.forEach { rowEvolution ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    rowEvolution.forEach { pokemon ->
-                        Box(
-                            modifier = Modifier
-                                .weight(1F)
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                horizontalAlignment = CenterHorizontally
-                            ) {
-                                PokemonImage(
-                                    url = pokemon.getGifOrImage(),
-                                    backgroundType = BackgroundType.None,
-                                    clickable = true,
-                                    onClick = {
-                                        onPokemonClick(pokemon)
-                                    }
-                                )
-                                ResponsiveText(
-                                    text = pokemon.formattedName(),
-                                    textStyle = PokemonGB,
-                                    color = BlackTextColor,
-                                    targetTextSizeHeight = 7.sp,
-                                    fontWeight = FontWeight(1000),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 4.dp),
-                                    textAlign = TextAlign.Center,
-                                    maxLines = 1
-                                )
-                            }
-                        }
-
-                        if (rowEvolution.last() != pokemon) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_arrow_forward),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .padding(horizontal = 6.dp)
-                            )
-                        }
-                    }
-                }
-            }
-
-        }
-
-        Spacer(
-            modifier = Modifier
-                .height(20.dp)
-        )
-    }
-}
-
-@Composable
-fun BasicDetails(pokemon: Pokemon, frontImage: String, backImage: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Pokemon ID
-            Text(
-                text = pokemon.formattedID(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight(500),
-                color = BlackTextColor,
-                modifier = Modifier,
-                textAlign = TextAlign.Center,
-                style = PokemonGB
-            )
-
-            // Pokemon Generation
-            pokemon.species?.generation?.let {
-                PokemonGenerationToUI(
-                    pokemonGeneration = it,
-                    fontSize = 8.sp
-                )
-            }
-        }
-
-
-        // Pokemon Name
-        ResponsiveText(
-            text = pokemon.formattedName(),
-            targetTextSizeHeight = 16.sp,
-            fontWeight = FontWeight(1000),
-            color = BlackTextColor,
-            modifier = Modifier
-                .padding(vertical = 4.dp),
-            textAlign = TextAlign.Center,
-            textStyle = PokemonGB,
-            maxLines = 1
-        )
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Pokemon Types
-            pokemon.types.forEach {
-                PokemonTypeToUI(
-                    pokemonType = it,
-                    size = 34.dp
-                )
-            }
-        }
-
-        // Pokemon Images
-        RotationalImage(
-            frontImage = frontImage,
-            backImage = backImage,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-                .align(CenterHorizontally),
-            backgroundType = BackgroundType.RadialBackground(
-                White.copy(alpha = 0.5F),
-                Transparent
-            )
-        )
     }
 }
 
