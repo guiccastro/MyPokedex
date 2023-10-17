@@ -9,6 +9,7 @@ import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.model.PokemonColor
 import com.project.mypokedex.model.PokemonGeneration
 import com.project.mypokedex.model.PokemonSpecies
 import com.project.mypokedex.model.PokemonType
@@ -246,6 +247,7 @@ class PokemonRepository @Inject constructor(
         var evolutionChain: EvolutionChain = EvolutionChain(EvolutionChainItem(0, emptyList()))
         var varieties: List<Int> = emptyList()
         var generation: PokemonGeneration = PokemonGeneration.Unknown
+        var color: PokemonColor = PokemonColor.Black
         CoroutineScope(Main).launch {
             async {
                 evolutionChain = createEvolutionChain(pokemonSpeciesResponse.evolutionChain)
@@ -256,10 +258,13 @@ class PokemonRepository @Inject constructor(
             async {
                 generation = createPokemonGeneration(pokemonSpeciesResponse.generation)
             }
+            async {
+                color = createPokemonColor(pokemonSpeciesResponse.color)
+            }
         }.join()
         Log.i(TAG, "createPokemonSpecies: Pokemon species created")
 
-        return PokemonSpecies(evolutionChain, varieties, generation)
+        return PokemonSpecies(evolutionChain, varieties, generation, color)
     }
 
     private suspend fun createEvolutionChain(evolutionChainSpeciesResponse: PokemonSpeciesEvolutionChainResponse): EvolutionChain {
@@ -292,6 +297,10 @@ class PokemonRepository @Inject constructor(
 
     private fun createPokemonGeneration(generationResponse: BasicResponse): PokemonGeneration {
         return PokemonGeneration.fromId(generationResponse.url.getIDFromURL())
+    }
+
+    private fun createPokemonColor(colorResponse: BasicResponse): PokemonColor {
+        return PokemonColor.fromId(colorResponse.url.getIDFromURL())
     }
 
     suspend fun getRandomPokemons(quantity: Int): List<Pokemon> {

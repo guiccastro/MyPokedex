@@ -7,12 +7,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.project.mypokedex.extensions.innerShadow
 import com.project.mypokedex.ui.theme.Black
 import com.project.mypokedex.ui.theme.CardColor
-import com.project.mypokedex.ui.theme.CardInternBackground
+import com.project.mypokedex.ui.theme.MainBlue
 
 @Composable
 fun CardScreen(
@@ -21,6 +22,7 @@ fun CardScreen(
     cardPadding: PaddingValues = PaddingValues(10.dp),
     cardBorderSize: PaddingValues = PaddingValues(10.dp),
     cardCorner: Dp = 8.dp,
+    cardInternBackground: Color = MainBlue,
     screenCorner: Dp = 6.dp,
     content: @Composable () -> Unit
 ) {
@@ -41,7 +43,7 @@ fun CardScreen(
                     blur = 5.dp
                 )
                 .then(screenModifier),
-            color = CardInternBackground,
+            color = cardInternBackground,
             shape = RoundedCornerShape(screenCorner)
         ) {
             content()

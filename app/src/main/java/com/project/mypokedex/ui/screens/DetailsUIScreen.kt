@@ -75,6 +75,7 @@ import com.project.mypokedex.ui.components.Section
 import com.project.mypokedex.ui.stateholders.DetailsScreenUIState
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MainRed
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
@@ -84,7 +85,9 @@ import com.project.mypokedex.ui.theme.White
 
 @Composable
 fun DetailsUIScreen(state: DetailsScreenUIState) {
-    CardScreen {
+    CardScreen(
+        cardInternBackground = state.pokemon?.species?.color?.getColor() ?: MainBlue
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

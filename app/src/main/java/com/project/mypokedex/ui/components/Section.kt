@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -53,11 +54,14 @@ import com.project.mypokedex.ui.theme.PokemonGB
 @Composable
 fun Section(
     @StringRes title: Int,
+    backgroundColor: Color = MainWhite,
     content: @Composable () -> Unit
 ) {
     Column {
         var headerState by remember { mutableStateOf(HeaderState.HideContent) }
-        SectionHeader(title, headerState) { headerState = headerState.switchState() }
+        SectionHeader(title, backgroundColor, headerState) {
+            headerState = headerState.switchState()
+        }
 
         AnimatedVisibility(
             visible = headerState == HeaderState.ShowContent || LocalInspectionMode.current,
@@ -70,7 +74,7 @@ fun Section(
                     .leftBorder(1.dp, MainBlack)
                     .rightBorder(1.dp, MainBlack)
                     .bottomBorder(1.dp, MainBlack)
-                    .background(MainWhite.copy(alpha = 0.5f))
+                    .background(backgroundColor.copy(alpha = 0.5f))
             ) {
                 content()
             }
@@ -81,6 +85,7 @@ fun Section(
 @Composable
 fun SectionHeader(
     @StringRes title: Int,
+    backgroundColor: Color,
     headerState: HeaderState,
     onHeaderClick: () -> Unit
 ) {
@@ -95,7 +100,7 @@ fun SectionHeader(
                 onHeaderClick()
             }
             .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
-            .background(MainWhite, RoundedCornerShape(4.dp))
+            .background(backgroundColor, RoundedCornerShape(4.dp))
     ) {
         ResponsiveText(
             text = stringResource(id = title),

@@ -23,7 +23,6 @@ val MainSelectionTextBackground = Color(0x773C3635)
 
 /** Common **/
 val CardColor = MainWhite
-val CardInternBackground = MainBlue
 
 /** Home Screen **/
 val HomeScreenBackground = MainRed
