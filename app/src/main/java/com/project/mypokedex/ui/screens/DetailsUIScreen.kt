@@ -91,7 +91,6 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 10.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
@@ -147,7 +146,7 @@ fun BasicDetails(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp),
+            .padding(vertical = 10.dp, horizontal = 10.dp),
         verticalArrangement = Arrangement.Center
     ) {
 
@@ -226,7 +225,8 @@ fun SpriteTypes(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp),
+            .padding(bottom = 20.dp)
+            .padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         spriteGenderOptions?.let {
@@ -391,7 +391,7 @@ fun Varieties(
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                        .padding(vertical = 8.dp, horizontal = 10.dp)
                 ) {
                     row.forEach { pokemon ->
                         Box(

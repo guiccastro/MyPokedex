@@ -6,7 +6,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -38,8 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.extensions.bottomBorder
-import com.project.mypokedex.extensions.leftBorder
-import com.project.mypokedex.extensions.rightBorder
+import com.project.mypokedex.extensions.topBorder
 import com.project.mypokedex.model.HeaderState
 import com.project.mypokedex.sampledata.bulbasaur
 import com.project.mypokedex.sampledata.charmander
@@ -70,9 +68,6 @@ fun Section(
         ) {
             Box(
                 modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .leftBorder(1.dp, MainBlack)
-                    .rightBorder(1.dp, MainBlack)
                     .bottomBorder(1.dp, MainBlack)
                     .background(backgroundColor.copy(alpha = 0.5f))
             ) {
@@ -99,7 +94,8 @@ fun SectionHeader(
             ) {
                 onHeaderClick()
             }
-            .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+            .topBorder(1.dp, MainBlack)
+            .bottomBorder(1.dp, MainBlack)
             .background(backgroundColor, RoundedCornerShape(4.dp))
     ) {
         ResponsiveText(
@@ -109,7 +105,7 @@ fun SectionHeader(
             targetTextSizeHeight = 14.sp,
             fontWeight = FontWeight(1000),
             modifier = Modifier
-                .padding(start = 4.dp)
+                .padding(start = 6.dp)
         )
 
         Divider(
