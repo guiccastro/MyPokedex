@@ -28,7 +28,9 @@ class DatabaseModule {
             context,
             PokemonDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

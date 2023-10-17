@@ -10,7 +10,8 @@ class Pokemon(
     val types: List<PokemonType>,
     val speciesId: Int,
     val sprites: Sprites,
-    val height: Int
+    val height: Int,
+    val weight: Int
 ) {
     var species: PokemonSpecies? = null
 

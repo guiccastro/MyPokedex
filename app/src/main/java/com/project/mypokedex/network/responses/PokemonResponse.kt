@@ -8,7 +8,8 @@ data class PokemonResponse(
     val types: List<TypeListResponse>,
     val sprites: Sprites,
     val species: BasicResponse,
-    val height: Int
+    val height: Int,
+    val weight: Int
 )
 
 data class TypeListResponse(
