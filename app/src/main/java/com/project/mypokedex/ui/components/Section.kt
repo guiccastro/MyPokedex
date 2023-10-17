@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +46,7 @@ fun Section(
     SectionHeader(title, headerState) { headerState = headerState.switchState() }
 
     AnimatedVisibility(
-        visible = headerState == HeaderState.ShowContent,
+        visible = headerState == HeaderState.ShowContent || LocalInspectionMode.current,
         enter = expandVertically(),
         exit = shrinkVertically()
     ) {
