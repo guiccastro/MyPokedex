@@ -349,7 +349,9 @@ fun EvolutionChain(
                                     clickable = true,
                                     onClick = {
                                         onPokemonClick(pokemon)
-                                    }
+                                    },
+                                    modifier = Modifier
+                                        .heightIn(max = 100.dp)
                                 )
                                 ResponsiveText(
                                     text = pokemon.formattedName(),
@@ -413,7 +415,9 @@ fun Varieties(
                                     clickable = true,
                                     onClick = {
                                         onPokemonClick(pokemon)
-                                    }
+                                    },
+                                    modifier = Modifier
+                                        .heightIn(max = 100.dp)
                                 )
                                 ResponsiveText(
                                     text = pokemon.formattedName(),
