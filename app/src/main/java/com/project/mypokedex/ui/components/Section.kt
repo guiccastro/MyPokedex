@@ -5,12 +5,17 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
@@ -31,9 +36,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
+import com.project.mypokedex.extensions.bottomBorder
+import com.project.mypokedex.extensions.leftBorder
+import com.project.mypokedex.extensions.rightBorder
 import com.project.mypokedex.model.HeaderState
+import com.project.mypokedex.sampledata.bulbasaur
+import com.project.mypokedex.sampledata.charmander
+import com.project.mypokedex.sampledata.squirtle
+import com.project.mypokedex.ui.screens.EvolutionChain
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 
@@ -42,15 +55,26 @@ fun Section(
     @StringRes title: Int,
     content: @Composable () -> Unit
 ) {
-    var headerState by remember { mutableStateOf(HeaderState.HideContent) }
-    SectionHeader(title, headerState) { headerState = headerState.switchState() }
+    Column {
+        var headerState by remember { mutableStateOf(HeaderState.HideContent) }
+        SectionHeader(title, headerState) { headerState = headerState.switchState() }
 
-    AnimatedVisibility(
-        visible = headerState == HeaderState.ShowContent || LocalInspectionMode.current,
-        enter = expandVertically(),
-        exit = shrinkVertically()
-    ) {
-        content()
+        AnimatedVisibility(
+            visible = headerState == HeaderState.ShowContent || LocalInspectionMode.current,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .leftBorder(1.dp, MainBlack)
+                    .rightBorder(1.dp, MainBlack)
+                    .bottomBorder(1.dp, MainBlack)
+                    .background(MainWhite.copy(alpha = 0.5f))
+            ) {
+                content()
+            }
+        }
     }
 }
 
@@ -70,13 +94,17 @@ fun SectionHeader(
             ) {
                 onHeaderClick()
             }
+            .border(1.dp, MainBlack, RoundedCornerShape(4.dp))
+            .background(MainWhite, RoundedCornerShape(4.dp))
     ) {
         ResponsiveText(
             text = stringResource(id = title),
             textStyle = PokemonGB,
             color = BlackTextColor,
             targetTextSizeHeight = 14.sp,
-            fontWeight = FontWeight(1000)
+            fontWeight = FontWeight(1000),
+            modifier = Modifier
+                .padding(start = 4.dp)
         )
 
         Divider(
@@ -100,13 +128,16 @@ fun SectionHeader(
     }
 }
 
-@Preview(showSystemUi = true)
+@Preview
 @Composable
 fun PreviewSection() {
     MyPokedexTheme {
         Surface {
             Section(R.string.details_screen_evolution_chain_title) {
-
+                EvolutionChain(
+                    evolutionChain = listOf(listOf(bulbasaur, squirtle, charmander)),
+                    onPokemonClick = {}
+                )
             }
         }
     }

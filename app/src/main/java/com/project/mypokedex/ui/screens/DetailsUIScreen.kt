@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -90,7 +89,8 @@ fun DetailsUIScreen(state: DetailsScreenUIState) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 10.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             state.pokemon?.let { pokemon ->
 
@@ -268,7 +268,8 @@ fun Sprites(
 ) {
     Section(title = R.string.details_screen_sprites_title) {
         LazyRow(
-            modifier = Modifier,
+            modifier = Modifier
+                .padding(vertical = 4.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(spriteOptions) {
@@ -313,7 +314,10 @@ fun EvolutionChain(
     if (evolutionChain.isEmpty()) return
 
     Section(title = R.string.details_screen_evolution_chain_title) {
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(4.dp)
+        ) {
             evolutionChain.forEach { rowEvolution ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -368,11 +372,6 @@ fun EvolutionChain(
             }
 
         }
-
-        Spacer(
-            modifier = Modifier
-                .height(20.dp)
-        )
     }
 }
 
