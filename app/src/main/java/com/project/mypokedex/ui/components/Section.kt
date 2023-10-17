@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
@@ -96,7 +95,7 @@ fun SectionHeader(
             }
             .topBorder(1.dp, MainBlack)
             .bottomBorder(1.dp, MainBlack)
-            .background(backgroundColor, RoundedCornerShape(4.dp))
+            .background(backgroundColor)
     ) {
         ResponsiveText(
             text = stringResource(id = title),
