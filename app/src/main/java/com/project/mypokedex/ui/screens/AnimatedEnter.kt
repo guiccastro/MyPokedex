@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.model.AnimatedEnterOrientation
-import com.project.mypokedex.repository.PokemonDownloadInfo
+import com.project.mypokedex.model.PokemonDownloadInfo
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
