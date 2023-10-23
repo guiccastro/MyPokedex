@@ -15,8 +15,7 @@ val bulbasaur = Pokemon(
     listOf(PokemonType.Grass, PokemonType.Poison),
     1,
     Sprites(),
-    1,
-    1
+    10
 ).apply {
     species = PokemonSpecies(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),
@@ -32,8 +31,7 @@ val charmander = Pokemon(
     listOf(PokemonType.Fire),
     4,
     Sprites(),
-    1,
-    1
+    10
 ).apply {
     species = PokemonSpecies(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),
@@ -49,8 +47,7 @@ val squirtle = Pokemon(
     listOf(PokemonType.Water),
     7,
     Sprites(),
-    1,
-    1
+    10
 ).apply {
     species = PokemonSpecies(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),
@@ -66,8 +63,7 @@ val charizard = Pokemon(
     listOf(PokemonType.Fire, PokemonType.Flying),
     6,
     Sprites(),
-    1,
-    1
+    10
 ).apply {
     species = PokemonSpecies(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),

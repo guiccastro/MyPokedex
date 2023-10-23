@@ -30,7 +30,6 @@ class AnimatedEnterViewModel @Inject constructor(
             )
         }
 
-
         viewModelScope.launch {
             repository.progressRequest.collect {
                 _uiState.value = _uiState.value.copy(
@@ -45,7 +44,8 @@ class AnimatedEnterViewModel @Inject constructor(
             repository.needToRequestPokemons.collect { needToRequestPokemons ->
                 _uiState.update {
                     it.copy(
-                        showDownloadMessage = needToRequestPokemons
+                        showDownloadMessage = needToRequestPokemons,
+                        downloadInfoType = repository.pokemonDownloadInfo
                     )
                 }
             }

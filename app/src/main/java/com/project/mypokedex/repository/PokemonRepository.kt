@@ -10,6 +10,7 @@ import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonColor
+import com.project.mypokedex.model.PokemonDownloadInfo
 import com.project.mypokedex.model.PokemonGeneration
 import com.project.mypokedex.model.PokemonSpecies
 import com.project.mypokedex.model.PokemonType
@@ -57,6 +58,7 @@ class PokemonRepository @Inject constructor(
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
     var needToRequestPokemons: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var pokemonDownloadInfo: PokemonDownloadInfo = PokemonDownloadInfo.None
 
     init {
         CoroutineScope(Main).launch {
@@ -77,12 +79,23 @@ class PokemonRepository @Inject constructor(
             Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
         }
 
-        needToRequestPokemons.value = needToRequestPokemon()
+        needToRequestPokemons.value =
+            needToRequestFullPokemonInfo() || needToRequestAnyPokemonInfo()
 
         if (!needToRequestPokemons.value) {
             Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
             totalPokemons = pokemonList.value.size
             progressRequest.value = 1F
+        } else {
+            setPokemonDownloadInfo()
+        }
+    }
+
+    private fun setPokemonDownloadInfo() {
+        if (needToRequestFullPokemonInfo()) {
+            pokemonDownloadInfo = PokemonDownloadInfo.FullInfo
+        } else if (needToRequestAnyPokemonInfo()) {
+            pokemonDownloadInfo = PokemonDownloadInfo.UpdateInfo
         }
     }
 
@@ -94,14 +107,24 @@ class PokemonRepository @Inject constructor(
     private fun needToRequestBasicKeys(): Boolean =
         pokemonBasicKeyID.isEmpty() || pokemonBasicKeyName.isEmpty() || totalPokemons == 0
 
-    private fun needToRequestPokemon(): Boolean =
+    private fun needToRequestFullPokemonInfo(): Boolean =
         pokemonList.value.isEmpty() || pokemonList.value.size != totalPokemons
 
+    private fun needToRequestAnyPokemonInfo(): Boolean =
+        needToRequestPokemonInfo()
+
+    private fun needToRequestPokemonInfo(): Boolean =
+        pokemonList.value.any { it.height == -1 }
+
     private fun setRequestPokemons() {
-        pokemonBasicKeyID.keys.forEach { keyID ->
-            if (pokemonList.value.indexOfFirst { it.id == keyID } == -1) {
-                requestPokemons.add(keyID)
+        if (pokemonDownloadInfo == PokemonDownloadInfo.FullInfo) {
+            pokemonBasicKeyID.keys.forEach { keyID ->
+                if (pokemonList.value.indexOfFirst { it.id == keyID } == -1) {
+                    requestPokemons.add(keyID)
+                }
             }
+        } else if (pokemonDownloadInfo == PokemonDownloadInfo.UpdateInfo) {
+            requestPokemons.addAll(pokemonList.value.filter { it.height == -1 }.map { it.id })
         }
     }
 
@@ -157,7 +180,11 @@ class PokemonRepository @Inject constructor(
             requestPokemons.subList(0, toIndex).forEach { id ->
                 async {
                     try {
-                        requestPokemon(id)
+                        if (pokemonDownloadInfo == PokemonDownloadInfo.FullInfo) {
+                            requestPokemonFull(id)
+                        } else if (pokemonDownloadInfo == PokemonDownloadInfo.UpdateInfo) {
+                            requestOnlyPokemonInfo(id)
+                        }
                         requestPokemons.remove(id)
                         calculateProgressRequest()
                         responseCount++
@@ -177,7 +204,8 @@ class PokemonRepository @Inject constructor(
     }
 
     private fun calculateProgressRequest() {
-        progressRequest.value = pokemonList.value.size.toFloat() / totalPokemons.toFloat()
+        progressRequest.value =
+            1F - (requestPokemons.size.toFloat() / totalPokemons.toFloat())//pokemonList.value.size.toFloat() / totalPokemons.toFloat()
         Log.i(TAG, "ProgressRequest: ${progressRequest.value}%")
     }
 
@@ -190,11 +218,34 @@ class PokemonRepository @Inject constructor(
         }
     }
 
-    private suspend fun requestPokemon(id: Int) {
+    private suspend fun requestOnlyPokemonInfo(id: Int) {
         try {
-            Log.i(TAG, "requestPokemon: Requesting pokemon $id from client")
+            Log.i(TAG, "requestOnlyPokemonInfo: Requesting pokemon $id from client")
             val pokemonResponse = pokemonClient.getPokemon(id)
-            Log.i(TAG, "requestPokemon: Get pokemon $id from client")
+            Log.i(TAG, "requestOnlyPokemonInfo: Get pokemon $id from client")
+            val newPokemon = createPokemon(pokemonResponse)
+            val oldPokemon = pokemonList.value.first { it.id == id }
+            newPokemon.apply {
+                species = oldPokemon.species
+            }
+            val listCopy = pokemonList.value.toMutableList()
+            listCopy.removeIf { it.id == id }
+            pokemonList.value = (listCopy + newPokemon)
+
+            CoroutineScope(IO).launch {
+                dao.insert(newPokemon)
+            }
+        } catch (e: Exception) {
+            Log.i(TAG, "requestOnlyPokemonInfo: Failure on requesting pokemon $id - $e")
+            requestOnlyPokemonInfo(id)
+        }
+    }
+
+    private suspend fun requestPokemonFull(id: Int) {
+        try {
+            Log.i(TAG, "requestPokemonFull: Requesting pokemon $id from client")
+            val pokemonResponse = pokemonClient.getPokemon(id)
+            Log.i(TAG, "requestPokemonFull: Get pokemon $id from client")
             val pokemon = createPokemon(pokemonResponse).apply {
                 species = getPokemonSpecies(speciesId)
             }
@@ -204,8 +255,8 @@ class PokemonRepository @Inject constructor(
                 dao.insert(pokemon)
             }
         } catch (e: Exception) {
-            Log.i(TAG, "requestPokemon: Failure on requesting pokemon $id - $e")
-            requestPokemon(id)
+            Log.i(TAG, "requestPokemonFull: Failure on requesting pokemon $id - $e")
+            requestPokemonFull(id)
         }
     }
 
@@ -236,7 +287,7 @@ class PokemonRepository @Inject constructor(
         val height = pokemonResponse.height
         val weight = pokemonResponse.weight
 
-        val newPokemon = Pokemon(id, name, types, species, sprites, height, weight)
+        val newPokemon = Pokemon(id, name, types, species, sprites, height)
         Log.i(TAG, "createPokemon: Pokemon created $newPokemon")
 
         return newPokemon
