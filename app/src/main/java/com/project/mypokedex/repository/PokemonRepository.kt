@@ -79,6 +79,7 @@ class PokemonRepository @Inject constructor(
             Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
         }
 
+        setPokemonDownloadInfo()
         needToRequestPokemons.value =
             needToRequestFullPokemonInfo() || needToRequestAnyPokemonInfo()
 
@@ -86,8 +87,6 @@ class PokemonRepository @Inject constructor(
             Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
             totalPokemons = pokemonList.value.size
             progressRequest.value = 1F
-        } else {
-            setPokemonDownloadInfo()
         }
     }
 
