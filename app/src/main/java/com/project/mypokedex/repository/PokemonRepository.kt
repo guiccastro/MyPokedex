@@ -10,10 +10,12 @@ import com.project.mypokedex.model.EvolutionChain
 import com.project.mypokedex.model.EvolutionChainItem
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.model.PokemonColor
-import com.project.mypokedex.model.PokemonDownloadInfo
 import com.project.mypokedex.model.PokemonGeneration
 import com.project.mypokedex.model.PokemonSpecies
 import com.project.mypokedex.model.PokemonType
+import com.project.mypokedex.model.downloadInfo.DownloadInfoType
+import com.project.mypokedex.model.downloadInfo.RequestUpdateClass
+import com.project.mypokedex.model.downloadInfo.UpdateInfo
 import com.project.mypokedex.network.responses.BasicKeysResponse
 import com.project.mypokedex.network.responses.BasicResponse
 import com.project.mypokedex.network.responses.EvolutionChainResponse
@@ -43,7 +45,7 @@ class PokemonRepository @Inject constructor(
     private val evolutionChainClient: EvolutionChainService,
     private val pokemonSpeciesClient: PokemonSpeciesService,
     val context: Context
-) {
+): RequestUpdateClass {
     companion object {
         private const val MAX_BASIC_KEY_RETRY = 5
         private const val TAG = "PokemonRepository"
@@ -58,7 +60,7 @@ class PokemonRepository @Inject constructor(
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
     var needToRequestPokemons: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var pokemonDownloadInfo: PokemonDownloadInfo = PokemonDownloadInfo.None
+    var pokemonDownloadInfo: DownloadInfoType = DownloadInfoType.None()
 
     init {
         CoroutineScope(Main).launch {
@@ -79,22 +81,14 @@ class PokemonRepository @Inject constructor(
             Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
         }
 
-        setPokemonDownloadInfo()
-        needToRequestPokemons.value =
-            needToRequestFullPokemonInfo() || needToRequestAnyPokemonInfo()
+        pokemonDownloadInfo =
+            DownloadInfoType.getPokemonDownloadInfo(pokemonList.value, totalPokemons)
+        needToRequestPokemons.value = pokemonDownloadInfo != DownloadInfoType.None()
 
         if (!needToRequestPokemons.value) {
             Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
             totalPokemons = pokemonList.value.size
             progressRequest.value = 1F
-        }
-    }
-
-    private fun setPokemonDownloadInfo() {
-        if (needToRequestFullPokemonInfo()) {
-            pokemonDownloadInfo = PokemonDownloadInfo.FullInfo
-        } else if (needToRequestAnyPokemonInfo()) {
-            pokemonDownloadInfo = PokemonDownloadInfo.UpdateInfo
         }
     }
 
@@ -106,25 +100,13 @@ class PokemonRepository @Inject constructor(
     private fun needToRequestBasicKeys(): Boolean =
         pokemonBasicKeyID.isEmpty() || pokemonBasicKeyName.isEmpty() || totalPokemons == 0
 
-    private fun needToRequestFullPokemonInfo(): Boolean =
-        pokemonList.value.isEmpty() || pokemonList.value.size != totalPokemons
-
-    private fun needToRequestAnyPokemonInfo(): Boolean =
-        needToRequestPokemonInfo()
-
-    private fun needToRequestPokemonInfo(): Boolean =
-        pokemonList.value.any { it.height == -1 }
-
     private fun setRequestPokemons() {
-        if (pokemonDownloadInfo == PokemonDownloadInfo.FullInfo) {
-            pokemonBasicKeyID.keys.forEach { keyID ->
-                if (pokemonList.value.indexOfFirst { it.id == keyID } == -1) {
-                    requestPokemons.add(keyID)
-                }
-            }
-        } else if (pokemonDownloadInfo == PokemonDownloadInfo.UpdateInfo) {
-            requestPokemons.addAll(pokemonList.value.filter { it.height == -1 }.map { it.id })
-        }
+        requestPokemons.addAll(
+            pokemonDownloadInfo.getRequestPokemons(
+                pokemonBasicKeyID.keys.toList(),
+                pokemonList.value
+            )
+        )
     }
 
     private suspend fun getBasicKeys() {
@@ -168,6 +150,14 @@ class PokemonRepository @Inject constructor(
         pokemonBasicKeyName = keyList.associate { it.first to it.second }
     }
 
+    override suspend fun requestInfo(id: Int) {
+        if (pokemonDownloadInfo == DownloadInfoType.FullInfo()) {
+            requestPokemonFull(id)
+        } else if (pokemonDownloadInfo == DownloadInfoType.NewInfo(emptyList())) {
+            requestOnlyPokemonInfo(id)
+        }
+    }
+
     private suspend fun requestAllPokemons() {
         var responseCount = 0
         val toIndex = if (requestPokemons.size >= totalPokemons) {
@@ -179,11 +169,7 @@ class PokemonRepository @Inject constructor(
             requestPokemons.subList(0, toIndex).forEach { id ->
                 async {
                     try {
-                        if (pokemonDownloadInfo == PokemonDownloadInfo.FullInfo) {
-                            requestPokemonFull(id)
-                        } else if (pokemonDownloadInfo == PokemonDownloadInfo.UpdateInfo) {
-                            requestOnlyPokemonInfo(id)
-                        }
+                        requestInfo(id)
                         requestPokemons.remove(id)
                         calculateProgressRequest()
                         responseCount++

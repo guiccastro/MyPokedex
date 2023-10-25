@@ -508,11 +508,12 @@ fun HeightInfo(
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 2.dp)
+                .padding(horizontal = 2.dp),
+            verticalAlignment = Alignment.Bottom,
         ) {
             Column(
                 modifier = Modifier
-                    .heightIn(min = personHeightImage + 16.dp + 4.dp)
+                    .heightIn(min = 40.dp)
                     .height(personHeightImage),
                 horizontalAlignment = CenterHorizontally,
                 verticalArrangement = Arrangement.Center
