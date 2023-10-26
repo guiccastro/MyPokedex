@@ -6,7 +6,5 @@ interface UpdateInfoInterface {
 
     val updateClass: UpdateClass
 
-    fun needToRequest(pokemonList: List<Pokemon>): Boolean
-
-    fun getRequestPokemons(pokemonList: List<Pokemon>): List<Int>
+    fun needToRequest(pokemon: Pokemon): Boolean
 }

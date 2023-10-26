@@ -13,9 +13,8 @@ import com.project.mypokedex.model.PokemonColor
 import com.project.mypokedex.model.PokemonGeneration
 import com.project.mypokedex.model.PokemonSpecies
 import com.project.mypokedex.model.PokemonType
-import com.project.mypokedex.model.downloadInfo.DownloadInfoType
-import com.project.mypokedex.model.downloadInfo.RequestUpdateClass
-import com.project.mypokedex.model.downloadInfo.UpdateInfo
+import com.project.mypokedex.model.downloadInfo.DownloadType
+import com.project.mypokedex.model.downloadInfo.UpdateClass
 import com.project.mypokedex.network.responses.BasicKeysResponse
 import com.project.mypokedex.network.responses.BasicResponse
 import com.project.mypokedex.network.responses.EvolutionChainResponse
@@ -45,22 +44,24 @@ class PokemonRepository @Inject constructor(
     private val evolutionChainClient: EvolutionChainService,
     private val pokemonSpeciesClient: PokemonSpeciesService,
     val context: Context
-): RequestUpdateClass {
+) {
     companion object {
         private const val MAX_BASIC_KEY_RETRY = 5
         private const val TAG = "PokemonRepository"
     }
 
+    // Repository
     private var pokemonBasicKeyID: Map<Int, String> = emptyMap()
     private var pokemonBasicKeyName: Map<String, Int> = emptyMap()
     private var totalPokemons = 0
-
-    private val requestPokemons = ArrayList<Int>()
-
     val pokemonList: MutableStateFlow<List<Pokemon>> = MutableStateFlow(emptyList())
+
+    // Download
+    private val requestPokemons = ArrayList<Int>()
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
     var needToRequestPokemons: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var pokemonDownloadInfo: DownloadInfoType = DownloadInfoType.None()
+    var pokemonDownloadInfo: DownloadType = DownloadType.None
+    private var updateClassToDownload: List<UpdateClass> = emptyList()
 
     init {
         CoroutineScope(Main).launch {
@@ -81,9 +82,8 @@ class PokemonRepository @Inject constructor(
             Log.i(TAG, "verifyDaoData: Basic Keys read from DAO")
         }
 
-        pokemonDownloadInfo =
-            DownloadInfoType.getPokemonDownloadInfo(pokemonList.value, totalPokemons)
-        needToRequestPokemons.value = pokemonDownloadInfo != DownloadInfoType.None()
+        pokemonDownloadInfo = DownloadType.getDownloadType(pokemonList.value, totalPokemons)
+        needToRequestPokemons.value = pokemonDownloadInfo != DownloadType.None
 
         if (!needToRequestPokemons.value) {
             Log.i(TAG, "verifyDaoData: Pokemon List read from DAO")
@@ -107,6 +107,8 @@ class PokemonRepository @Inject constructor(
                 pokemonList.value
             )
         )
+
+        updateClassToDownload = UpdateClass.getClasses(pokemonList.value)
     }
 
     private suspend fun getBasicKeys() {
@@ -150,11 +152,15 @@ class PokemonRepository @Inject constructor(
         pokemonBasicKeyName = keyList.associate { it.first to it.second }
     }
 
-    override suspend fun requestInfo(id: Int) {
-        if (pokemonDownloadInfo == DownloadInfoType.FullInfo()) {
+    suspend fun requestInfo(id: Int) {
+        if (pokemonDownloadInfo == DownloadType.FullInfo) {
             requestPokemonFull(id)
-        } else if (pokemonDownloadInfo == DownloadInfoType.NewInfo(emptyList())) {
-            requestOnlyPokemonInfo(id)
+        } else if (pokemonDownloadInfo == DownloadType.NewInfo) {
+            updateClassToDownload.forEach { updateClass ->
+                when (updateClass) {
+                    UpdateClass.PokemonClass -> requestOnlyPokemonInfo(id)
+                }
+            }
         }
     }
 
@@ -189,8 +195,7 @@ class PokemonRepository @Inject constructor(
     }
 
     private fun calculateProgressRequest() {
-        progressRequest.value =
-            1F - (requestPokemons.size.toFloat() / totalPokemons.toFloat())//pokemonList.value.size.toFloat() / totalPokemons.toFloat()
+        progressRequest.value = 1F - (requestPokemons.size.toFloat() / totalPokemons.toFloat())
         Log.i(TAG, "ProgressRequest: ${progressRequest.value}%")
     }
 
