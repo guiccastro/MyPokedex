@@ -10,7 +10,7 @@ import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.model.Pokemon
 
 @Database(
-    version = 2,
+    version = 3,
     entities = [Pokemon::class]
 )
 @TypeConverters(DatabaseConverters::class)

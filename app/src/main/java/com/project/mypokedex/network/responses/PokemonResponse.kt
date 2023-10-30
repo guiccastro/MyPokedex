@@ -24,7 +24,7 @@ data class PokemonResponse(
         }
         val species = species.url.getIDFromURL()
 
-        val newPokemon = Pokemon(id, name, types, species, sprites, height)
+        val newPokemon = Pokemon(id, name, types, species, sprites, height, weight)
         Log.i("PokemonResponse", "createPokemon: Pokemon created $newPokemon")
 
         return newPokemon

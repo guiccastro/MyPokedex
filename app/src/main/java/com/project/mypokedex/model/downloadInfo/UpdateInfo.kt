@@ -10,6 +10,16 @@ enum class UpdateInfo : UpdateInfoInterface {
         override fun needToRequest(pokemon: Pokemon): Boolean {
             return pokemon.height == -1
         }
+    },
+
+    Weight {
+        override val updateClass: UpdateClass
+            get() = UpdateClass.PokemonClass
+
+        override fun needToRequest(pokemon: Pokemon): Boolean {
+            return pokemon.weight == -1
+        }
+
     };
 
     companion object {
