@@ -56,9 +56,3 @@ enum class DownloadType : DownloadTypeInterface {
         }
     }
 }
-
-interface DownloadTypeInterface {
-    fun needToRequest(pokemonList: List<Pokemon>, totalPokemons: Int): Boolean
-
-    fun getRequestPokemons(pokemonBasicKeys: List<Int>, pokemonList: List<Pokemon>): List<Int>
-}

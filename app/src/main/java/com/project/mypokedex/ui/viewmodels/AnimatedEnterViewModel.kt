@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnimatedEnterViewModel @Inject constructor(
-    private val repository: PokemonRepository
+    private val repository: PokemonRepository,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AnimatedEnterUIState> =
@@ -31,7 +31,7 @@ class AnimatedEnterViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.progressRequest.collect {
+            repository.downloaderInfo.progressRequest.collect {
                 _uiState.value = _uiState.value.copy(
                     downloadProgress = it,
                     formattedDownloadProgress = "${downloadProgressFormatter.format(it * 100)}%",
@@ -41,11 +41,11 @@ class AnimatedEnterViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.needToRequestPokemons.collect { needToRequestPokemons ->
+            repository.downloaderInfo.needToRequestPokemons.collect { needToRequestPokemons ->
                 _uiState.update {
                     it.copy(
                         showDownloadMessage = needToRequestPokemons,
-                        downloadInfoType = repository.pokemonDownloadInfo
+                        downloadInfoType = repository.downloaderInfo.pokemonDownloadInfo
                     )
                 }
             }
@@ -54,7 +54,11 @@ class AnimatedEnterViewModel @Inject constructor(
 
     private fun onDownloadClick() {
         viewModelScope.launch {
-            repository.prepareToRequestPokemons()
+            repository.downloaderInfo.requestPokemons(
+                repository.getBasicKeys(),
+                repository.pokemonList.value,
+                repository.getTotalPokemons()
+            )
         }
 
         _uiState.update {
