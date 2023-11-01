@@ -22,7 +22,7 @@ val bulbasaur = Pokemon(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),
         varieties = emptyList(),
         generation = PokemonGeneration.Gen1,
-        //color = PokemonColor.Green
+        color = PokemonColor.Green
     )
 }
 
@@ -39,7 +39,7 @@ val charmander = Pokemon(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),
         varieties = emptyList(),
         generation = PokemonGeneration.Gen1,
-        //color = PokemonColor.Yellow
+        color = PokemonColor.Yellow
     )
 }
 
@@ -56,7 +56,7 @@ val squirtle = Pokemon(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),
         varieties = emptyList(),
         generation = PokemonGeneration.Gen1,
-        //color = PokemonColor.Blue
+        color = PokemonColor.Blue
     )
 }
 
@@ -73,7 +73,7 @@ val charizard = Pokemon(
         evolutionChain = EvolutionChain(EvolutionChainItem(1, emptyList())),
         varieties = emptyList(),
         generation = PokemonGeneration.Gen1,
-        //color = PokemonColor.Red
+        color = PokemonColor.Red
     )
 }
 

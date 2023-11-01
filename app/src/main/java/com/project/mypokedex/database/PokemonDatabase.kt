@@ -8,7 +8,7 @@ import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.model.Pokemon
 
 @Database(
-    version = 4,
+    version = 5,
     exportSchema = true,
     entities = [Pokemon::class]
 )

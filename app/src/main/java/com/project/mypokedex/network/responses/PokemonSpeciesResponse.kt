@@ -44,7 +44,7 @@ data class PokemonSpeciesResponse(
         }.join()
         Log.i("PokemonSpeciesResponse", "createPokemonSpecies: Pokemon species created")
 
-        return PokemonSpecies(evolutionChain, varieties, generation)
+        return PokemonSpecies(evolutionChain, varieties, generation, color)
     }
 
     private fun List<PokemonSpeciesVarietiesResponse>.createPokemonVarieties(): List<Int> {

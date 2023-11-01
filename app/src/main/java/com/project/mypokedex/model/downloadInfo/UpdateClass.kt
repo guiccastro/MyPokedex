@@ -9,6 +9,14 @@ enum class UpdateClass : UpdateClassInterface {
                 UpdateInfo.getProperties(this).any { it.needToRequest(pokemon) }
             }
         }
+    },
+
+    PokemonSpecies {
+        override fun needToRequest(pokemonList: List<Pokemon>): Boolean {
+            return pokemonList.any { pokemon ->
+                UpdateInfo.getProperties(this).any { it.needToRequest(pokemon) }
+            }
+        }
     };
 
     companion object {

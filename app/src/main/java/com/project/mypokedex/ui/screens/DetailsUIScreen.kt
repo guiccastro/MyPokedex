@@ -88,7 +88,7 @@ import com.project.mypokedex.ui.theme.White
 @Composable
 fun DetailsUIScreen(state: DetailsScreenUIState) {
     CardScreen(
-        cardInternBackground = MainBlue //state.pokemon?.species?.color?.getColor() ?: MainBlue
+        cardInternBackground = state.pokemon?.species?.color?.getColor() ?: MainBlue
     ) {
         Column(
             modifier = Modifier

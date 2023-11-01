@@ -33,12 +33,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.model.AnimatedEnterOrientation
 import com.project.mypokedex.model.downloadInfo.DownloadType
+import com.project.mypokedex.model.downloadInfo.UpdateInfo
 import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
@@ -249,6 +251,36 @@ fun DownloadMessage(state: AnimatedEnterUIState) {
                     lineHeight = 16.sp
                 )
 
+
+                if (state.downloadInfoType == DownloadType.NewInfo && state.downloadNewProperties.isNotEmpty()) {
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.animated_enter_new_info_title_properties),
+                            style = PokemonGB,
+                            color = BlackTextColor,
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 2.dp)
+                        )
+
+                        state.downloadNewProperties.forEach {
+                            Text(
+                                text = " - " + stringResource(id = it),
+                                style = PokemonGB,
+                                color = BlackTextColor,
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 2.dp)
+                            )
+                        }
+                    }
+                }
+
                 Text(
                     text = stringResource(id = R.string.animated_enter_message_download_now),
                     style = PokemonGB,
@@ -298,7 +330,12 @@ fun AnimatedEnterPreview() {
                     isDownloading = true,
                     downloadProgress = 0.75F,
                     formattedDownloadProgress = "75%",
-                    showDownloadMessage = true
+                    showDownloadMessage = true,
+                    downloadInfoType = DownloadType.NewInfo,
+                    downloadNewProperties = listOf(
+                        UpdateInfo.Height.getDescription(),
+                        UpdateInfo.Weight.getDescription()
+                    )
                 )
             )
         }

@@ -1,8 +1,10 @@
 package com.project.mypokedex.model
 
 import android.util.Log
+import androidx.annotation.StringRes
 import com.project.mypokedex.model.downloadInfo.DownloadType
 import com.project.mypokedex.model.downloadInfo.UpdateClass
+import com.project.mypokedex.model.downloadInfo.UpdateInfo
 import com.project.mypokedex.network.responses.BasicKeysResponse
 import com.project.mypokedex.network.services.EvolutionChainService
 import com.project.mypokedex.network.services.PokemonService
@@ -30,6 +32,9 @@ class DownloaderInfo(
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
     var needToRequestPokemons: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var pokemonDownloadInfo: DownloadType = DownloadType.None
+
+    @StringRes
+    var pokemonPropertiesDesc: List<Int> = emptyList()
     private var updateClassToDownload: List<UpdateClass> = emptyList()
 
     private var onFailureCountBasicKeys = 0
@@ -59,6 +64,7 @@ class DownloaderInfo(
 
     fun prepareToDownload(pokemonList: List<Pokemon>, totalPokemons: Int) {
         pokemonDownloadInfo = DownloadType.getDownloadType(pokemonList, totalPokemons)
+        pokemonPropertiesDesc = UpdateInfo.getDescription(pokemonList)
         needToRequestPokemons.value = pokemonDownloadInfo != DownloadType.None
 
         if (!needToRequestPokemons.value) {
@@ -124,6 +130,7 @@ class DownloaderInfo(
             updateClassToDownload.forEach { updateClass ->
                 when (updateClass) {
                     UpdateClass.PokemonClass -> requestOnlyPokemonInfo(id)
+                    UpdateClass.PokemonSpecies -> requestOnlyPokemonSpecies(id)
                 }
             }
         }
@@ -159,6 +166,21 @@ class DownloaderInfo(
         } catch (e: Exception) {
             logStatus("requestOnlyPokemonInfo: Failure on requesting pokemon $id - $e")
             requestOnlyPokemonInfo(id)
+        }
+    }
+
+    private suspend fun requestOnlyPokemonSpecies(id: Int) {
+        try {
+            val oldPokemon = repository.getPokemon(id) ?: return
+            val speciesId = oldPokemon.speciesId
+            val newSpecies = getPokemonSpecies(speciesId)
+            val newPokemon = oldPokemon.apply {
+                species = newSpecies
+            }
+            repository.replacePokemon(newPokemon)
+        } catch (e: Exception) {
+            logStatus("requestOnlyPokemonSpecies: Failure on requesting pokemon species $id - $e")
+            requestOnlyPokemonSpecies(id)
         }
     }
 

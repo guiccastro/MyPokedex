@@ -78,12 +78,12 @@ class DatabaseConverters {
     }
 
     @TypeConverter
-    fun pokemonColorToString(color: PokemonColor): String {
-        return Gson().toJson(color)
+    fun pokemonColorToInt(color: PokemonColor): Int {
+        return color.id
     }
 
     @TypeConverter
-    fun stringToPokemonColor(str: String): PokemonColor {
-        return Gson().fromJson(str, PokemonColor::class.java)
+    fun intToPokemonColor(id: Int): PokemonColor {
+        return PokemonColor.fromId(id)
     }
 }

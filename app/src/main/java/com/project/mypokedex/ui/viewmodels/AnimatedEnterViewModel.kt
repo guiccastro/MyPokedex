@@ -45,7 +45,8 @@ class AnimatedEnterViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         showDownloadMessage = needToRequestPokemons,
-                        downloadInfoType = repository.downloaderInfo.pokemonDownloadInfo
+                        downloadInfoType = repository.downloaderInfo.pokemonDownloadInfo,
+                        downloadNewProperties = repository.downloaderInfo.pokemonPropertiesDesc
                     )
                 }
             }

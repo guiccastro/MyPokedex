@@ -7,6 +7,7 @@ import com.project.mypokedex.ui.theme.FairyColor
 import com.project.mypokedex.ui.theme.FightingColor
 import com.project.mypokedex.ui.theme.GhostColor
 import com.project.mypokedex.ui.theme.GrassColor
+import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.NormalColor
 import com.project.mypokedex.ui.theme.RockColor
@@ -22,11 +23,13 @@ enum class PokemonColor(val id: Int) {
     Purple(7),
     Red(8),
     White(9),
-    Yellow(10);
+    Yellow(10),
+    Unknown(0),
+    None(-1);
 
     companion object {
         fun fromId(id: Int): PokemonColor {
-            return values().firstOrNull { it.id == id } ?: Black
+            return values().firstOrNull { it.id == id } ?: Unknown
         }
     }
 
@@ -42,6 +45,8 @@ enum class PokemonColor(val id: Int) {
             Red -> FightingColor
             White -> MainWhite
             Yellow -> ElectricColor
+            Unknown -> MainBlue
+            None -> MainBlue
         }
     }
 }
