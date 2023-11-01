@@ -22,6 +22,12 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -51,6 +57,9 @@ android {
     }
     kapt {
         correctErrorTypes true
+    }
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
 }
 
@@ -102,6 +111,8 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    androidTestImplementation "android.arch.persistence.room:testing:1.1.1"
+    androidTestImplementation "androidx.room:room-testing:2.6.0"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:2.44"

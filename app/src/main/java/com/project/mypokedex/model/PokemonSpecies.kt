@@ -4,5 +4,5 @@ data class PokemonSpecies(
     val evolutionChain: EvolutionChain,
     val varieties: List<Int>,
     val generation: PokemonGeneration?,
-    val color: PokemonColor
+    //val color: PokemonColor
 )

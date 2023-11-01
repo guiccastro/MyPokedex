@@ -1,5 +1,6 @@
 package com.project.mypokedex.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -13,6 +14,8 @@ class Pokemon(
     val height: Int,
     val weight: Int
 ) {
+
+    @Embedded
     var species: PokemonSpecies? = null
 
     override fun toString(): String {
