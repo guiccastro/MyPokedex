@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyPokedex</string>
+    <string name="app_name">MyDex</string>
 
     <!-- Animated Enter Screen -->
     <string name="animated_enter_download_description">Downloading Pokémon info.</string>
@@ -32,7 +32,7 @@
     <string name="about_screen_contact_title">Contact</string>
     <string name="about_screen_contact">You can contact me through my linkedin.</string>
     <string name="about_screen_disclaimer_title">Disclaimer</string>
-    <string name="about_screen_disclaimer">MyPokedex is an unofficial, free fan made app and is not affiliated, endorsed or supported by Nintendo, GAME FREAK or The Pokémon Company in any way. Some images used in this are copyrighted and supported under fair use. Pokémon and Pokémon character names are trademarks of Nintendo. No copyright infringement intended.</string>
+    <string name="about_screen_disclaimer">MyDex is an unofficial, free fan made app and is not affiliated, endorsed or supported by Nintendo, GAME FREAK or The Pokémon Company in any way. Some images used in this are copyrighted and supported under fair use. Pokémon and Pokémon character names are trademarks of Nintendo. No copyright infringement intended.</string>
     <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
 
     <!-- Details Screen -->

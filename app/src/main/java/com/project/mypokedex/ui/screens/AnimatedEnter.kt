@@ -196,7 +196,7 @@ fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIStat
                 .padding(vertical = 20.dp, horizontal = 20.dp)
         ) {
             ResponsiveText(
-                text = "MyPokedex",
+                text = stringResource(id = R.string.app_name),
                 textStyle = PokemonGB,
                 targetTextSizeHeight = 26.sp,
                 color = BlackTextColor,
