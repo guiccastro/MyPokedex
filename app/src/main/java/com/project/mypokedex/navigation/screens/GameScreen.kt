@@ -21,6 +21,8 @@ object GameScreen : Screen {
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
         override fun getTitle(): Int = R.string.game_screen_title
 
+        override fun hasMenu(): Boolean = true
+
         override fun hasReturn(): Boolean = false
 
         override fun getActionItems(): List<TopAppBarActionItem> = emptyList()

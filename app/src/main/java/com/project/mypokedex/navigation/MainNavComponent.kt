@@ -87,6 +87,7 @@ class MainNavComponent private constructor() {
                 topAppBarComponent?.let {
                     TopAppBarUIState(
                         title = topAppBarComponent.getTitle(),
+                        hasMenu = topAppBarComponent.hasMenu(),
                         hasReturn = topAppBarComponent.hasReturn(),
                         onClickReturn = { navController.popBackStack() },
                         actionItems = topAppBarComponent.getActionItems()

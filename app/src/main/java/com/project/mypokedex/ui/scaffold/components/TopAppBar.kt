@@ -29,7 +29,10 @@ import com.project.mypokedex.ui.theme.PokemonGB
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
+fun TopBar(
+    state: TopAppBarUIState = TopAppBarUIState(),
+    onMenuClick: () -> Unit = {}
+) {
     TopAppBar(
         modifier = Modifier
             .bottomBorder(1.dp, MainBlack)
@@ -59,6 +62,13 @@ fun TopBar(state: TopAppBarUIState = TopAppBarUIState()) {
                     id = R.drawable.ic_arrow_back,
                     clickable = true,
                     onClick = state.onClickReturn,
+                    boxPadding = PaddingValues(horizontal = 10.dp)
+                )
+            } else if (state.hasMenu) {
+                AppIcon(
+                    id = R.drawable.ic_menu,
+                    clickable = true,
+                    onClick = { onMenuClick() },
                     boxPadding = PaddingValues(horizontal = 10.dp)
                 )
             }
