@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.sampledata.charmander
@@ -26,10 +28,12 @@ import com.project.mypokedex.sampledata.listPokemons
 import com.project.mypokedex.ui.components.AppButton
 import com.project.mypokedex.ui.components.PokemonImage
 import com.project.mypokedex.ui.stateholders.GameScreenUIState
+import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainBlue
 import com.project.mypokedex.ui.theme.MainWhite
 import com.project.mypokedex.ui.theme.MyPokedexTheme
+import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.Transparent
 import com.project.mypokedex.ui.theme.White
 
@@ -43,6 +47,26 @@ fun GameUIScreen(state: GameScreenUIState) {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = CenterHorizontally
     ) {
+        Text(
+            text = stringResource(id = R.string.current_points) + " " + state.currentPoints,
+            style = PokemonGB,
+            color = BlackTextColor,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            fontSize = 14.sp
+        )
+
+        Text(
+            text = stringResource(id = R.string.highest_points) + " " + state.highestPoints,
+            style = PokemonGB,
+            color = BlackTextColor,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 4.dp),
+            fontSize = 10.sp
+        )
+
         PokemonImage(
             url = state.pokemon?.getGifOrImage(),
             clickable = state.answered,
@@ -103,7 +127,14 @@ fun OptionsButtons(state: GameScreenUIState, modifier: Modifier = Modifier) {
 fun GameUIScreenPreview() {
     MyPokedexTheme {
         Surface {
-            GameUIScreen(state = GameScreenUIState(pokemon = charmander, options = listPokemons))
+            GameUIScreen(
+                state = GameScreenUIState(
+                    pokemon = charmander,
+                    options = listPokemons,
+                    highestPoints = 100,
+                    currentPoints = 20
+                )
+            )
         }
     }
 }

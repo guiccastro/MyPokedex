@@ -11,5 +11,7 @@ data class GameScreenUIState(
     val isCorrect: Boolean = false,
     val buttonsUIState: List<Pair<Color, Boolean>> = emptyList(),
     val onClickNext: () -> Unit = {},
-    val onClickPokemon: () -> Unit = {}
+    val onClickPokemon: () -> Unit = {},
+    val highestPoints: Int = 0,
+    val currentPoints: Int = 0
 )

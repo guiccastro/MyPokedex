@@ -19,6 +19,8 @@
     <string name="grid_screen_search">Search</string>
     <string name="grid_screen_label">Grid</string>
     <string name="grid_screen_title">Grid Screen</string>
+    <string name="highest_points">Highest points:</string>
+    <string name="current_points">Current points:</string>
 
     <!-- List Screen -->
     <string name="list_screen_label">List</string>

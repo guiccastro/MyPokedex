@@ -26,6 +26,8 @@ class GameScreenViewModel @Inject constructor(
         MutableStateFlow(GameScreenUIState())
     val uiState get() = _uiState.asStateFlow()
 
+    private var verifypoints = true
+
     init {
         _uiState.update { currentState ->
             currentState.copy(
@@ -60,6 +62,7 @@ class GameScreenViewModel @Inject constructor(
                 buttonsUIState = emptyList()
             )
         }
+        verifypoints = true
     }
 
     private fun onOptionClick(pokemon: Pokemon) {
@@ -71,6 +74,7 @@ class GameScreenViewModel @Inject constructor(
 
             val buttonsUIState = _uiState.value.options.map {
                 if (_uiState.value.answered) {
+                    updatePoints()
                     if (_uiState.value.isCorrect) {
                         if (it == pokemon) {
                             Pair(CorrectAnswer, true)
@@ -108,6 +112,32 @@ class GameScreenViewModel @Inject constructor(
             DetailsScreen.apply {
                 navigateToItself(pokemonId = _uiState.value.pokemon?.id)
             }
+        }
+    }
+
+    private fun updatePoints() {
+        if (verifypoints) {
+            val isCorrect = _uiState.value.isCorrect
+            var currentPoints = _uiState.value.currentPoints
+            var highestPoints = _uiState.value.highestPoints
+
+            if (isCorrect) {
+                currentPoints++
+
+                if (currentPoints > highestPoints) {
+                    highestPoints = currentPoints
+                }
+            } else {
+                currentPoints = 0
+            }
+
+            _uiState.update {
+                it.copy(
+                    highestPoints = highestPoints,
+                    currentPoints = currentPoints
+                )
+            }
+            verifypoints = false
         }
     }
 }
