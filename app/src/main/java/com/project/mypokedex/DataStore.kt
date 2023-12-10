@@ -3,11 +3,13 @@ package com.project.mypokedex
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private object PreferencesKeys {
@@ -15,6 +17,10 @@ private object PreferencesKeys {
     val BASIC_KEYS = stringPreferencesKey("basic-keys")
     val TOTAL_POKEMONS = intPreferencesKey("total-pokemons")
     val USER_HEIGHT = intPreferencesKey("user-height")
+    val GAME_HIGHEST_POINTS = intPreferencesKey("game-highest-points")
+    val GAME_CURRENT_POINTS = intPreferencesKey("game-current-points")
+    val GAME_CURRENT_OPTIONS = stringPreferencesKey("game-current-options")
+    val GAME_ANSWERED = booleanPreferencesKey("game-answered")
 }
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PreferencesKeys.DATA_STORE_TITLE)
@@ -59,5 +65,57 @@ fun getUserHeight(context: Context): Flow<Int> {
     return context.dataStore.data.map { preferences ->
         preferences[PreferencesKeys.USER_HEIGHT] ?: 150
     }
+}
+
+suspend fun saveGameHighestPoints(context: Context, highestPoints: Int) {
+    context.dataStore.edit { settings ->
+        settings[PreferencesKeys.GAME_HIGHEST_POINTS] = highestPoints
+    }
+}
+
+fun getGameHighestPoints(context: Context): Flow<Int> {
+    return context.dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.GAME_HIGHEST_POINTS] ?: 0
+    }
+}
+
+suspend fun saveGameCurrentPoints(context: Context, currentPoints: Int) {
+    context.dataStore.edit { settings ->
+        settings[PreferencesKeys.GAME_CURRENT_POINTS] = currentPoints
+    }
+}
+
+fun getGameCurrentPoints(context: Context): Flow<Int> {
+    return context.dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.GAME_CURRENT_POINTS] ?: 0
+    }
+}
+
+suspend fun saveGameCurrentOptions(context: Context, currentOptions: List<Pair<Boolean, Int>>) {
+    context.dataStore.edit { settings ->
+        settings[PreferencesKeys.GAME_CURRENT_OPTIONS] =
+            currentOptions.joinToString("|") { "${it.first}/${it.second}" }
+    }
+}
+
+suspend fun getGameCurrentOptions(context: Context): List<Pair<Boolean, Int>>? {
+    return context.dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.GAME_CURRENT_OPTIONS]?.split("|")?.map {
+            val pairValues = it.split("/")
+            Pair(pairValues[0].toBoolean(), pairValues[1].toInt())
+        }
+    }.first()
+}
+
+suspend fun saveGameAnswered(context: Context, answered: Boolean) {
+    context.dataStore.edit { settings ->
+        settings[PreferencesKeys.GAME_ANSWERED] = answered
+    }
+}
+
+suspend fun getGameAnswered(context: Context): Boolean {
+    return context.dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.GAME_ANSWERED] ?: false
+    }.first()
 }
 
