@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
+import com.project.mypokedex.ui.components.ResponsiveText
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainRed
@@ -153,12 +154,13 @@ fun TitleSection(title: String, modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 20.dp)
         ) {
-            Text(
+            ResponsiveText(
                 text = "  " + title.uppercase() + "  ",
-                style = PokemonGB,
+                textStyle = PokemonGB,
                 color = BlackTextColor,
-                fontSize = 16.sp,
+                targetTextSizeHeight = 16.sp,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,

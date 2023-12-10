@@ -9,11 +9,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.mypokedex.R
 import com.project.mypokedex.model.PokemonGeneration
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
@@ -30,7 +32,7 @@ fun PokemonGenerationToUI(
 ) {
     val shape = RoundedCornerShape(4.dp)
     Text(
-        text = pokemonGeneration.getTitle(),
+        text = stringResource(id = R.string.generation, pokemonGeneration.id),
         style = PokemonGB,
         color = BlackTextColor,
         fontWeight = FontWeight.Bold,

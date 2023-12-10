@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">MyDex</string>
+    <string name="app_name" translatable="false">MyDex</string>
 
     <!-- Animated Enter Screen -->
     <string name="animated_enter_download_description">Downloading Pokémon info.</string>
     <string name="animated_enter_message_title">Download Info</string>
-    <string name="animated_enter_message_full_info">MyPokedex will download all the basic data now, so you can enjoy the app offline later. Only the images of the pokémons will be downloaded during the use of the app.</string>
+    <string name="animated_enter_message_full_info">MyDex will download all the basic data now, so you can enjoy the app offline later. Only the images of the pokémons will be downloaded during the use of the app.</string>
     <string name="animated_enter_message_update">New info is available! Download the info now.</string>
     <string name="animated_enter_message_download_now">Download Now</string>
     <string name="animated_enter_message_alert">A Wi-Fi connection is recommended.</string>
@@ -12,7 +12,7 @@
 
     <!-- Game Screen -->
     <string name="game_screen_label">Game</string>
-    <string name="game_screen_title">Who\'s That Pokémon</string>
+    <string name="game_screen_title">Who\'s That Pokémon?</string>
     <string name="game_screen_next_button">Next</string>
 
     <!-- Grid Screen -->
@@ -32,7 +32,7 @@
     <string name="about_screen_about_app">Hi! My name is Guilherme, I\'m a brazilian mobile developer. I developed this app to study and improve my skills about mobile development.</string>
     <string name="about_screen_about_app_extra">Feel free to give me some feedback and ideas about the app.</string>
     <string name="about_screen_contact_title">Contact</string>
-    <string name="about_screen_contact">You can contact me through my linkedin.</string>
+    <string name="about_screen_contact">You can contact me through my Linkedin.</string>
     <string name="about_screen_disclaimer_title">Disclaimer</string>
     <string name="about_screen_disclaimer">MyDex is an unofficial, free fan made app and is not affiliated, endorsed or supported by Nintendo, GAME FREAK or The Pokémon Company in any way. Some images used in this are copyrighted and supported under fair use. Pokémon and Pokémon character names are trademarks of Nintendo. No copyright infringement intended.</string>
     <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
@@ -43,7 +43,7 @@
     <string name="details_screen_varieties_title">Varieties</string>
     <string name="details_screen_sprites_title">Sprites</string>
     <string name="details_screen_advanced_details_title">Details</string>
-    <string name="input_height_dialog_title">Input your height.</string>
+    <string name="input_height_dialog_title">Input your height</string>
     <string name="input_height_dialog_desc">The value must be in centimeter.</string>
     <string name="input_height_dialog_hint">Height</string>
     <string name="input_height_dialog_cancel">Cancel</string>
@@ -88,5 +88,13 @@
     <string name="updateInfo_desc_weight">Weight</string>
     <string name="updateInfo_desc_color">Color</string>
 
-
+    <string name="generation">Generation %1$d</string>
+    <string name="front">Front</string>
+    <string name="back">Back</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="normal">Normal</string>
+    <string name="shiny">Shiny</string>
+    <string name="transparent">Transparent</string>
+    <string name="gray">Gray</string>
 </resources>

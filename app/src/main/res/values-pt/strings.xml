@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Animated Enter Screen -->
+    <string name="animated_enter_download_description">Baixando informações dos Pokémons.</string>
+    <string name="animated_enter_message_title">Baixar Informações</string>
+    <string name="animated_enter_message_full_info">MyDex irá baixar toda as informações básicas agora, para que você possa aproveitar o aplicativo offline depois. Apenas as imagens dos pokémons serão baixadas durante o uso do aplicativo.</string>
+    <string name="animated_enter_message_update">Novas informações estão disponíveis! Baixa as informações agora.</string>
+    <string name="animated_enter_message_download_now">Baixar Agora</string>
+    <string name="animated_enter_message_alert">Uma conexão Wi-Fi é recomendada.</string>
+    <string name="animated_enter_new_info_title_properties">Novas informações adicionadas:</string>
+
+    <!-- Game Screen -->
+    <string name="game_screen_label">Jogo</string>
+    <string name="game_screen_title">Quem é esse Pokémon?</string>
+    <string name="game_screen_next_button">Próximo</string>
+
+    <!-- Grid Screen -->
+    <string name="grid_screen_search">Procurar</string>
+    <string name="grid_screen_label">Grade</string>
+    <string name="grid_screen_title">Tela de Grade</string>
+    <string name="highest_points">Maior pontuação:</string>
+    <string name="current_points">Pontuação atual:</string>
+
+    <!-- List Screen -->
+    <string name="list_screen_label">Lista</string>
+    <string name="list_screen_title">Tela de Lista</string>
+
+    <!-- About Screen -->
+    <string name="about_screen_label">Sobre</string>
+    <string name="about_screen_title">Sobre o App</string>
+    <string name="about_screen_about_app">Olá! Meu nome é Guilherme, eu sou um desenvolvedor mobile brasileiro. Eu desenvolvi esse aplicativo para estudar e melhorar minhas habilidades de desenvolvimento mobile.</string>
+    <string name="about_screen_about_app_extra">Sinta-se livre para me dar opiniões e ideias sobre o aplicativo.</string>
+    <string name="about_screen_contact_title">Contato</string>
+    <string name="about_screen_contact">Você pode me contatar através do meu Linkedin.</string>
+    <string name="about_screen_disclaimer_title">Isenção de Responsabilidade</string>
+    <string name="about_screen_disclaimer">MyDex é um aplicativo não oficial, gratuito feito por fãs e não está afiliado, endossado ou suportado pela Nintendo, GAME FREAK ou The Pokémon Company em nenhuma maneira. Algumas imagens usadas aqui são protegidas por direitos autorais e suportadas sob uso justo. Pokémon e nomes de personagens Pokémons são marcas registradas da Nintendo. Não há intenção de infringir direitos de autoria.</string>
+    <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
+
+    <!-- Details Screen -->
+    <string name="details_screen_title">Tela de Jogo</string>
+    <string name="details_screen_evolution_chain_title">Cadeia de Evolução</string>
+    <string name="details_screen_varieties_title">Variedades</string>
+    <string name="details_screen_sprites_title">Imagens</string>
+    <string name="details_screen_advanced_details_title">Detalhes</string>
+    <string name="input_height_dialog_title">Insira sua altura</string>
+    <string name="input_height_dialog_desc">O valor deve estar em centímetros.</string>
+    <string name="input_height_dialog_hint">Altura</string>
+    <string name="input_height_dialog_cancel">Cancelar</string>
+    <string name="input_height_dialog_save">Salvar</string>
+    <string name="input_height_dialog_error">Altura não é válida. O valor deve conter apenas números and e deve ser maior que zero.</string>
+
+    <!-- Sprites -->
+    <string name="sprites_default_title">Padrão</string>
+    <string name="sprites_other_title">Outros</string>
+    <string name="sprites_dream_world_title">Dream World</string>
+    <string name="sprites_home_title">Home</string>
+    <string name="sprites_official_artwork_title">Arte Oficial</string>
+    <string name="sprites_versions_title">Versões</string>
+    <string name="sprites_generationI_title">Geração I</string>
+    <string name="sprites_generationII_title">Geração II</string>
+    <string name="sprites_generationIII_title">Geração III</string>
+    <string name="sprites_generationIV_title">Geração IV</string>
+    <string name="sprites_generationV_title">Geração V</string>
+    <string name="sprites_generationVI_title">Geração VI</string>
+    <string name="sprites_generationVII_title">Geração VII</string>
+    <string name="sprites_generationVIII_title">Geração VIII</string>
+    <string name="sprites_red_blue_title">Red &amp; Blue</string>
+    <string name="sprites_yellow_title">Yellow</string>
+    <string name="sprites_crystal_title">Crystal</string>
+    <string name="sprites_gold_title">Gold</string>
+    <string name="sprites_silver_title">Silver</string>
+    <string name="sprites_emerald_title">Emerald</string>
+    <string name="sprites_fire_red_leaf_green_title">FireRed &amp; LeafGreen</string>
+    <string name="sprites_ruby_sapphire_title">Ruby &amp; Sapphire</string>
+    <string name="sprites_diamond_pearl_title">Diamond &amp; Pearl</string>
+    <string name="sprites_heart_gold_soul_silver_title">HeartGold &amp; SoulSilver</string>
+    <string name="sprites_platinum_title">Platinum</string>
+    <string name="sprites_black_white_title">Black &amp; White</string>
+    <string name="sprites_animated_title">Animado</string>
+    <string name="sprites_omega_ruby_alpha_sapphire_title">Omega Ruby &amp; Alpha Sapphire</string>
+    <string name="sprites_x_y_title">XY</string>
+    <string name="sprites_icons_title">Ícones</string>
+    <string name="sprites_ultra_sun_ultra_moon_title">Ultra Sun &amp; Ultra Moon</string>
+
+    <!-- UpdateInfo Description -->
+    <string name="updateInfo_desc_height">Altura</string>
+    <string name="updateInfo_desc_weight">Peso</string>
+    <string name="updateInfo_desc_color">Cor</string>
+
+    <string name="generation">Geração %1$d</string>
+    <string name="front">Frente</string>
+    <string name="back">Costas</string>
+    <string name="male">Macho</string>
+    <string name="female">Fêmea</string>
+    <string name="normal">Normal</string>
+    <string name="shiny">Brilhante</string>
+    <string name="transparent">Transparente</string>
+    <string name="gray">Cinza</string>
+</resources>

@@ -235,7 +235,7 @@ fun SpriteTypes(
     ) {
         spriteGenderOptions?.let {
             Text(
-                text = spriteGenderOptions.toString(),
+                text = stringResource(id = (spriteGenderOptions as SpriteTypes).getStringRes()),
                 color = BlackTextColor,
                 fontSize = 12.sp,
                 style = PokemonGB,
@@ -251,7 +251,7 @@ fun SpriteTypes(
         }
         spriteVariantOptions?.let {
             Text(
-                text = spriteVariantOptions.toString(),
+                text = stringResource(id = (spriteVariantOptions as SpriteTypes).getStringRes()),
                 color = BlackTextColor,
                 fontSize = 12.sp,
                 style = PokemonGB,

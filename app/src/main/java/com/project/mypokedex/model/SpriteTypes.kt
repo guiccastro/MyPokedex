@@ -1,5 +1,8 @@
 package com.project.mypokedex.model
 
+import androidx.annotation.StringRes
+import com.project.mypokedex.R
+
 sealed class SpriteTypes {
     object Front : SpriteOrientation, SpriteTypes()
     object Back : SpriteOrientation, SpriteTypes()
@@ -10,8 +13,18 @@ sealed class SpriteTypes {
     object Transparent : SpriteBackground, SpriteTypes()
     object Gray : SpriteBackground, SpriteTypes()
 
-    override fun toString(): String {
-        return this.javaClass.simpleName
+    @StringRes
+    fun getStringRes(): Int {
+        return when (this) {
+            Front -> R.string.front
+            Back -> R.string.back
+            Female -> R.string.female
+            Gray -> R.string.gray
+            Male -> R.string.male
+            Normal -> R.string.normal
+            Shiny -> R.string.shiny
+            Transparent -> R.string.transparent
+        }
     }
 }
 
