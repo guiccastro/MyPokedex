@@ -12,7 +12,7 @@
 
     <!-- Game Screen -->
     <string name="game_screen_label">Jogo</string>
-    <string name="game_screen_title">Quem é esse Pokémon?</string>
+    <string name="game_screen_title">Quem É Esse Pokémon?</string>
     <string name="game_screen_next_button">Próximo</string>
 
     <!-- Grid Screen -->
