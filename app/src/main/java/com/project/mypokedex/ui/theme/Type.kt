@@ -36,7 +36,7 @@ val Typography = Typography(
 )
 
 val PokemonGB = TextStyle(
-    fontFamily = FontFamily(Font(R.font.font_pokemon_gb)),
+    fontFamily = FontFamily(Font(R.font.font_retro_gaming)),
     fontWeight = FontWeight.Normal,
     fontSize = 8.sp
 )
