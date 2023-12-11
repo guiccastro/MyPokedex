@@ -104,4 +104,6 @@
     <!-- Settings Screen -->
     <string name="settings_language_title">Linguagem</string>
     <string name="language_screen_title">Selecionar Linguagem</string>
+    <string name="english_language_option">Inglês</string>
+    <string name="portuguese_language_option">Português Brasileiro</string>
 </resources>
