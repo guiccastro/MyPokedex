@@ -1,7 +1,7 @@
 package com.project.mypokedex.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,11 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.R
+import com.project.mypokedex.extensions.bottomBorder
+import com.project.mypokedex.extensions.topBorder
 import com.project.mypokedex.model.SettingsOptionItem
-import com.project.mypokedex.navigation.screens.AboutScreen
+import com.project.mypokedex.navigation.MainNavComponent
 import com.project.mypokedex.ui.scaffold.MainScaffold
-import com.project.mypokedex.ui.stateholders.SettingsScreenUIState
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainRed
@@ -27,13 +27,13 @@ import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 
 @Composable
-fun SettingsUIScreen(state: SettingsScreenUIState) {
+fun SettingsUIScreen() {
     Column(
         modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 10.dp),
+            .padding(vertical = 10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        state.options.forEach { option ->
+        SettingsOptionItem.values().forEach { option ->
             Text(
                 text = stringResource(id = option.title),
                 style = PokemonGB,
@@ -41,10 +41,22 @@ fun SettingsUIScreen(state: SettingsScreenUIState) {
                 fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(1.dp, MainBlack)
-                    .padding(vertical = 10.dp, horizontal = 10.dp)
+                    .topBorder(1.dp, MainBlack)
+                    .bottomBorder(1.dp, MainBlack)
                     .shadow(4.dp)
+                    .clickable {
+                        MainNavComponent.navController.apply {
+                            option.screen.apply {
+                                navigateToItself(
+                                    navOptions = MainNavComponent.getSingleTopWithPopUpTo(
+                                        getRoute()
+                                    )
+                                )
+                            }
+                        }
+                    }
                     .background(MainRed.copy(alpha = 1F))
+                    .padding(vertical = 10.dp, horizontal = 10.dp)
             )
         }
     }
@@ -56,20 +68,7 @@ fun SettingsScreenPreview() {
     MyPokedexTheme {
         MainScaffold {
             Surface {
-                SettingsUIScreen(
-                    SettingsScreenUIState(
-                        options = listOf(
-                            SettingsOptionItem(
-                                title = R.string.settings_language_title,
-                                screen = AboutScreen
-                            ),
-                            SettingsOptionItem(
-                                title = R.string.drawer_item_settings_title,
-                                screen = AboutScreen
-                            )
-                        )
-                    )
-                )
+                SettingsUIScreen()
             }
         }
     }

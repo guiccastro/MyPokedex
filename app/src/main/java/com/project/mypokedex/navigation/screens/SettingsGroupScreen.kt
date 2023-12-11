@@ -12,7 +12,8 @@ object SettingsGroupScreen : GroupNavigation {
     private const val settingsGraphRoute = "settings"
 
     override val listScreens: List<Screen> = listOf(
-        SettingsScreen
+        SettingsScreen,
+        LanguageScreen
     )
 
     override fun NavGraphBuilder.graph() {

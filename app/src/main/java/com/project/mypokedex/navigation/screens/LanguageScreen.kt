@@ -9,14 +9,14 @@ import com.project.mypokedex.interfaces.BottomAppBarComponent
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.interfaces.TopAppBarComponent
 import com.project.mypokedex.model.TopAppBarActionItem
-import com.project.mypokedex.ui.screens.SettingsUIScreen
+import com.project.mypokedex.ui.screens.LanguageUIScreen
 
-object SettingsScreen : Screen {
+object LanguageScreen : Screen {
 
-    private const val settingsRoute = "SettingsScreen"
+    private const val languageRoute = "LanguageScreen"
 
     override val topAppBarComponent: TopAppBarComponent = object : TopAppBarComponent {
-        override fun getTitle(): Int = R.string.drawer_item_settings_title
+        override fun getTitle(): Int = R.string.language_screen_title
 
         override fun hasMenu(): Boolean = false
 
@@ -28,13 +28,13 @@ object SettingsScreen : Screen {
     override val bottomAppBarComponent: BottomAppBarComponent? = null
 
     override fun NavGraphBuilder.screen() {
-        composable(settingsRoute) {
-            SettingsUIScreen()
+        composable(languageRoute) {
+            LanguageUIScreen()
         }
     }
 
-    override fun getRoute(): String = settingsRoute
+    override fun getRoute(): String = languageRoute
 
     override fun NavController.navigateToItself(pokemonId: Int?, navOptions: NavOptions?) =
-        navigate(settingsRoute, navOptions)
+        navigate(languageRoute, navOptions)
 }
