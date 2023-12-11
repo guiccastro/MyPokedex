@@ -11,6 +11,12 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class MyPokedexApplication : Application(), ImageLoaderFactory {
+
+    override fun onCreate() {
+        super.onCreate()
+        LanguageCentral.initiateLanguage(baseContext)
+    }
+
     override fun newImageLoader(): ImageLoader {
         return ImageLoader.Builder(this)
             .components {

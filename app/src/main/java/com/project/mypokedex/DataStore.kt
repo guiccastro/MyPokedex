@@ -8,9 +8,11 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.project.mypokedex.model.LanguageOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.util.Locale
 
 private object PreferencesKeys {
     const val DATA_STORE_TITLE = "basic-keys-preferences"
@@ -21,6 +23,7 @@ private object PreferencesKeys {
     val GAME_CURRENT_POINTS = intPreferencesKey("game-current-points")
     val GAME_CURRENT_OPTIONS = stringPreferencesKey("game-current-options")
     val GAME_ANSWERED = booleanPreferencesKey("game-answered")
+    val CURRENT_LANGUAGE = stringPreferencesKey("current-language")
 }
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PreferencesKeys.DATA_STORE_TITLE)
@@ -116,6 +119,28 @@ suspend fun saveGameAnswered(context: Context, answered: Boolean) {
 suspend fun getGameAnswered(context: Context): Boolean {
     return context.dataStore.data.map { preferences ->
         preferences[PreferencesKeys.GAME_ANSWERED] ?: false
+    }.first()
+}
+
+suspend fun saveCurrentLanguage(context: Context, currentLanguage: Locale) {
+    context.dataStore.edit { settings ->
+        settings[PreferencesKeys.CURRENT_LANGUAGE] =
+            currentLanguage.language + "|" + currentLanguage.country
+    }
+}
+
+suspend fun getCurrentLanguage(context: Context): Locale? {
+    return context.dataStore.data.map { preferences ->
+        preferences[PreferencesKeys.CURRENT_LANGUAGE]?.let {
+            val localeValue = it.split("|")
+            val language = localeValue.getOrNull(0)
+            val country = localeValue.getOrNull(1)
+            if (language != null && country != null) {
+                Locale(language, country)
+            } else {
+                LanguageOption.English.locale
+            }
+        }
     }.first()
 }
 

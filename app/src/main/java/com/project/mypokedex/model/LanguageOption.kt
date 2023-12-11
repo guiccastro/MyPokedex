@@ -6,9 +6,9 @@ enum class LanguageOption(
     val locale: Locale
 ) {
     English(
-        locale = Locale("en")
+        locale = Locale("en", "US")
     ),
     Portuguese(
-        locale = Locale("pt")
+        locale = Locale("pt", "BR")
     )
 }
