@@ -15,9 +15,7 @@ object MainDrawerMenuComponent {
     private var drawerMenuState: MutableStateFlow<DrawerMenuUIState> =
         MutableStateFlow(DrawerMenuUIState())
 
-    val drawerItems: List<DrawerMenuItem> = listOf(
-        DrawerMenuItem.SettingsDrawerMenuItem
-    )
+    val drawerItems: List<DrawerMenuItem> = DrawerMenuItem.values().toList()
 
     @Composable
     fun drawerMenuState(): DrawerMenuUIState {
