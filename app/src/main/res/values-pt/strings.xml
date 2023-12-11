@@ -100,4 +100,7 @@
 
     <!-- Drawer Menu -->
     <string name="drawer_item_settings_title">Configurações</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_language_title">Linguagem</string>
 </resources>
