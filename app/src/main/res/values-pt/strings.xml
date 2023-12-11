@@ -97,4 +97,7 @@
     <string name="shiny">Brilhante</string>
     <string name="transparent">Transparente</string>
     <string name="gray">Cinza</string>
+
+    <!-- Drawer Menu -->
+    <string name="drawer_item_settings_title">Configurações</string>
 </resources>

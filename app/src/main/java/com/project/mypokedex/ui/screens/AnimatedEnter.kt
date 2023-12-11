@@ -32,7 +32,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +40,7 @@ import com.project.mypokedex.R
 import com.project.mypokedex.model.AnimatedEnterOrientation
 import com.project.mypokedex.model.downloadInfo.DownloadType
 import com.project.mypokedex.model.downloadInfo.UpdateInfo
-import com.project.mypokedex.ui.components.ResponsiveText
+import com.project.mypokedex.ui.components.AppNameCard
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
 import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
 import com.project.mypokedex.ui.theme.BlackTextColor
@@ -189,25 +188,12 @@ fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIStat
     }
 
     if (orientation == AnimatedEnterOrientation.Top) {
-        Box(
+        AppNameCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height((LocalConfiguration.current.screenHeightDp / 2).dp - circleOffset)
                 .padding(vertical = 20.dp, horizontal = 20.dp)
-        ) {
-            ResponsiveText(
-                text = stringResource(id = R.string.app_name),
-                textStyle = PokemonGB,
-                targetTextSizeHeight = 26.sp,
-                color = BlackTextColor,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .background(MainWhite, RoundedCornerShape(6.dp))
-                    .border(4.dp, MainBlack, RoundedCornerShape(6.dp))
-                    .padding(vertical = 10.dp, horizontal = 20.dp)
-            )
-        }
+        )
     }
 }
 

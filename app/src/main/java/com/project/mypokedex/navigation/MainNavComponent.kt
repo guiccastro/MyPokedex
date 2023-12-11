@@ -14,10 +14,13 @@ import com.project.mypokedex.interfaces.GroupNavigation
 import com.project.mypokedex.interfaces.Screen
 import com.project.mypokedex.model.BottomAppBarItem
 import com.project.mypokedex.model.MainBottomAppBarComponent.updateBottomAppBarState
+import com.project.mypokedex.model.MainDrawerMenuComponent
+import com.project.mypokedex.model.MainDrawerMenuComponent.updateDrawerMenuState
 import com.project.mypokedex.model.MainTopAppBarComponent.updateTopAppBarState
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.navigation.screens.HomeGroupScreen
 import com.project.mypokedex.ui.stateholders.BottomAppBarUIState
+import com.project.mypokedex.ui.stateholders.DrawerMenuUIState
 import com.project.mypokedex.ui.stateholders.TopAppBarUIState
 
 class MainNavComponent private constructor() {
@@ -79,6 +82,7 @@ class MainNavComponent private constructor() {
 
             updateTopBar(screen)
             updateBottomBar(screen)
+            updateDrawerMenu(screen)
         }
 
         private fun updateTopBar(screen: Screen?) {
@@ -104,6 +108,15 @@ class MainNavComponent private constructor() {
                 BottomAppBarUIState(
                     selectedItem = bottomAppBarItemSelected,
                     bottomAppBarComponent = screen?.bottomAppBarComponent
+                )
+            )
+        }
+
+        private fun updateDrawerMenu(screen: Screen?) {
+            val drawerItemSelected = MainDrawerMenuComponent.findItemByScreen(screen)
+            updateDrawerMenuState(
+                DrawerMenuUIState(
+                    itemSelected = drawerItemSelected
                 )
             )
         }
