@@ -23,7 +23,7 @@ class Pokemon(
     }
 
     fun formattedID(): String {
-        return "# ${id.toString().padStart(3, '0')}"
+        return "#${id.toString().padStart(3, '0')}"
     }
 
     fun formattedName(): String {
