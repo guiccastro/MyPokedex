@@ -9,17 +9,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -27,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.project.mypokedex.R
+import com.project.mypokedex.extensions.topBorder
 import com.project.mypokedex.model.BackgroundType
 import com.project.mypokedex.model.Pokemon
 import com.project.mypokedex.sampledata.charizard
@@ -37,6 +43,8 @@ import com.project.mypokedex.ui.components.PokemonTypeToUI
 import com.project.mypokedex.ui.components.SearchInputText
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import com.project.mypokedex.ui.theme.BlackTextColor
+import com.project.mypokedex.ui.theme.MainBlack
+import com.project.mypokedex.ui.theme.MainGreen
 import com.project.mypokedex.ui.theme.MyPokedexTheme
 import com.project.mypokedex.ui.theme.PokemonGB
 import com.project.mypokedex.ui.theme.Transparent
@@ -50,7 +58,10 @@ fun GridUIScreen(viewModel: GridScreenViewModel) {
 
 @Composable
 fun GridUIScreen(state: GridScreenUIState) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         AnimatedVisibility(
             visible = state.isSearching,
             enter = expandVertically(),
@@ -63,7 +74,9 @@ fun GridUIScreen(state: GridScreenUIState) {
         }
 
         CardScreen(
-            cardPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp)
+            cardPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp),
+            cardModifier = Modifier
+                .weight(1F)
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
@@ -76,6 +89,8 @@ fun GridUIScreen(state: GridScreenUIState) {
                 }
             }
         }
+
+        DownloadInfo(state)
     }
 }
 
@@ -137,6 +152,33 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
     }
 }
 
+@Composable
+fun DownloadInfo(state: GridScreenUIState) {
+    if (state.downloadProgress < 1F) {
+        Column {
+            Text(
+                text = stringResource(id = R.string.download_description),
+                fontSize = 8.sp,
+                color = BlackTextColor,
+                style = PokemonGB,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .padding(horizontal = 0.dp)
+            )
+
+            LinearProgressIndicator(
+                progress = state.downloadProgress,
+                modifier = Modifier
+                    .height(4.dp)
+                    .fillMaxWidth()
+                    .topBorder((0.5).dp, MainBlack),
+                color = MainGreen
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 fun GridUIScreenPreview() {
@@ -158,5 +200,17 @@ fun PokemonGridCardPreview() {
         Surface {
             PokemonGridCard(charizard)
         }
+    }
+}
+
+@Preview
+@Composable
+fun DownloadInfoPreview() {
+    MyPokedexTheme {
+        DownloadInfo(
+            GridScreenUIState(
+                downloadProgress = 0.75F
+            )
+        )
     }
 }

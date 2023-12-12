@@ -2,13 +2,15 @@
 <resources>
 
     <!-- Animated Enter Screen -->
-    <string name="animated_enter_download_description">Baixando informações dos Pokémons.</string>
     <string name="animated_enter_message_title">Baixar Informações</string>
     <string name="animated_enter_message_full_info">MyDex irá baixar toda as informações básicas agora, para que você possa aproveitar o aplicativo offline depois. Apenas as imagens dos pokémons serão baixadas durante o uso do aplicativo.</string>
     <string name="animated_enter_message_update">Novas informações estão disponíveis! Baixa as informações agora.</string>
     <string name="animated_enter_message_download_now">Baixar Agora</string>
     <string name="animated_enter_message_alert">Uma conexão Wi-Fi é recomendada.</string>
     <string name="animated_enter_new_info_title_properties">Novas informações adicionadas:</string>
+
+    <!-- Download Information -->
+    <string name="download_description">Baixando informações dos Pokémons.</string>
 
     <!-- Game Screen -->
     <string name="game_screen_label">Jogo</string>

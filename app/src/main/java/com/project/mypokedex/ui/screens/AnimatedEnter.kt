@@ -69,26 +69,26 @@ fun AnimatedScreen(state: AnimatedEnterUIState) {
     AnimatedVisibility(
         visible = !state.openApp,
         exit = slideOutVertically(
-            animationSpec = tween(2000),
+            animationSpec = tween(2000, 500),
             targetOffsetY = { -it }
         )
     ) {
-        HalfScreen(AnimatedEnterOrientation.Top, state)
+        HalfScreen(AnimatedEnterOrientation.Top)
     }
 
     AnimatedVisibility(
         visible = !state.openApp,
         exit = slideOutVertically(
-            animationSpec = tween(2000),
+            animationSpec = tween(2000, 500),
             targetOffsetY = { it }
         )
     ) {
-        HalfScreen(AnimatedEnterOrientation.Bottom, state)
+        HalfScreen(AnimatedEnterOrientation.Bottom)
     }
 }
 
 @Composable
-fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIState) {
+fun HalfScreen(orientation: AnimatedEnterOrientation) {
     val heightFraction = when (orientation) {
         AnimatedEnterOrientation.Top -> 0.5f
         AnimatedEnterOrientation.Bottom -> 1F

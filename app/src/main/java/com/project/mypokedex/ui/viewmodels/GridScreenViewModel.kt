@@ -39,6 +39,14 @@ class GridScreenViewModel @Inject constructor(
                 )
             }
         }
+
+        viewModelScope.launch {
+            repository.downloaderInfo.progressRequest.collect {
+                _uiState.value = _uiState.value.copy(
+                    downloadProgress = it
+                )
+            }
+        }
     }
 
     private fun onPokemonClick(pokemon: Pokemon) {

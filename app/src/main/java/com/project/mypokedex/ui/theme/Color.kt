@@ -13,6 +13,7 @@ val HeavyRed = Color(0xFFdd3524)
 val MainBlack = Color(0xFF3c3635)
 val MainBlue = Color(0xFF52b2cf)
 val MainWhite = Color(0xFFd6d5c9)
+val MainGreen = Color(0xFF_5FBD58)
 
 /** Text Colors **/
 val BlackTextColor = MainBlack
@@ -63,4 +64,3 @@ val ShadowColor = Color(0xFF636363)
 val PokeballRed = HeavyRed
 val PokeballWhite = White
 val PokeballDetails = MainBlack
-val AnimatedEnterProgressIndicator = MainBlack

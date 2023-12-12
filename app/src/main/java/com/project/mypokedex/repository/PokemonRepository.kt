@@ -108,7 +108,7 @@ class PokemonRepository @Inject constructor(
     }
 
     fun addPokemon(pokemon: Pokemon) {
-        pokemonList.value = (pokemonList.value + pokemon)
+        pokemonList.value = (pokemonList.value + pokemon).sortedBy { it.id }
 
         CoroutineScope(IO).launch {
             dao.insert(pokemon)

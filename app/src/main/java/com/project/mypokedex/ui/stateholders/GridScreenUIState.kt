@@ -8,4 +8,5 @@ data class GridScreenUIState(
     val searchText: String = "",
     val onSearchChange: (String) -> Unit = {},
     val onPokemonClick: (Pokemon) -> Unit = {},
+    val downloadProgress: Float = 0F
 )
