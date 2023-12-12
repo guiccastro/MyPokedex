@@ -19,11 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.LanguageCentral
 import com.project.mypokedex.R
 import com.project.mypokedex.extensions.bottomBorder
 import com.project.mypokedex.extensions.topBorder
 import com.project.mypokedex.model.LanguageUIOption
+import com.project.mypokedex.repository.LanguageRepository
 import com.project.mypokedex.ui.scaffold.MainScaffold
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
@@ -48,7 +48,7 @@ fun LanguageUIScreen() {
                     .bottomBorder(1.dp, MainBlack)
                     .shadow(4.dp)
                     .clickable {
-                        LanguageCentral.changeLanguage(context, option.languageOption.locale)
+                        LanguageRepository.changeLanguage(context, option.languageOption.locale)
                     }
                     .background(MainRed.copy(alpha = 1F))
                     .padding(vertical = 10.dp, horizontal = 10.dp)
@@ -62,7 +62,7 @@ fun LanguageUIScreen() {
                         .weight(1F)
                 )
 
-                if (option.languageOption.locale == LanguageCentral.getCurrentLanguage()) {
+                if (option.languageOption.locale == LanguageRepository.getCurrentLanguage()) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_check),
                         contentDescription = null,

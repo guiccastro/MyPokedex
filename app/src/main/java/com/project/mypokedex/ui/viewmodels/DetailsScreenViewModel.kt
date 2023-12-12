@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.navOptions
+import com.project.mypokedex.MyPokedexApplication
 import com.project.mypokedex.extensions.toGrid
 import com.project.mypokedex.getUserHeight
 import com.project.mypokedex.model.Pokemon
@@ -36,8 +37,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailsScreenViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    private val repository: PokemonRepository
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<DetailsScreenUIState> =
@@ -76,7 +76,7 @@ class DetailsScreenViewModel @Inject constructor(
                 .getStateFlow<Int?>(pokemonIdArgument, null)
                 .filterNotNull()
                 .collect { id ->
-                    repository.getPokemon(id)?.let {
+                    PokemonRepository.getPokemon(id)?.let {
                         setPokemon(it)
                         selectNewPokemonImage(
                             it,
@@ -91,7 +91,7 @@ class DetailsScreenViewModel @Inject constructor(
         }
 
         CoroutineScope(IO).launch {
-            getUserHeight(repository.context).collect { height ->
+            getUserHeight(MyPokedexApplication.getInstance()).collect { height ->
                 viewModelScope.launch {
                     _uiState.update {
                         it.copy(
@@ -132,7 +132,8 @@ class DetailsScreenViewModel @Inject constructor(
             _uiState.update { currentState ->
                 currentState.copy(
                     evolutionChain = pokemon.species?.evolutionChain?.getAllPaths()
-                        ?.map { it.mapNotNull { id -> repository.getPokemon(id) } } ?: emptyList()
+                        ?.map { it.mapNotNull { id -> PokemonRepository.getPokemon(id) } }
+                        ?: emptyList()
                 )
             }
         }
@@ -142,7 +143,11 @@ class DetailsScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    varieties = pokemon.species?.varieties?.mapNotNull { repository.getPokemon(it) }
+                    varieties = pokemon.species?.varieties?.mapNotNull {
+                        PokemonRepository.getPokemon(
+                            it
+                        )
+                    }
                         ?.filter { it != pokemon }
                         ?.toGrid(3) ?: emptyList()
                 )
@@ -259,7 +264,7 @@ class DetailsScreenViewModel @Inject constructor(
                     )
                 }
                 withContext(IO) {
-                    saveUserHeight(repository.context, newHeight.toInt())
+                    saveUserHeight(MyPokedexApplication.getInstance(), newHeight.toInt())
                 }
             }
         }

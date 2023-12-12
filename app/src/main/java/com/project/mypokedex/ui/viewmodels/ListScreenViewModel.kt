@@ -7,17 +7,12 @@ import com.project.mypokedex.navigation.MainNavComponent
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.ListScreenUIState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ListScreenViewModel @Inject constructor(
-    private val repository: PokemonRepository
-) : ViewModel() {
+class ListScreenViewModel : ViewModel() {
 
     private val _uiState: MutableStateFlow<ListScreenUIState> =
         MutableStateFlow(ListScreenUIState())
@@ -32,7 +27,7 @@ class ListScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.pokemonList.collect {
+            PokemonRepository.pokemonList.collect {
                 _uiState.value = _uiState.value.copy(
                     pokemonList = it
                 )
@@ -57,7 +52,7 @@ class ListScreenViewModel @Inject constructor(
 
     private fun filterList(text: String): List<Pokemon> {
         val id = text.toIntOrNull() ?: 0
-        return repository.pokemonList.value.filter {
+        return PokemonRepository.pokemonList.value.filter {
             it.id == id ||
                     it.name.contains(text) ||
                     it.types.toString().lowercase().contains(text)

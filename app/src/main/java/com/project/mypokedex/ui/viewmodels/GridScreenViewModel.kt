@@ -7,17 +7,12 @@ import com.project.mypokedex.navigation.MainNavComponent
 import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class GridScreenViewModel @Inject constructor(
-    private val repository: PokemonRepository
-) : ViewModel() {
+class GridScreenViewModel : ViewModel() {
 
     private val _uiState: MutableStateFlow<GridScreenUIState> =
         MutableStateFlow(GridScreenUIState())
@@ -33,7 +28,7 @@ class GridScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.pokemonList.collect {
+            PokemonRepository.pokemonList.collect {
                 _uiState.value = _uiState.value.copy(
                     pokemonList = filterList(_uiState.value.searchText)
                 )
@@ -41,7 +36,7 @@ class GridScreenViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.downloaderInfo.progressRequest.collect {
+            PokemonRepository.downloaderInfo.progressRequest.collect {
                 _uiState.value = _uiState.value.copy(
                     downloadProgress = it
                 )
@@ -59,7 +54,7 @@ class GridScreenViewModel @Inject constructor(
 
     fun onSearchClick() {
         _uiState.value = _uiState.value.copy(
-            pokemonList = repository.pokemonList.value,
+            pokemonList = PokemonRepository.pokemonList.value,
             isSearching = !_uiState.value.isSearching,
             searchText = ""
         )
@@ -74,7 +69,7 @@ class GridScreenViewModel @Inject constructor(
 
     private fun filterList(text: String): List<Pokemon> {
         val id = text.toIntOrNull() ?: 0
-        return repository.pokemonList.value.filter {
+        return PokemonRepository.pokemonList.value.filter {
             it.id == id ||
                     it.name.contains(text) ||
                     it.types.toString().lowercase().contains(text)

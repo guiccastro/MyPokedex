@@ -1,13 +1,14 @@
 package com.project.mypokedex.repository
 
-import android.content.Context
 import android.util.Log
+import com.project.mypokedex.MyPokedexApplication
 import com.project.mypokedex.database.dao.PokemonDao
 import com.project.mypokedex.extensions.getIDFromURL
 import com.project.mypokedex.getBasicKeysPreferences
 import com.project.mypokedex.getTotalPokemonsPreferences
 import com.project.mypokedex.model.DownloaderInfo
 import com.project.mypokedex.model.Pokemon
+import com.project.mypokedex.network.PokeAPIRetrofit
 import com.project.mypokedex.network.responses.BasicKeysResponse
 import com.project.mypokedex.network.services.EvolutionChainService
 import com.project.mypokedex.network.services.PokemonService
@@ -22,18 +23,17 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class PokemonRepository @Inject constructor(
-    private val dao: PokemonDao,
-    pokemonClient: PokemonService,
-    evolutionChainClient: EvolutionChainService,
-    pokemonSpeciesClient: PokemonSpeciesService,
-    val context: Context
-) {
-    companion object {
-        private const val TAG = "PokemonRepository"
-    }
+object PokemonRepository {
+    private const val TAG = "PokemonRepository"
+
+    private val dao: PokemonDao = MyPokedexApplication.getDatabase().pokemonDao()
+    private val pokemonClient: PokemonService =
+        PokeAPIRetrofit.createRetrofit().create(PokemonService::class.java)
+    private val evolutionChainClient: EvolutionChainService =
+        PokeAPIRetrofit.createRetrofit().create(EvolutionChainService::class.java)
+    private val pokemonSpeciesClient: PokemonSpeciesService =
+        PokeAPIRetrofit.createRetrofit().create(PokemonSpeciesService::class.java)
 
     val downloaderInfo =
         DownloaderInfo(this, pokemonClient, evolutionChainClient, pokemonSpeciesClient)
@@ -47,6 +47,7 @@ class PokemonRepository @Inject constructor(
         CoroutineScope(Main).launch {
             runBlocking(IO) {
                 pokemonList.value = dao.getAll()
+                val context = MyPokedexApplication.getContext()
                 setBasicKeys(getBasicKeysPreferences(context).first())
                 totalPokemons = getTotalPokemonsPreferences(context).first()
             }
@@ -87,6 +88,7 @@ class PokemonRepository @Inject constructor(
         }
 
         CoroutineScope(IO).launch {
+            val context = MyPokedexApplication.getContext()
             saveBasicKeysPreferences(context, keyList)
             saveTotalPokemonsPreferences(context, totalPokemons)
         }

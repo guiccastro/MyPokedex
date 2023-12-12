@@ -1,4 +1,4 @@
-package com.project.mypokedex
+package com.project.mypokedex.repository
 
 import android.app.LocaleManager
 import android.content.Context
@@ -8,12 +8,13 @@ import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.project.mypokedex.model.LanguageOption
+import com.project.mypokedex.saveCurrentLanguage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import java.util.Locale
 
-object LanguageCentral {
+object LanguageRepository {
 
     private var currentLanguage = LanguageOption.English.locale
 
@@ -22,7 +23,8 @@ object LanguageCentral {
     fun initiateLanguage(context: Context) {
         CoroutineScope(IO).launch {
             val locale =
-                getCurrentLanguage(context) ?: Resources.getSystem().configuration.locales.get(0)
+                com.project.mypokedex.getCurrentLanguage(context)
+                    ?: Resources.getSystem().configuration.locales.get(0)
             changeLanguage(context, locale)
         }
     }

@@ -3,6 +3,7 @@ package com.project.mypokedex.ui.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.mypokedex.MyPokedexApplication
 import com.project.mypokedex.getGameAnswered
 import com.project.mypokedex.getGameCurrentOptions
 import com.project.mypokedex.getGameCurrentPoints
@@ -19,7 +20,6 @@ import com.project.mypokedex.ui.stateholders.GameScreenUIState
 import com.project.mypokedex.ui.theme.CardColor
 import com.project.mypokedex.ui.theme.CorrectAnswer
 import com.project.mypokedex.ui.theme.WrongAnswer
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,12 +27,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-@HiltViewModel
-class GameScreenViewModel @Inject constructor(
-    private val repository: PokemonRepository
-) : ViewModel() {
+class GameScreenViewModel : ViewModel() {
 
     private val _uiState: MutableStateFlow<GameScreenUIState> =
         MutableStateFlow(GameScreenUIState())
@@ -56,7 +52,7 @@ class GameScreenViewModel @Inject constructor(
         }
 
         CoroutineScope(IO).launch {
-            getGameHighestPoints(repository.context).collect { highestPoints ->
+            getGameHighestPoints(MyPokedexApplication.getInstance()).collect { highestPoints ->
                 viewModelScope.launch {
                     _uiState.update {
                         it.copy(
@@ -67,8 +63,9 @@ class GameScreenViewModel @Inject constructor(
             }
         }
 
+        val context = MyPokedexApplication.getInstance()
         CoroutineScope(IO).launch {
-            getGameCurrentPoints(repository.context).collect { currentPoints ->
+            getGameCurrentPoints(context).collect { currentPoints ->
                 viewModelScope.launch {
                     _uiState.update {
                         it.copy(
@@ -80,14 +77,14 @@ class GameScreenViewModel @Inject constructor(
         }
 
         CoroutineScope(IO).launch {
-            val currentOptions = getGameCurrentOptions(repository.context)
+            val currentOptions = getGameCurrentOptions(context)
             Log.println(Log.ASSERT, "getGameCurrentOptions", currentOptions.toString())
             val listPairOptions =
-                currentOptions?.map { Pair(it.first, repository.getPokemon(it.second)) }
+                currentOptions?.map { Pair(it.first, PokemonRepository.getPokemon(it.second)) }
             val options = listPairOptions?.mapNotNull { it.second }
             val pokemon =
                 listPairOptions?.filter { it.first }?.firstNotNullOfOrNull { it.second }
-            val answered = getGameAnswered(repository.context)
+            val answered = getGameAnswered(context)
             if (!answered && options != null && options.size == 3 && pokemon != null) {
                 viewModelScope.launch {
                     _uiState.update {
@@ -110,7 +107,7 @@ class GameScreenViewModel @Inject constructor(
 
     private fun setGame() {
         viewModelScope.launch {
-            val options = repository.getRandomPokemons(3)
+            val options = PokemonRepository.getRandomPokemons(3)
             val pokemon = options.getPokemon()
             _uiState.value = _uiState.value.copy(
                 options = options,
@@ -121,9 +118,10 @@ class GameScreenViewModel @Inject constructor(
             )
 
             withContext(IO) {
+                val context = MyPokedexApplication.getInstance()
                 val pairOptions = options.map { Pair(it.id == pokemon?.id, it.id) }
-                saveGameCurrentOptions(repository.context, pairOptions)
-                saveGameAnswered(repository.context, false)
+                saveGameCurrentOptions(context, pairOptions)
+                saveGameAnswered(context, false)
             }
         }
     }
@@ -137,7 +135,7 @@ class GameScreenViewModel @Inject constructor(
 
             viewModelScope.launch {
                 withContext(IO) {
-                    saveGameAnswered(repository.context, true)
+                    saveGameAnswered(MyPokedexApplication.getInstance(), true)
                 }
             }
 
@@ -212,8 +210,9 @@ class GameScreenViewModel @Inject constructor(
             viewModelScope.launch {
                 withContext(IO) {
                     Log.println(Log.ASSERT, "CurrentPoints", currentPoints.toString())
-                    saveGameCurrentPoints(repository.context, currentPoints)
-                    saveGameHighestPoints(repository.context, highestPoints)
+                    val context = MyPokedexApplication.getInstance()
+                    saveGameCurrentPoints(context, currentPoints)
+                    saveGameHighestPoints(context, highestPoints)
                 }
             }
         }

@@ -18,11 +18,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.project.mypokedex.LanguageCentral
 import com.project.mypokedex.extensions.bottomBorder
 import com.project.mypokedex.extensions.topBorder
 import com.project.mypokedex.model.SettingsOptionItem
 import com.project.mypokedex.navigation.MainNavComponent
+import com.project.mypokedex.repository.LanguageRepository
 import com.project.mypokedex.ui.scaffold.MainScaffold
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
@@ -71,7 +71,7 @@ fun SettingsUIScreen() {
 
                 if (option == SettingsOptionItem.LanguageSettingItem) {
                     Text(
-                        text = LanguageCentral.getCurrentLanguage().toLanguageTag().uppercase(),
+                        text = LanguageRepository.getCurrentLanguage().toLanguageTag().uppercase(),
                         style = PokemonGB,
                         color = BlackTextColor.copy(alpha = 0.5F),
                         fontSize = 12.sp,
