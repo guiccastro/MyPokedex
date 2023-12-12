@@ -89,8 +89,6 @@ fun GridUIScreen(state: GridScreenUIState) {
                 }
             }
         }
-
-        DownloadInfo(state)
     }
 }
 
@@ -152,33 +150,6 @@ fun PokemonGridCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
     }
 }
 
-@Composable
-fun DownloadInfo(state: GridScreenUIState) {
-    if (state.downloadProgress < 1F) {
-        Column {
-            Text(
-                text = stringResource(id = R.string.download_description),
-                fontSize = 8.sp,
-                color = BlackTextColor,
-                style = PokemonGB,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier
-                    .padding(horizontal = 0.dp)
-            )
-
-            LinearProgressIndicator(
-                progress = state.downloadProgress,
-                modifier = Modifier
-                    .height(4.dp)
-                    .fillMaxWidth()
-                    .topBorder((0.5).dp, MainBlack),
-                color = MainGreen
-            )
-        }
-    }
-}
-
 @Preview
 @Composable
 fun GridUIScreenPreview() {
@@ -200,17 +171,5 @@ fun PokemonGridCardPreview() {
         Surface {
             PokemonGridCard(charizard)
         }
-    }
-}
-
-@Preview
-@Composable
-fun DownloadInfoPreview() {
-    MyPokedexTheme {
-        DownloadInfo(
-            GridScreenUIState(
-                downloadProgress = 0.75F
-            )
-        )
     }
 }

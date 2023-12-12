@@ -34,14 +34,6 @@ class GridScreenViewModel : ViewModel() {
                 )
             }
         }
-
-        viewModelScope.launch {
-            PokemonRepository.downloaderInfo.progressRequest.collect {
-                _uiState.value = _uiState.value.copy(
-                    downloadProgress = it
-                )
-            }
-        }
     }
 
     private fun onPokemonClick(pokemon: Pokemon) {
