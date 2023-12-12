@@ -311,7 +311,7 @@ fun PokemonListCard(pokemon: Pokemon, onClick: (Pokemon) -> Unit = {}) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 items(pokemon.types) {
-                    PokemonTypeToUI(pokemonType = it)
+                    PokemonTypeToUI(pokemonType = it, size = 34.dp)
                 }
             }
         }
