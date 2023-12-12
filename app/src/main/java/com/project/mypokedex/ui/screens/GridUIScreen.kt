@@ -65,20 +65,14 @@ fun GridUIScreen(state: GridScreenUIState) {
         CardScreen(
             cardPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 20.dp, top = 10.dp)
         ) {
-            AnimatedVisibility(
-                visible = state.showList,
-                enter = expandVertically(),
-                exit = shrinkVertically()
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
             ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalArrangement = Arrangement.spacedBy(20.dp),
-                    contentPadding = PaddingValues(vertical = 10.dp, horizontal = 6.dp)
-                ) {
-                    items(state.pokemonList) { pokemon ->
-                        PokemonGridCard(pokemon = pokemon, onClick = state.onPokemonClick)
-                    }
+                items(state.pokemonList) { pokemon ->
+                    PokemonGridCard(pokemon = pokemon, onClick = state.onPokemonClick)
                 }
             }
         }

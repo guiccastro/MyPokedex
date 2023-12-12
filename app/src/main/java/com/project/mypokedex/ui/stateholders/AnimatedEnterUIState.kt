@@ -4,9 +4,7 @@ import androidx.annotation.StringRes
 import com.project.mypokedex.model.downloadInfo.DownloadType
 
 data class AnimatedEnterUIState(
-    val isDownloading: Boolean = true,
-    val downloadProgress: Float = 0F,
-    val formattedDownloadProgress: String = "",
+    val openApp: Boolean = false,
     val showDownloadMessage: Boolean = false,
     val downloadInfoType: DownloadType = DownloadType.None,
     @StringRes val downloadNewProperties: List<Int> = emptyList(),

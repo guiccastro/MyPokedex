@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,8 +20,6 @@ class AnimatedEnterViewModel @Inject constructor(
         MutableStateFlow(AnimatedEnterUIState())
     val uiState get() = _uiState.asStateFlow()
 
-    private val downloadProgressFormatter = DecimalFormat("#.##")
-
     init {
         _uiState.update {
             it.copy(
@@ -31,23 +28,16 @@ class AnimatedEnterViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.downloaderInfo.progressRequest.collect {
-                _uiState.value = _uiState.value.copy(
-                    downloadProgress = it,
-                    formattedDownloadProgress = "${downloadProgressFormatter.format(it * 100)}%",
-                    isDownloading = it < 1F
-                )
-            }
-        }
-
-        viewModelScope.launch {
             repository.downloaderInfo.needToRequestPokemons.collect { needToRequestPokemons ->
-                _uiState.update {
-                    it.copy(
-                        showDownloadMessage = needToRequestPokemons,
-                        downloadInfoType = repository.downloaderInfo.pokemonDownloadInfo,
-                        downloadNewProperties = repository.downloaderInfo.pokemonPropertiesDesc
-                    )
+                if (needToRequestPokemons != null) {
+                    _uiState.update {
+                        it.copy(
+                            showDownloadMessage = needToRequestPokemons,
+                            downloadInfoType = repository.downloaderInfo.pokemonDownloadInfo,
+                            downloadNewProperties = repository.downloaderInfo.pokemonPropertiesDesc,
+                            openApp = !needToRequestPokemons
+                        )
+                    }
                 }
             }
         }
@@ -64,7 +54,8 @@ class AnimatedEnterViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                showDownloadMessage = false
+                showDownloadMessage = false,
+                openApp = true
             )
         }
     }

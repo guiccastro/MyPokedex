@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +41,6 @@ import com.project.mypokedex.model.downloadInfo.DownloadType
 import com.project.mypokedex.model.downloadInfo.UpdateInfo
 import com.project.mypokedex.ui.components.AppNameCard
 import com.project.mypokedex.ui.stateholders.AnimatedEnterUIState
-import com.project.mypokedex.ui.theme.AnimatedEnterProgressIndicator
 import com.project.mypokedex.ui.theme.BlackTextColor
 import com.project.mypokedex.ui.theme.MainBlack
 import com.project.mypokedex.ui.theme.MainRed
@@ -57,35 +54,7 @@ import com.project.mypokedex.ui.theme.PokemonGB
 @Composable
 fun AnimatedEnter(state: AnimatedEnterUIState) {
     MainScreen(state = state)
-    DownloadInformation(state = state)
     DownloadMessage(state = state)
-}
-
-@Composable
-fun DownloadInformation(state: AnimatedEnterUIState) {
-    if (state.isDownloading && state.downloadProgress != 0F) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            CircularProgressIndicator(
-                progress = state.downloadProgress,
-                modifier = Modifier
-                    .size(100.dp)
-                    .align(Alignment.Center),
-                color = AnimatedEnterProgressIndicator,
-                strokeWidth = 5.dp
-            )
-
-            Text(
-                text = state.formattedDownloadProgress,
-                color = BlackTextColor,
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .align(Alignment.Center)
-            )
-        }
-    }
 }
 
 @Composable
@@ -98,9 +67,9 @@ fun MainScreen(state: AnimatedEnterUIState) {
 @Composable
 fun AnimatedScreen(state: AnimatedEnterUIState) {
     AnimatedVisibility(
-        visible = state.isDownloading,
+        visible = !state.openApp,
         exit = slideOutVertically(
-            animationSpec = tween(2000, delayMillis = 1000),
+            animationSpec = tween(2000),
             targetOffsetY = { -it }
         )
     ) {
@@ -108,9 +77,9 @@ fun AnimatedScreen(state: AnimatedEnterUIState) {
     }
 
     AnimatedVisibility(
-        visible = state.isDownloading,
+        visible = !state.openApp,
         exit = slideOutVertically(
-            animationSpec = tween(2000, delayMillis = 1000),
+            animationSpec = tween(2000),
             targetOffsetY = { it }
         )
     ) {
@@ -166,24 +135,6 @@ fun HalfScreen(orientation: AnimatedEnterOrientation, state: AnimatedEnterUIStat
                     .background(PokeballWhite, CircleShape)
                     .border(20.dp, PokeballDetails, CircleShape)
                     .align(alignment)
-            )
-        }
-    }
-
-    if (orientation == AnimatedEnterOrientation.Bottom && state.isDownloading && state.downloadProgress != 0F) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 20.dp, horizontal = 20.dp)
-                .offset(y = -circleOffset)
-        ) {
-            Text(
-                text = stringResource(id = R.string.animated_enter_download_description),
-                style = PokemonGB,
-                fontSize = 10.sp,
-                color = BlackTextColor,
-                modifier = Modifier
-                    .align(Alignment.Center)
             )
         }
     }
@@ -315,9 +266,6 @@ fun AnimatedEnterPreview() {
         Surface {
             AnimatedEnter(
                 state = AnimatedEnterUIState(
-                    isDownloading = true,
-                    downloadProgress = 0.75F,
-                    formattedDownloadProgress = "75%",
                     showDownloadMessage = true,
                     downloadInfoType = DownloadType.NewInfo,
                     downloadNewProperties = listOf(

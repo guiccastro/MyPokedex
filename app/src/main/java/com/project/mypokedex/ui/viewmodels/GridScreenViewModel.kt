@@ -8,7 +8,6 @@ import com.project.mypokedex.navigation.screens.DetailsScreen
 import com.project.mypokedex.repository.PokemonRepository
 import com.project.mypokedex.ui.stateholders.GridScreenUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,7 +26,6 @@ class GridScreenViewModel @Inject constructor(
     init {
         _uiState.update { currentState ->
             currentState.copy(
-                showList = false,
                 isSearching = false,
                 onSearchChange = { onSearchChange(it) },
                 onPokemonClick = { onPokemonClick(it) }
@@ -40,13 +38,6 @@ class GridScreenViewModel @Inject constructor(
                     pokemonList = filterList(_uiState.value.searchText)
                 )
             }
-        }
-
-        viewModelScope.launch {
-            delay(1000)
-            _uiState.value = _uiState.value.copy(
-                showList = true,
-            )
         }
     }
 

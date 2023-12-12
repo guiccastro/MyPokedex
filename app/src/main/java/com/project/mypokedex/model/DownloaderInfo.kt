@@ -30,7 +30,7 @@ class DownloaderInfo(
 
     private val requestPokemons = ArrayList<Int>()
     var progressRequest: MutableStateFlow<Float> = MutableStateFlow(0F)
-    var needToRequestPokemons: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    var needToRequestPokemons: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     var pokemonDownloadInfo: DownloadType = DownloadType.None
 
     @StringRes
@@ -67,7 +67,7 @@ class DownloaderInfo(
         pokemonPropertiesDesc = UpdateInfo.getDescription(pokemonList)
         needToRequestPokemons.value = pokemonDownloadInfo != DownloadType.None
 
-        if (!needToRequestPokemons.value) {
+        if (needToRequestPokemons.value == false) {
             logStatus("verifyDaoData: Pokemon List read from DAO")
             progressRequest.value = 1F
         }
