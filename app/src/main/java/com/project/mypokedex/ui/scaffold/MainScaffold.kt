@@ -1,5 +1,9 @@
 package com.project.mypokedex.ui.scaffold
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerValue
@@ -71,11 +75,14 @@ fun MainScaffold(
                     }
                 )
             },
-            bottomBar = { BottomBar(state = bottomAppBarState) }
+            bottomBar = {
+                BottomBar(state = bottomAppBarState)
+            }
         ) { paddingValues ->
             Surface(
                 modifier = Modifier
                     .padding(paddingValues)
+                    .padding(if (bottomAppBarState.bottomAppBarComponent == null) WindowInsets.navigationBars.asPaddingValues() else PaddingValues())
             ) {
                 content()
             }
