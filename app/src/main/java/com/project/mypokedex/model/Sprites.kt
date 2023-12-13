@@ -30,7 +30,7 @@ interface Sprite {
 
     fun getSelectableSpriteOptions(): List<SelectableSprite> {
         val list = ArrayList<SelectableSprite>()
-        if (this is SelectableSprite) {
+        if (this is SelectableSprite && this.hasSprites()) {
             list.add(this)
         }
         list.addAll(getAllOptions().filterIsInstance<SelectableSprite>().filter { it.hasSprites() })
@@ -392,6 +392,8 @@ interface SelectableSprite : Sprite {
         return getAllSprites().map { it.getSpriteType() }
             .filter { it.orientation == SpriteTypes.Front }
     }
+
+    fun getPriority(): Int = Int.MAX_VALUE
 }
 
 interface GroupSprite : Sprite
@@ -451,6 +453,8 @@ data class SpriteDreamWorld(
     val front_female: String? = null
 ) : Sprite, SelectableSprite {
 
+    override fun getPriority(): Int = 2
+
     @StringRes
     override fun getName(): Int = R.string.sprites_dream_world_title
 
@@ -469,6 +473,8 @@ data class SpriteHome(
     val front_shiny_female: String? = null,
 ) : Sprite, SelectableSprite {
 
+    override fun getPriority(): Int = 3
+
     @StringRes
     override fun getName(): Int = R.string.sprites_home_title
 
@@ -486,6 +492,8 @@ data class SpriteOfficialArtwork(
     val front_default: String? = null,
     val front_shiny: String? = null
 ) : Sprite, SelectableSprite {
+
+    override fun getPriority(): Int = 4
 
     @StringRes
     override fun getName(): Int = R.string.sprites_official_artwork_title
@@ -956,6 +964,8 @@ data class SpriteAnimated(
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
 ) : Sprite, SelectableSprite {
+
+    override fun getPriority(): Int = 1
 
     @StringRes
     override fun getName(): Int = R.string.sprites_animated_title

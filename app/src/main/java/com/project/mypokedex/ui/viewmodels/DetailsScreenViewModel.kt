@@ -238,7 +238,7 @@ class DetailsScreenViewModel @Inject constructor(
                             selectableSprite,
                             selectableSprite.getSpriteByType(defaultType)
                         )
-                    }
+                    }.sortedBy { value -> value.first.getPriority() }
                 )
             }
         }
