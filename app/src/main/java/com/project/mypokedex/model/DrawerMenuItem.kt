@@ -18,7 +18,7 @@ enum class DrawerMenuItem(
         screen = SettingsScreen
     ),
 
-    AboutScreenBottomAppBarItem(
+    AboutAppDrawerMenuItem(
         title = R.string.about_screen_label,
         icon = R.drawable.ic_about_app,
         screen = AboutScreen

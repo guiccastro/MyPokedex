@@ -15,8 +15,8 @@ android {
         applicationId "com.project.mypokedex"
         minSdk 26
         targetSdk 34
-        versionCode 8
-        versionName "1.2.1"
+        versionCode 9
+        versionName "1.2.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -28,7 +28,9 @@ android {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
-        resourceConfigurations + ["en_US", "pt_BR"]
+        androidResources {
+            generateLocaleConfig = true
+        }
     }
 
     buildTypes {
