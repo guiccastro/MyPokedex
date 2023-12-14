@@ -142,7 +142,11 @@ object PokemonRepository {
         val selectedIds = ArrayList<Int>()
 
         repeat(quantity) {
-            val id = idList.toIntArray().random()
+            var id: Int
+            do {
+                id = idList.toIntArray().random()
+            } while (selectedIds.contains(id))
+
             selectedIds.add(id)
             idList.remove(id)
         }

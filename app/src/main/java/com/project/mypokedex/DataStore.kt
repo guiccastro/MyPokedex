@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.project.mypokedex.model.LanguageOption
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import java.util.Locale
 

@@ -32,6 +32,7 @@ class Pokemon(
 
     fun getGifOrImage(): String {
         return getGif().front_default.orEmpty()
+            .ifBlank { getOfficialArtWork().front_default }.orEmpty()
             .ifBlank { getDefaultImage().front_default }.orEmpty()
     }
 
@@ -39,15 +40,31 @@ class Pokemon(
         return sprites.versions.generation_v.black_white.animated
     }
 
-    private fun getDefaultImage(): SpriteOfficialArtwork {
+    private fun getOfficialArtWork(): SpriteOfficialArtwork {
         return sprites.other.official_artwork
+    }
+
+    private fun getDefaultImage(): Sprites {
+        return sprites
+    }
+
+    private fun getDreamWorldImage(): SpriteDreamWorld {
+        return sprites.other.dream_world
     }
 
     fun getAvailableGifOrImageSprite(): SelectableSprite {
         return if (getGif().hasSpriteByType(SpriteType.defaultType)) {
             getGif()
+        } else if (getOfficialArtWork().hasSpriteByType(SpriteType.defaultType)) {
+            getOfficialArtWork()
         } else {
             getDefaultImage()
         }
+    }
+
+    fun getImageForHeightInfo(): String {
+        return getDreamWorldImage().front_default.orEmpty()
+            .ifBlank { getOfficialArtWork().front_default }.orEmpty()
+            .ifBlank { getDefaultImage().front_default }.orEmpty()
     }
 }

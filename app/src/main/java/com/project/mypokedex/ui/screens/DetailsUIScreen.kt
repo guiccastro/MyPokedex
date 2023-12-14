@@ -582,14 +582,14 @@ fun HeightInfo(
 
         Row(
             modifier = Modifier
-                .padding(horizontal = 2.dp)
+                .padding(horizontal = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             SubcomposeAsyncImage(
-                model = pokemon.sprites.other.dream_world.front_default
-                    ?: pokemon.sprites.other.official_artwork.front_default,
+                model = pokemon.getImageForHeightInfo(),
                 contentDescription = null,
                 modifier = Modifier
-                    .height(pokemonHeightImage)
+                    .height(pokemonHeightImage),
             )
 
             Image(
@@ -604,7 +604,8 @@ fun HeightInfo(
 
             Box(
                 modifier = Modifier
-                    .height(pokemonHeightImage)
+                    .heightIn(min = 10.dp)
+                    .height(pokemonHeightImage),
             ) {
                 Text(
                     text = "$pokemonHeight cm",
