@@ -43,7 +43,7 @@ class MyPokedexApplication : Application(), ImageLoaderFactory {
         return ImageLoader.Builder(this)
             .components {
                 add(SvgDecoder.Factory())
-                if (Build.VERSION.SDK_INT >= 28) {
+                if (Build.VERSION.SDK_INT > 28) {
                     add(ImageDecoderDecoder.Factory())
                 } else {
                     add(GifDecoder.Factory())
