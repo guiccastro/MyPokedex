@@ -2,6 +2,7 @@ package com.project.mypokedex.ui.scaffold.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,10 +23,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.project.mypokedex.BuildConfig
 import com.project.mypokedex.model.DrawerMenuItem
 import com.project.mypokedex.model.MainDrawerMenuComponent
 import com.project.mypokedex.model.MainDrawerMenuComponent.onClickDrawerMenuItem
@@ -40,54 +43,71 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DrawerContent(state: DrawerMenuUIState) {
-    Column(
+    ModalDrawerSheet(
         modifier = Modifier
-            .padding(horizontal = 10.dp)
+            .width(300.dp)
     ) {
-        AppNameCard(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 60.dp)
-        )
-
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            thickness = 1.dp,
-            color = MainBlack
-        )
-
-        MainDrawerMenuComponent.drawerItems.forEach { drawerItem ->
-
-            NavigationDrawerItem(
-                label = {
-                    Text(
-                        text = stringResource(id = drawerItem.title),
-                        style = PokemonGB,
-                        fontSize = 14.sp,
-                        color = BlackTextColor,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                icon = {
-                    Image(
-                        painter = painterResource(id = drawerItem.icon),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(vertical = 10.dp),
-                        colorFilter = ColorFilter.tint(MainBlack)
-                    )
-                },
+                .padding(horizontal = 10.dp)
+        ) {
+            AppNameCard(
                 modifier = Modifier
-                    .height(50.dp),
-                selected = drawerItem == state.itemSelected,
-                onClick = {
-                    onClickDrawerMenuItem(drawerItem)
-                },
-                colors = NavigationDrawerItemDefaults.colors(
-                    selectedContainerColor = MainBlack.copy(alpha = 0.2F)
+                    .fillMaxWidth()
+                    .padding(vertical = 60.dp)
+            )
+
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                thickness = 1.dp,
+                color = MainBlack
+            )
+
+            MainDrawerMenuComponent.drawerItems.forEach { drawerItem ->
+
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = stringResource(id = drawerItem.title),
+                            style = PokemonGB,
+                            fontSize = 14.sp,
+                            color = BlackTextColor,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    },
+                    icon = {
+                        Image(
+                            painter = painterResource(id = drawerItem.icon),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(vertical = 10.dp),
+                            colorFilter = ColorFilter.tint(MainBlack)
+                        )
+                    },
+                    modifier = Modifier
+                        .height(50.dp),
+                    selected = drawerItem == state.itemSelected,
+                    onClick = {
+                        onClickDrawerMenuItem(drawerItem)
+                    },
+                    colors = NavigationDrawerItemDefaults.colors(
+                        selectedContainerColor = MainBlack.copy(alpha = 0.2F)
+                    )
                 )
+            }
+
+            Spacer(modifier = Modifier.weight(1F))
+
+            Text(
+                text = "v${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+                color = BlackTextColor,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 10.sp,
+                style = PokemonGB
             )
         }
     }
@@ -103,16 +123,11 @@ fun DrawerContentPreview() {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                ModalDrawerSheet(
-                    modifier = Modifier
-                        .width(300.dp)
-                ) {
-                    DrawerContent(
-                        DrawerMenuUIState(
-                            itemSelected = DrawerMenuItem.SettingsDrawerMenuItem
-                        )
+                DrawerContent(
+                    DrawerMenuUIState(
+                        itemSelected = DrawerMenuItem.SettingsDrawerMenuItem
                     )
-                }
+                )
             },
         ) {
             Scaffold(
