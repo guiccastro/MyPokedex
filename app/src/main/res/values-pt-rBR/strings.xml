@@ -20,13 +20,13 @@
     <!-- Grid Screen -->
     <string name="grid_screen_search">Procurar</string>
     <string name="grid_screen_label">Grade</string>
-    <string name="grid_screen_title">Tela de Grade</string>
+    <string name="grid_screen_title">Grade</string>
     <string name="highest_points">Maior pontuação:</string>
     <string name="current_points">Pontuação atual:</string>
 
     <!-- List Screen -->
     <string name="list_screen_label">Lista</string>
-    <string name="list_screen_title">Tela de Lista</string>
+    <string name="list_screen_title">Lista</string>
 
     <!-- About Screen -->
     <string name="about_screen_label">Sobre</string>
@@ -40,7 +40,7 @@
     <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
 
     <!-- Details Screen -->
-    <string name="details_screen_title">Tela de Jogo</string>
+    <string name="details_screen_title">Detalhes</string>
     <string name="details_screen_evolution_chain_title">Cadeia de Evolução</string>
     <string name="details_screen_varieties_title">Variedades</string>
     <string name="details_screen_sprites_title">Imagens</string>

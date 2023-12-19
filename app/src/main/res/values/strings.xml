@@ -20,13 +20,13 @@
     <!-- Grid Screen -->
     <string name="grid_screen_search">Search</string>
     <string name="grid_screen_label">Grid</string>
-    <string name="grid_screen_title">Grid Screen</string>
+    <string name="grid_screen_title">Grid</string>
     <string name="highest_points">Highest points:</string>
     <string name="current_points">Current points:</string>
 
     <!-- List Screen -->
     <string name="list_screen_label">List</string>
-    <string name="list_screen_title">List Screen</string>
+    <string name="list_screen_title">List</string>
 
     <!-- About Screen -->
     <string name="about_screen_label">About</string>
@@ -40,7 +40,7 @@
     <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
 
     <!-- Details Screen -->
-    <string name="details_screen_title">Game Screen</string>
+    <string name="details_screen_title">Details</string>
     <string name="details_screen_evolution_chain_title">Evolution Chain</string>
     <string name="details_screen_varieties_title">Varieties</string>
     <string name="details_screen_sprites_title">Sprites</string>

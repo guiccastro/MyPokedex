@@ -56,7 +56,7 @@ fun SettingsUIScreen() {
                             }
                         }
                     }
-                    .background(MainRed.copy(alpha = 1F))
+                    .background(MainRed)
                     .padding(vertical = 10.dp, horizontal = 10.dp),
                 verticalAlignment = CenterVertically
             ) {

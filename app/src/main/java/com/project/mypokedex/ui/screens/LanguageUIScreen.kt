@@ -50,7 +50,7 @@ fun LanguageUIScreen() {
                     .clickable {
                         LanguageRepository.changeLanguage(context, option.languageOption.locale)
                     }
-                    .background(MainRed.copy(alpha = 1F))
+                    .background(MainRed)
                     .padding(vertical = 10.dp, horizontal = 10.dp)
             ) {
                 Text(

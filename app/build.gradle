@@ -139,6 +139,4 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.11'
-
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
 }
