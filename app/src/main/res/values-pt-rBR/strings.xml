@@ -40,7 +40,7 @@
     <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
     <string name="legal_title">Legal</string>
     <string name="privacy_policy_desc">Ao utilizar MyDex, você confirma que leu a Política de Privacidade. Você pode ler a Política de Privacidade clicando abaixo.</string>
-    <string name="privacy_policy_button">Privacy Policy</string>
+    <string name="privacy_policy_button">Política de Privacidade</string>
 
     <!-- Details Screen -->
     <string name="details_screen_title">Detalhes</string>
