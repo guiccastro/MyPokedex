@@ -34,10 +34,13 @@
     <string name="about_screen_about_app">Olá! Meu nome é Guilherme, eu sou um desenvolvedor mobile brasileiro. Eu desenvolvi esse aplicativo para estudar e melhorar minhas habilidades de desenvolvimento mobile.</string>
     <string name="about_screen_about_app_extra">Sinta-se livre para me dar opiniões e ideias sobre o aplicativo.</string>
     <string name="about_screen_contact_title">Contato</string>
-    <string name="about_screen_contact">Você pode me contatar através do meu Linkedin.</string>
-    <string name="about_screen_disclaimer_title">Isenção de Responsabilidade</string>
+    <string name="about_screen_contact">Você pode me contatar através do meu LinkedIn.</string>
+    <string name="about_screen_disclaimer_title">Aviso Legal</string>
     <string name="about_screen_disclaimer">MyDex é um aplicativo não oficial, gratuito feito por fãs e não está afiliado, endossado ou suportado pela Nintendo, GAME FREAK ou The Pokémon Company em nenhuma maneira. Algumas imagens usadas aqui são protegidas por direitos autorais e suportadas sob uso justo. Pokémon e nomes de personagens Pokémons são marcas registradas da Nintendo. Não há intenção de infringir direitos de autoria.</string>
     <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
+    <string name="legal_title">Legal</string>
+    <string name="privacy_policy_desc">Ao utilizar MyDex, você confirma que leu a Política de Privacidade. Você pode ler a Política de Privacidade clicando abaixo.</string>
+    <string name="privacy_policy_button">Privacy Policy</string>
 
     <!-- Details Screen -->
     <string name="details_screen_title">Detalhes</string>

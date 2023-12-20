@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">MyDex</string>
+    <string name="linkedin_url" translatable="false">https://www.linkedin.com/in/guilhermescastro/</string>
+    <string name="privacy_policy_url" translatable="false">https://www.termsfeed.com/live/bfb81a25-2042-4450-9049-f08b8d208318</string>
+
 
     <!-- Animated Enter Screen -->
     <string name="animated_enter_message_title">Download Info</string>
@@ -34,10 +37,13 @@
     <string name="about_screen_about_app">Hi! My name is Guilherme, I\'m a brazilian mobile developer. I developed this app to study and improve my skills about mobile development.</string>
     <string name="about_screen_about_app_extra">Feel free to give me some feedback and ideas about the app.</string>
     <string name="about_screen_contact_title">Contact</string>
-    <string name="about_screen_contact">You can contact me through my Linkedin.</string>
+    <string name="about_screen_contact">You can contact me through my LinkedIn.</string>
     <string name="about_screen_disclaimer_title">Disclaimer</string>
     <string name="about_screen_disclaimer">MyDex is an unofficial, free fan made app and is not affiliated, endorsed or supported by Nintendo, GAME FREAK or The Pokémon Company in any way. Some images used in this are copyrighted and supported under fair use. Pokémon and Pokémon character names are trademarks of Nintendo. No copyright infringement intended.</string>
     <string name="about_screen_copyright">© 2023 Pokémon. © 1995–2023 Nintendo/Creatures Inc./GAME FREAK inc.</string>
+    <string name="legal_title">Legal</string>
+    <string name="privacy_policy_desc">By using MyDex, you confirm that you have read the Privacy Policy. You can read the Privacy Policy by tapping below.</string>
+    <string name="privacy_policy_button">Privacy Policy</string>
 
     <!-- Details Screen -->
     <string name="details_screen_title">Details</string>

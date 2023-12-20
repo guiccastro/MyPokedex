@@ -2,6 +2,7 @@ package com.project.mypokedex.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,13 +10,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +42,8 @@ fun AboutUIScreen() {
     LazyColumn(
         modifier = Modifier
             .padding(horizontal = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Text(
@@ -86,6 +92,7 @@ fun AboutUIScreen() {
             )
 
             val uriHandler = LocalUriHandler.current
+            val context = LocalContext.current
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,10 +106,51 @@ fun AboutUIScreen() {
                         .align(Alignment.Center)
                         .size(50.dp)
                         .clickable {
-                            uriHandler.openUri("https://www.linkedin.com/in/guilhermescastro/")
+                            uriHandler.openUri(context.resources.getString(R.string.linkedin_url))
                         }
                 )
             }
+        }
+
+        item {
+            TitleSection(
+                title = stringResource(id = R.string.legal_title)
+            )
+
+            Text(
+                text = stringResource(id = R.string.privacy_policy_desc),
+                style = PokemonGB,
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                lineHeight = 18.sp,
+                letterSpacing = 2.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 20.dp)
+            )
+
+            val uriHandler = LocalUriHandler.current
+            val context = LocalContext.current
+            Text(
+                text = stringResource(id = R.string.privacy_policy_button),
+                style = PokemonGB,
+                color = BlackTextColor,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                lineHeight = 18.sp,
+                letterSpacing = 2.sp,
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .shadow(4.dp, CircleShape)
+                    .background(MainRed, CircleShape)
+                    .border(1.dp, MainBlack, CircleShape)
+                    .clip(CircleShape)
+                    .clickable {
+                        uriHandler.openUri(context.resources.getString(R.string.privacy_policy_url))
+                    }
+                    .padding(horizontal = 20.dp, vertical = 10.dp)
+            )
         }
 
         item {
